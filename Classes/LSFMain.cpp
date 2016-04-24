@@ -1,9 +1,5 @@
 ﻿#include "LSFMain.h"
 #include "LSFGame.h"
-#include "cocos2d\external\json\rapidjson.h"
-#include "cocos2d\external\json\document.h"
-#include "cocos2d\external\json\stringbuffer.h"
-#include "cocos2d\external\json\writer.h"
 
 using namespace cocos2d;
 using namespace rapidjson;
@@ -130,7 +126,7 @@ bool LSFMain::init()
 //CCSpriteFrameCache.cpp에 따로 정의하지 않았음(할필요없음..)
 void SpriteFrameCache::addSpriteFramesWithJson(const std::string & json)
 {
-	assert(json.size() > 0, "json filename should not be nullptr");
+	CCASSERT(json.size() > 0, "json filename should not be nullptr");
 	std::string fullPath = FileUtils::getInstance()->fullPathForFilename(json);
 	if (fullPath.size() == 0)
 	{
