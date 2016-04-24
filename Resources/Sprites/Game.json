@@ -1,0 +1,97 @@
+{ "frames": [
+   {
+    "filename": "Game 0.ase",
+    "frame": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 1.ase",
+    "frame": { "x": 720, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 2.ase",
+    "frame": { "x": 1440, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 3.ase",
+    "frame": { "x": 2160, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 4.ase",
+    "frame": { "x": 2880, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 5.ase",
+    "frame": { "x": 3600, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 6.ase",
+    "frame": { "x": 4320, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 7.ase",
+    "frame": { "x": 5040, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "Game 8.ase",
+    "frame": { "x": 5760, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.4.1",
+  "image": "D:\\LSF_Project\\Resources\\Sprites\\Game.png",
+  "format": "I8",
+  "size": { "w": 6480, "h": 1280 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}

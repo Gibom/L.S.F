@@ -25,6 +25,16 @@ bool LSFGame::init()
 	}
 
 	//////////////////////////////
+	//스프라이트 캐시
+	auto backFrameCache = SpriteFrameCache::getInstance();
+	backFrameCache->addSpriteFramesWithJson("Sprites/Game.json");
+
+	Sprite* back = Sprite::createWithSpriteFrame(backFrameCache->getSpriteFrameByName("Game 0.png"));
+	back->setAnchorPoint(Vec2::ZERO);
+	back->setPosition(Vec2(0, -110));
+	//back->setScaleY(0.8f);
+	this->addChild(back);
+
 
 	return true;
 }
