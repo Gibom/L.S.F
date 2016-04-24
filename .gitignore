@@ -6072,3 +6072,13 @@ proj.win8.1-universal/App.WindowsPhone/LSF_Project.WindowsPhone.vcxproj
 proj.win8.1-universal/App.WindowsPhone/LSF_Project.WindowsPhone.vcxproj.filters
 proj.win8.1-universal/App.WindowsPhone/Package.appxmanifest
 proj.win8.1-universal/LSF_Project.sln
+cocos2d/cocos/platform/android/java/local.properties
+proj.android/libs/armeabi/gdb.setup
+proj.android/libs/armeabi/gdbserver
+proj.android/local.properties
+proj.android/obj/local/armeabi/objs-debug/cocos2dcpp_shared/__/__/Classes/AppDelegate.o
+proj.android/obj/local/armeabi/objs-debug/cocos2dcpp_shared/__/__/Classes/AppDelegate.o.d
+proj.android/obj/local/armeabi/objs-debug/cocos2dcpp_shared/hellocpp/main.o
+proj.android/obj/local/armeabi/objs-debug/cocos2dcpp_shared/hellocpp/main.o.d
+proj.win32/Debug.win32/Sprites/Logo.json
+proj.win32/Debug.win32/Sprites/Logo.png

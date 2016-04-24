@@ -36,6 +36,13 @@ bool LSFMain::init()
 	//back->setScaleY(0.8f);
 	this->addChild(back);
 
+	auto logoFrameCache = SpriteFrameCache::getInstance();
+	logoFrameCache->addSpriteFramesWithJson("Sprites/Logo.json");
+
+	Sprite* logo = Sprite::createWithSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 0.png"));
+	logo->setAnchorPoint(Vec2::ZERO);
+	logo->setPosition(Vec2(0, -110));
+	this->addChild(logo);
 
 	auto btnFrameCache = SpriteFrameCache::getInstance();
 	btnFrameCache->addSpriteFramesWithJson("Sprites/Botton_start.json");
@@ -46,7 +53,10 @@ bool LSFMain::init()
 	btn_Start->setScale(1);
 	this->addChild(btn_Start);
 
+
 	//애니메이션 - (코드 개선 작업 시 addSpriteFramesWithJson 함수에서 for 문으로 animation 생성하는 기능 추가, animation 생성여부 파라미터 bool값으로 )
+	
+	//Background
 	auto mainBackgroundAnimation = Animation::create();
 	mainBackgroundAnimation->setDelayPerUnit(0.1f);
 	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 0.png"));
@@ -72,12 +82,45 @@ bool LSFMain::init()
 	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 20.png"));
 	mainBackgroundAnimation->retain();
 
+	//Logo
+	auto mainLogoAnimation = Animation::create();
+	mainLogoAnimation->setDelayPerUnit(0.1f);
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 0.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 1.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 2.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 3.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 4.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 5.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 6.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 7.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 8.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 9.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 10.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 11.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 12.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 13.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 14.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 15.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 16.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 17.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 18.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 19.png"));
+	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 20.png"));
+	mainLogoAnimation->retain();
+
 	////애니메이션 실행
+
+	//Background
 	auto backAnimate = Animate::create(mainBackgroundAnimation);
-	auto rep = Repeat::create(backAnimate,1);
+	auto rep = RepeatForever::create(backAnimate);
+
+	//Logo
+	auto logoAnimate = Animate::create(mainLogoAnimation);
+	auto delayLogo = DelayTime::create(5.f);
+	auto seqLogo = Sequence::create(logoAnimate, delayLogo, nullptr);
+	auto seqLogoRep = RepeatForever::create(seqLogo);
+	logo->runAction(seqLogoRep);
 	back->runAction(rep);
-
-
 
 	return true;
 }
