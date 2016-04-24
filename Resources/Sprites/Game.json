@@ -6,7 +6,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 1.ase",
@@ -15,7 +15,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 2.ase",
@@ -24,7 +24,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 3.ase",
@@ -33,7 +33,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 4.ase",
@@ -42,7 +42,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 5.ase",
@@ -51,7 +51,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 6.ase",
@@ -60,7 +60,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 7.ase",
@@ -69,7 +69,7 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
    },
    {
     "filename": "Game 8.ase",
@@ -78,7 +78,70 @@
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
     "sourceSize": { "w": 720, "h": 1280 },
-    "duration": 100
+    "duration": 200
+   },
+   {
+    "filename": "Game 9.ase",
+    "frame": { "x": 6480, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 200
+   },
+   {
+    "filename": "Game 10.ase",
+    "frame": { "x": 7200, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 200
+   },
+   {
+    "filename": "Game 11.ase",
+    "frame": { "x": 7920, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 200
+   },
+   {
+    "filename": "Game 12.ase",
+    "frame": { "x": 8640, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 200
+   },
+   {
+    "filename": "Game 13.ase",
+    "frame": { "x": 9360, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 200
+   },
+   {
+    "filename": "Game 14.ase",
+    "frame": { "x": 10080, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 200
+   },
+   {
+    "filename": "Game 15.ase",
+    "frame": { "x": 10800, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 200
    }
  ],
  "meta": {
@@ -86,12 +149,13 @@
   "version": "1.1.4.1",
   "image": "D:\\LSF_Project\\Resources\\Sprites\\Game.png",
   "format": "I8",
-  "size": { "w": 6480, "h": 1280 },
+  "size": { "w": 11520, "h": 1280 },
   "scale": "1",
   "frameTags": [
   ],
   "layers": [
-   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+   { "name": "background", "opacity": 255, "blendMode": "normal" },
+   { "name": "cloud", "opacity": 255, "blendMode": "normal" }
   ]
  }
 }

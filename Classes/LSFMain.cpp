@@ -127,7 +127,7 @@ bool LSFMain::init()
 
 //Aseprite -> Json으로 Export한 것을 Parsing하는 함수 생성[addSpriteFramesWithJson(const std::string & json)]
 //CCSpriteFrameCache.h에 'void addSpriteFramesWidthJson(const std::string & json);' 추가하고 여기서 정의함
-//CCSpriteFrameCache.cpp에 따로 정의하지 않았음
+//CCSpriteFrameCache.cpp에 따로 정의하지 않았음(할필요없음..)
 void SpriteFrameCache::addSpriteFramesWithJson(const std::string & json)
 {
 	assert(json.size() > 0, "json filename should not be nullptr");
@@ -250,6 +250,7 @@ void LSFMain::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
 	auto pScene = LSFGame::createScene();
+	
 	Director::getInstance()->replaceScene(createTransition(8, 1, pScene));
 	
 }
@@ -366,4 +367,6 @@ TransitionScene* LSFMain::createTransition(int nIndex, float t, Scene* s)
 
 	return NULL;
 }
+
+
 
