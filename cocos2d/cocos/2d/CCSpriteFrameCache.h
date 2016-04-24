@@ -174,7 +174,7 @@ public:
     * @return True if the file is loaded.
     */
 
-	//Aesprite - > Json 파싱을 위해 추가
+	//Aesprite - > Use to Json parsing
 	void addSpriteFramesWithJson(const std::string& json);
 	
 
