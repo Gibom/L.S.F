@@ -6083,3 +6083,9 @@ proj.android/obj/local/armeabi/objs-debug/cocos2dcpp_shared/hellocpp/main.o.d
 proj.win32/Debug.win32/Sprites/Logo.json
 proj.win32/Debug.win32/Sprites/Logo.png
 proj.win32/Debug.win32/
+bin/
+proj.android/obj/
+proj.android/libs/
+proj.android/gen/
+cocos2d/cocos/platform/android/
+proj.android/
