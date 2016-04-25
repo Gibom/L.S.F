@@ -1,6 +1,6 @@
 { "frames": [
    {
-    "filename": "backpack_small 0.png",
+    "filename": "Button_bag 0.png",
     "frame": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -9,7 +9,7 @@
     "duration": 100
    },
    {
-    "filename": "backpack_small 1.png",
+    "filename": "Button_bag 1.png",
     "frame": { "x": 64, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,

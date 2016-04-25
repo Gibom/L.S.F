@@ -28,8 +28,8 @@ bool LSFMain::init()
 
 	Sprite* back = Sprite::createWithSpriteFrame(backFrameCache->getSpriteFrameByName("Main 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
-	back->setPosition(Vec2(0, -100));
-	//back->setScaleY(0.8f);
+	back->setPosition(Vec2(0, 0));
+	back->setScale(0.5f);
 	this->addChild(back);
 
 	auto logoFrameCache = SpriteFrameCache::getInstance();
@@ -37,17 +37,23 @@ bool LSFMain::init()
 
 	Sprite* logo = Sprite::createWithSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 0.png"));
 	logo->setAnchorPoint(Vec2::ZERO);
-	logo->setPosition(Vec2(0, -100));
+	logo->setPosition(Vec2(0, 0));
+	logo->setScale(0.5f);
 	this->addChild(logo);
 
-	auto btnFrameCache = SpriteFrameCache::getInstance();
-	btnFrameCache->addSpriteFramesWithJson("Sprites/Botton_start.json");
-
-	btn_Start = Sprite::createWithSpriteFrame(btnFrameCache->getSpriteFrameByName("Botton_start 0.png"));
-	btn_Start->setAnchorPoint(Vec2(0.5, 0.5));
-	btn_Start->setPosition(Vec2(365, 300));
-	btn_Start->setScale(1);
-	this->addChild(btn_Start);
+	//메뉴
+	btn_Start = MenuItemImage::create("Sprites/Button_start_up.png",
+									  "Sprites/Button_start_down.png",
+									  CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
+	
+	auto startMenu = Menu::create(btn_Start, nullptr);
+	startMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	//startMenu->setPosition(Vec2(365, 300));
+	startMenu->setPosition(Vec2(80, 40));
+	startMenu->setScale(0.5f);
+	startMenu->alignItemsHorizontally();
+	
+	this->addChild(startMenu);
 
 
 	//애니메이션 - (코드 개선 작업 시 addSpriteFramesWithJson 함수에서 for 문으로 animation 생성하는 기능 추가, animation 생성여부 파라미터 bool값으로 )
@@ -195,54 +201,54 @@ void SpriteFrameCache::addSpriteFramesWithJson(const std::string & json)
 		_loadedFileNames->insert(json);
 	}
 }
-void LSFMain::onEnter()
-{
-	Layer::onEnter();
-	//Touch 
-	//싱글 터치 모드로 터치 리스너 등록
-	auto listener = EventListenerTouchOneByOne::create();
-	//Swallow touches only available in OneByOne mode.
-	//핸들링된 터치 이벤트를 터치 이벤트 array에서 지우겠다는 의미다.
-	listener->setSwallowTouches(true);
-
-	listener->onTouchBegan = CC_CALLBACK_2(LSFMain::onTouchBegan, this);
-	listener->onTouchMoved = CC_CALLBACK_2(LSFMain::onTouchMoved, this);
-	listener->onTouchEnded = CC_CALLBACK_2(LSFMain::onTouchEnded, this);
-
-	// The prioriry of the touch listener is based on the draw order of sprite
-	// 터치 리스너의 우선순위를 (노드가) 화면에 그려진 순서대로 한다
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-}
-void LSFMain::onExit()
-{
-
-	_eventDispatcher->removeEventListenersForType(EventListener::Type::TOUCH_ONE_BY_ONE);
-
-	Layer::onExit();
-}
-bool LSFMain::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event)
-{
-	auto touchPoint = touch->getLocation();
-
-	log("onTOuchBegan id = %d, x = %f, y= %f", touch->getID(), touchPoint.x, touchPoint.y);
-
-	//touch check --------------------------------
-
-	bool bTouch = btn_Start->getBoundingBox().containsPoint(touchPoint);
-	if (bTouch)
-	{
-		log("Start Clicked");
-		doPushSceneTran(this);
-
-	}
-	return true;
-}
-void LSFMain::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
-{
-	auto touchPoint = touch->getLocation();
-
-	//log("onTouchEnded id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
-}
+//void LSFMain::onEnter()
+//{
+//	Layer::onEnter();
+//	//Touch 
+//	//싱글 터치 모드로 터치 리스너 등록
+//	auto listener = EventListenerTouchOneByOne::create();
+//	//Swallow touches only available in OneByOne mode.
+//	//핸들링된 터치 이벤트를 터치 이벤트 array에서 지우겠다는 의미다.
+//	listener->setSwallowTouches(true);
+//
+//	listener->onTouchBegan = CC_CALLBACK_2(LSFMain::onTouchBegan, this);
+//	listener->onTouchMoved = CC_CALLBACK_2(LSFMain::onTouchMoved, this);
+//	listener->onTouchEnded = CC_CALLBACK_2(LSFMain::onTouchEnded, this);
+//
+//	// The prioriry of the touch listener is based on the draw order of sprite
+//	// 터치 리스너의 우선순위를 (노드가) 화면에 그려진 순서대로 한다
+//	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+//}
+//void LSFMain::onExit()
+//{
+//
+//	_eventDispatcher->removeEventListenersForType(EventListener::Type::TOUCH_ONE_BY_ONE);
+//
+//	Layer::onExit();
+//}
+//bool LSFMain::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event)
+//{
+//	auto touchPoint = touch->getLocation();
+//
+//	log("onTOuchBegan id = %d, x = %f, y= %f", touch->getID(), touchPoint.x, touchPoint.y);
+//
+//	//touch check --------------------------------
+//
+//	bool bTouch = btn_Start->getBoundingBox().containsPoint(touchPoint);
+//	if (bTouch)
+//	{
+//		log("Start Clicked");
+//		doPushSceneTran(this);
+//
+//	}
+//	return true;
+//}
+//void LSFMain::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
+//{
+//	auto touchPoint = touch->getLocation();
+//
+//	//log("onTouchEnded id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
+//}
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
 	auto pScene = LSFGame::createScene();
