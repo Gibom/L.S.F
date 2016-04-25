@@ -28,7 +28,7 @@ bool LSFMain::init()
 
 	Sprite* back = Sprite::createWithSpriteFrame(backFrameCache->getSpriteFrameByName("Main 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
-	back->setPosition(Vec2(0, -110));
+	back->setPosition(Vec2(0, -100));
 	//back->setScaleY(0.8f);
 	this->addChild(back);
 
@@ -37,7 +37,7 @@ bool LSFMain::init()
 
 	Sprite* logo = Sprite::createWithSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 0.png"));
 	logo->setAnchorPoint(Vec2::ZERO);
-	logo->setPosition(Vec2(0, -110));
+	logo->setPosition(Vec2(0, -100));
 	this->addChild(logo);
 
 	auto btnFrameCache = SpriteFrameCache::getInstance();

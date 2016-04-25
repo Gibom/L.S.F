@@ -26,7 +26,7 @@ bool LSFGame::init()
 
 	Sprite* back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
-	back->setPosition(Vec2(0, -110));
+	back->setPosition(Vec2(0, -100));
 	//back->setScaleY(0.8f);
 	this->addChild(back);
 
