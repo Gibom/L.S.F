@@ -15,12 +15,18 @@ public:
 	CREATE_FUNC(LSFGame);
 	Size winSize;
 	Sprite* inventory;
+	Sprite* craftUsel;
+	Sprite* craftSel;
 	Sprite* craft;
 	LayerColor* invenLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
 	
+	
 	int btnCount;
+	int cbtnCount;
+	bool craftSwitch;
+	bool modeSwitch;
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);

@@ -6091,3 +6091,4 @@ cocos2d/cocos/platform/android/
 proj.android/
 proj.win32/.vs/HelloCpp/v14/.suo
 proj.win32/HelloCpp.sdf
+proj.win32/

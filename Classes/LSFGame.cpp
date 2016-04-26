@@ -18,10 +18,12 @@ bool LSFGame::init()
 	{
 		return false;
 	}
-
+	
 	//////////////////////////////
 	winSize = Director::getInstance()->getWinSize();
 	btnCount = 0;
+	cbtnCount = 0;
+	craftSwitch = false;
 	//스프라이트 캐시
 	auto GameFrameCache = SpriteFrameCache::getInstance();
 	GameFrameCache->addSpriteFramesWithJson("Sprites/Game.json");
@@ -38,23 +40,46 @@ bool LSFGame::init()
 	invenLayer->setAnchorPoint(Vec2::ZERO);
 	invenLayer->setPosition(Vec2(0, 0));
 	invenLayer->setVisible(false);
+	invenLayer->setScaleY(2.f);
+	//invenLayer->setCascadeOpacityEnabled(true);
 	back->addChild(invenLayer);
 
-	inventory = Sprite::create("Sprites/inventory.png");
+	craftUsel = Sprite::create("Sprites/inventory_bg2.png");
+	craftUsel->setAnchorPoint(Vec2(0.5, 0.5));
+	craftUsel->setPosition(Vec2(180, 320));
+	craftUsel->setCascadeOpacityEnabled(true);
+	craftUsel->setOpacity(125);
+	invenLayer->addChild(craftUsel);
+	
+	craftSel = Sprite::create("Sprites/inventory_bg3.png");
+	craftSel->setAnchorPoint(Vec2(0.5, 0.5));
+	craftSel->setPosition(Vec2(180, 320));
+	craftSel->setCascadeOpacityEnabled(true);
+	craftSel->setOpacity(125);
+	craftSel->setVisible(false);
+	invenLayer->addChild(craftSel);
+
+
+	inventory = Sprite::create("Sprites/inventory_bg.png");
 	inventory->setAnchorPoint(Vec2(0.5, 0.5));
-	inventory->setPosition(Vec2(180, 700));
-	inventory->setScale(0.5f,1.5f);
+	inventory->setPosition(Vec2(184, 320));
+	//inventory->setScale(0.5f,1.5f);
+	inventory->setCascadeOpacityEnabled(true);
+	inventory->setOpacity(255);
 	inventory->setVisible(false);
 	invenLayer->addChild(inventory);
 
 	auto CraftFrameCache = SpriteFrameCache::getInstance();
 	CraftFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
 
-	Sprite* craft = Sprite::createWithSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 0.png"));
+	craft = Sprite::createWithSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 0.png"));
 	craft->setAnchorPoint(Vec2::ZERO);
-	craft->setPosition(Vec2(30, 30));
-	craft->setScale(1.f);
+	craft->setPosition(Vec2(38, 40));
+	craft->setScale(0.8f);
+	//craft->setVisible(false);
 	invenLayer->addChild(craft);
+
+
 	//메뉴
 	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png",
 										  "Sprites/Button_bagopen.png",
@@ -62,10 +87,13 @@ bool LSFGame::init()
 
 	inventoryMenu = Menu::create(btn_inventory, nullptr);
 	inventoryMenu->setAnchorPoint(Vec2::ZERO);
-	inventoryMenu->setPosition(Vec2(300, 50));
+	inventoryMenu->setPosition(Vec2(290, 70));
 	inventoryMenu->setScale(1.f);
 	inventoryMenu->alignItemsHorizontally();
 	this->addChild(inventoryMenu);
+
+	
+
 	//this->addChild(btn_inventory);
 	////애니메이션 - (코드 개선 작업 시 addSpriteFramesWithJson 함수에서 for 문으로 animation 생성하는 기능 추가, animation 생성여부 파라미터 bool값으로 )
 
@@ -91,7 +119,7 @@ bool LSFGame::init()
 	gameAnimation->retain();
 	
 	auto craftAnimation = Animation::create();
-	craftAnimation->setDelayPerUnit(0.5f);
+	craftAnimation->setDelayPerUnit(0.1f);
 	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 0.png"));
 	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 1.png"));
 	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 2.png"));
@@ -145,12 +173,25 @@ bool LSFGame::onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event)
 
 	//touch check --------------------------------
 
-	bool bTouch = inventoryMenu->getBoundingBox().containsPoint(touchPoint);
-	if (bTouch)
+	bool bTouch_craft = craft->getBoundingBox().containsPoint(touchPoint);
+	bool bTouch_mode; //모드 스위치 구현 시 사용
+	// 가방이 열려있고 craft가 선택 됐을 때
+	if (bTouch_craft && cbtnCount == 1)
 	{
-		log("Start Clicked");
-		doPushSceneTran(this);
-
+		if (craftSwitch == true)
+		{
+			craftUsel->setVisible(true);
+			craftSel->setVisible(false);
+			craftSwitch = false;
+			log("craftSwitch Status: Off", craftSwitch);
+		}
+		else {
+			craftUsel->setVisible(false);
+			craftSel->setVisible(true);
+			craftSwitch = true;
+			log("craftSwitch Status: On", craftSwitch);
+		}
+		
 	}
 	return true;
 }
@@ -167,14 +208,18 @@ void LSFGame::doPushSceneTran(Ref * pSender)
 	if (btnCount == 0) {
 		invenLayer->setVisible(true);
 		inventory->setVisible(true);
+		//craft->setVisible(true);
 		btn_inventory->selected();
 		btnCount++;
+		cbtnCount = 1;
 	}
 	else {
 		invenLayer->setVisible(false);
 		inventory->setVisible(false);
+		//craft->setVisible(false);
 		btn_inventory->unselected();
-		btnCount=0;
+		btnCount = 0;
+		cbtnCount = 0;
 	}
 }
 TransitionScene* LSFGame::createTransition(int nIndex, float t, Scene* s)

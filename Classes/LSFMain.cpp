@@ -206,7 +206,7 @@ void LSFMain::doPushSceneTran(Ref * pSender)
 {
 	auto pScene = LSFGame::createScene();
 	
-	Director::getInstance()->replaceScene(createTransition(8, 1, pScene));
+	Director::getInstance()->replaceScene(createTransition(7, 1, pScene));
 	
 }
 TransitionScene* LSFMain::createTransition(int nIndex, float t, Scene* s)
