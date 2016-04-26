@@ -43,11 +43,18 @@ bool LSFGame::init()
 	inventory = Sprite::create("Sprites/inventory.png");
 	inventory->setAnchorPoint(Vec2(0.5, 0.5));
 	inventory->setPosition(Vec2(180, 700));
-	inventory->setScaleX(0.5f);
-	inventory->setScaleY(1.f);
+	inventory->setScale(0.5f,1.5f);
 	inventory->setVisible(false);
 	invenLayer->addChild(inventory);
 
+	auto CraftFrameCache = SpriteFrameCache::getInstance();
+	CraftFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
+
+	Sprite* craft = Sprite::createWithSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 0.png"));
+	craft->setAnchorPoint(Vec2::ZERO);
+	craft->setPosition(Vec2(30, 30));
+	craft->setScale(1.f);
+	invenLayer->addChild(craft);
 	//메뉴
 	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png",
 										  "Sprites/Button_bagopen.png",
@@ -81,17 +88,27 @@ bool LSFGame::init()
 	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 13.png"));
 	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 14.png"));
 	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 15.png"));
-
 	gameAnimation->retain();
 	
+	auto craftAnimation = Animation::create();
+	craftAnimation->setDelayPerUnit(0.5f);
+	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 0.png"));
+	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 1.png"));
+	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 2.png"));
+	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 3.png"));
+	craftAnimation->retain();
+
+
 	////애니메이션 실행
 
 	//Background
 	auto backAnimate = Animate::create(gameAnimation);
-	auto rep = RepeatForever::create(backAnimate);
-	back->runAction(rep);
+	auto backRep = RepeatForever::create(backAnimate);
+	back->runAction(backRep);
 
-	
+	auto craftAnimate = Animate::create(craftAnimation);
+	auto craftRep = RepeatForever::create(craftAnimate);
+	craft->runAction(craftRep);
 	return true;
 }
 

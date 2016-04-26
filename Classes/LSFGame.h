@@ -14,10 +14,12 @@ public:
 
 	CREATE_FUNC(LSFGame);
 	Size winSize;
-	LayerColor* invenLayer;
 	Sprite* inventory;
+	Sprite* craft;
+	LayerColor* invenLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
+	
 	int btnCount;
 	virtual void onEnter();
 	virtual void onExit();
