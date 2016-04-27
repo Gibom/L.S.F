@@ -16,10 +16,35 @@ public:
 	virtual bool init();
 
 	CREATE_FUNC(LSFGame);
+	//Box2D----------------------------------------------------------------------------
+	bool createBox2dWorld(bool debug);
+	SpriteBatchNode* ropeSpriteSheet;
+	~LSFGame();
 
+	b2Body *groundBody;
+	void tick(float dt);
+	virtual void draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+	//³¬½Ã
+	b2Body* addNewSpriteAt(Vec2 point);
+	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
+	std::vector<VRope*>* ropes;
+
+	//³¯¾¾
+	
+
+
+	
+	Texture2D* texture;
+	b2World* _world;
+	GLESDebugDraw* m_debugDraw;
+
+	//Box2D----------------------------------------------------------------------------
+
+	//È¯°æ±¸¼º
 	Size winSize;
+	Sprite* back;
 	Sprite* ship;
-	Sprite* fhisherman;
+	Sprite* fisherman;
 	Sprite* inventory;
 	Sprite* craftUsel;
 	Sprite* craftSel;
@@ -37,12 +62,16 @@ public:
 	bool modeSwitch;
 	virtual void onEnter();
 	virtual void onExit();
-	virtual bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
-	virtual void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event);
+	virtual bool onTouchBegan(Touch* touch, Event* event);
+	virtual void onTouchEnded(Touch* touch, Event* event);
 
 	//Inventory Scene transition
 	void doPushSceneTran(Ref * pSender);
 	cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
+
+protected:
+	void onDraw(const cocos2d::Mat4& transform, uint32_t flags);
+	cocos2d::CustomCommand _customCommand;
 };
 
 #endif // __LSFGame_SCENE_H__
