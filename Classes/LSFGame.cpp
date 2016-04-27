@@ -20,11 +20,13 @@ bool LSFGame::init()
 	}
 
 	//////////////////////////////
-
+	
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
 	btnCount = 0;
 	cbtnCount = 0;
+	fishingStat = false;
+	ropeTickCount = false;
 	craftSwitch = false;
 	//스프라이트 캐시
 	auto GameFrameCache = SpriteFrameCache::getInstance();
@@ -129,7 +131,7 @@ bool LSFGame::init()
 	inventoryMenu->setPosition(Vec2(290, 70));
 	inventoryMenu->setScale(1.f);
 	inventoryMenu->alignItemsHorizontally();
-	this->addChild(inventoryMenu);
+	this->addChild(inventoryMenu,4);
 
 
 
@@ -206,9 +208,13 @@ bool LSFGame::init()
 	if (this->createBox2dWorld(true))
 	{
 		this->schedule(schedule_selector(LSFGame::tick));
+		water = WaterNode::create();
+		addChild(water,3);
 	}
 
 	return true;
+
+	
 }
 
 void LSFGame::onEnter()
@@ -231,9 +237,7 @@ void LSFGame::onEnter()
 }
 void LSFGame::onExit()
 {
-
-	_eventDispatcher->removeEventListenersForType(EventListener::Type::TOUCH_ONE_BY_ONE);
-
+	_eventDispatcher->removeAllEventListeners();
 	Layer::onExit();
 }
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
@@ -248,21 +252,19 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 
 	// 게임 화면
 	if (cbtnCount == 0) {
-		b2Body* body1 = this->addNewSpriteAt(touchPoint);
-		
-		Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
-		this->createRope(groundBody,
-			b2Vec2((fVec.x+16) / PTM_RATIO, (fVec.y-4) / PTM_RATIO),
-			body1,
-			body1->GetLocalCenter(),
-			1.1f);
-		log("fVec X: %f", fVec.x);
-		log("fVec Y: %f", fVec.y);
-		log("winSize X:  %f", winSize.width) ;
-		log("winSize X:  %f", winSize.height);
-		log("rope X:  %f", (winSize.width / 2) / PTM_RATIO);
-		log("rope Y:  %f", winSize.height / PTM_RATIO);
+		if (fishingStat == false) {
+			b2Body* body1 = this->addNewSpriteAt(touchPoint);
+			Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
+			
+			this->createRope(groundBody,
+				b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
+				body1,
+				body1->GetLocalCenter(),
+				1.1f);
+			ropeTouchCount = true;
+			fishingStat = true;
+		}
 	}
 
 	// 가방이 열려있고 craft가 선택 됐을 때
@@ -286,10 +288,42 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 
 	return true;
 }
-void LSFGame::onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
+void LSFGame::onTouchMoved(Touch* touch, Event* event) 
+{
+	Vec2 pt0 = touch->getPreviousLocation();
+	Vec2 pt1 = touch->getLocation();
+
+	std::vector<VRope*>::iterator rope;
+	for (rope = ropes->begin(); rope != ropes->end(); ++rope)
+	{
+		std::vector<VStick*>::iterator stick;
+		for (stick = (*rope)->getSticks().begin(); stick != (*rope)->getSticks().end(); ++stick)
+		{
+			Vec2 pa = (*stick)->getPointA()->point();
+			Vec2 pb = (*stick)->getPointB()->point();
+			if (this->checkLineIntersection(pt0, pt1, pa, pb))
+			{
+				//Cut the rope here
+				b2Body* newBodyA = createRopeTipBody();
+				b2Body* newBodyB = createRopeTipBody();
+
+				VRope* newRope = (*rope)->cutRopeInStick((*stick), newBodyA, newBodyB);
+				ropes->push_back(newRope);
+
+				return;
+			}
+		}
+	}
+}
+void LSFGame::onTouchEnded(Touch* touch, Event* event)
 {
 	auto touchPoint = touch->getLocation();
+	touchRope = touchPoint;
+	float test;
 
+	test = touchPoint.y;
+	log("%f",test);
+	this->scheduleOnce(schedule_selector(LSFGame::ropeTouch), test/470);
 	//log("onTouchEnded id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
 }
 void LSFGame::doPushSceneTran(Ref * pSender)
@@ -430,7 +464,7 @@ bool LSFGame::createBox2dWorld(bool debug)
 	//월드 생성 시작-----------------------------------------------------
 
 	//중력의 방향을 결정한다.
-	b2Vec2 gravity = b2Vec2(0.0f, -30.0f);
+	b2Vec2 gravity = b2Vec2(0.0f, -5.0f);
 
 	//월드를 생성한다.
 	_world = new b2World(gravity);
@@ -475,7 +509,7 @@ bool LSFGame::createBox2dWorld(bool debug)
 	//그리고 바디(groundBody)에 모양(groundEdge)을 고정시킨다.
 
 	//아래쪽
-	groundEdge.Set(b2Vec2(0, 0), b2Vec2(winSize.width / PTM_RATIO, 0));
+	groundEdge.Set(b2Vec2(0,0.5f), b2Vec2(winSize.width / PTM_RATIO, 0.5f));
 	groundBody->CreateFixture(&boxShapeDef);
 
 	//왼쪽
@@ -493,6 +527,10 @@ bool LSFGame::createBox2dWorld(bool debug)
 	groundBody->CreateFixture(&boxShapeDef);
 
 	//월드 생성 끝 ---------------------------------------------------
+
+	//컨택 리스너
+	myContactListener = new ContactListener();
+	_world->SetContactListener((b2ContactListener*)myContactListener);
 
 	//밧줄 이미지 로드
 	ropeSpriteSheet = SpriteBatchNode::create("Sprites/rope_texture.png");
@@ -513,7 +551,7 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point)
 	//Get the sprite frome the sprite sheet
 	Sprite* sprite = Sprite::create("Sprites/Fishes/Fish098.png");
 	this->addChild(sprite);
-
+	
 	//Defines the body of your candy
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
@@ -525,7 +563,7 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point)
 	//Define the fixture as a polygon
 	b2FixtureDef fixtureDef;
 	b2PolygonShape spriteShape;
-
+	
 	b2Vec2 verts[] = {
 		b2Vec2(-7.6f / PTM_RATIO, -34.4f / PTM_RATIO),
 		b2Vec2(8.3f / PTM_RATIO, -34.4f / PTM_RATIO),
@@ -543,7 +581,7 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point)
 	fixtureDef.filter.maskBits = 0x01;
 
 	body->CreateFixture(&fixtureDef);
-
+	
 	return body;
 }
 void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag)
@@ -557,25 +595,26 @@ void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 an
 	//Max length of joint = current distance between bodies * sag
 	float32 ropeLength = (bodyA->GetWorldPoint(anchorA) - bodyB->GetWorldPoint(anchorB)).Length()*sag;
 	if (ropeLength >= 1 && ropeLength <= 3) {
+		log("ropeLength: %f", ropeLength);
+		log("ropeLength: %f", ropeLength);
+		log("ropeLength: %f", ropeLength);
 		jd.maxLength = ropeLength;
 		b2RopeJoint* ropeJoint = (b2RopeJoint*)_world->CreateJoint(&jd);
 
 		VRope* newRope = new VRope(ropeJoint, ropeSpriteSheet);
 		ropes->push_back(newRope);
-		log("ropeLength: %f", ropeLength);
-		log("ropeLength: %f", ropeLength);
-		log("ropeLength: %f", ropeLength);
+
 		return;
 	}
 	else if(ropeLength<1||ropeLength>3){
-		jd.maxLength = 2;
+		log("else if ropeLength: %f", ropeLength);
+		log("else if ropeLength: %f", ropeLength);
+		log("else if ropeLength: %f", ropeLength);
+		jd.maxLength = 3;
 		b2RopeJoint* ropeJoint = (b2RopeJoint*)_world->CreateJoint(&jd);
 
 		VRope* newRope = new VRope(ropeJoint, ropeSpriteSheet);
 		ropes->push_back(newRope);
-		log("else if ropeLength: %f", ropeLength);
-		log("else if ropeLength: %f", ropeLength);
-		log("else if ropeLength: %f", ropeLength);
 		return;
 	}
 	else {
@@ -643,18 +682,69 @@ void LSFGame::tick(float dt)
 			spriteData->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 		}
 	}
+	if (ropeTickCount == false) {
+		this->schedule(schedule_selector(LSFGame::ropeTick), 0.095);
+		ropeTickCount = true;
+	}
+}
+void LSFGame::ropeTick(float dt)
+{
 	//밧줄 시뮬레이션
 	std::vector<VRope *>::iterator rope;
 	for (rope = ropes->begin(); rope != ropes->end(); ++rope)
 	{
+
 		(*rope)->update(dt);
 		(*rope)->updateSprites();
 	}
 }
+void LSFGame::ropeTouch(float dt) {
+	water->splash(touchRope.x, -100);
+}
 
+bool LSFGame::checkLineIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4)
+{
+	float denominator = (v4.y - v3.y) * (v2.x - v1.x) - (v4.x - v3.x) * (v2.y - v1.y);
+
+	//In this case the lines are parallel so you assume they don't intersect
+	if (denominator == 0.0f)
+		return false;
+	float ua = ((v4.x - v3.x)* (v1.y - v3.y) - (v4.y - v3.y) * (v1.x - v3.x)) / denominator;
+	float ub = ((v2.x - v1.x)* (v1.y - v3.y) - (v2.y - v1.y) * (v1.x - v3.x)) / denominator;
+
+	if (ua >= 0.0 && ua <= 1.0 && ub >= 0.0 && ub <= 1.0)
+	{
+		return true;
+	}
+	return false;
+}
+void ContactListener::BeginContact(b2Contact* contact)
+{
+	log("!!");
+}
+b2Body* LSFGame::createRopeTipBody()
+{
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.linearDamping = 0.5f;
+	b2Body* body = _world->CreateBody(&bodyDef);
+
+	b2FixtureDef circleDef;
+	b2CircleShape circle;
+	circle.m_radius = 1.0f / PTM_RATIO;
+	circleDef.shape = &circle;
+	circleDef.density = 10.0f;
+
+	//Since these tips don't have to collide with anything
+	//set the mask bits to zero
+	circleDef.filter.maskBits = 0;
+	body->CreateFixture(&circleDef);
+	return body;
+}
 LSFGame::~LSFGame()
 {
 	//월드를 C++의 new로 생성했으므로 여기서 지워준다.
 	delete _world;
 	_world = nullptr;
 }
+

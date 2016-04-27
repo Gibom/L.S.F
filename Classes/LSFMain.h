@@ -2,10 +2,10 @@
 #define __LSFMain_SCENE_H__
 
 #include "cocos2d.h"
-#include "C:\cocos2d-x-work\Project\LSF_Project_git\cocos2d\external\json\rapidjson.h"
-#include "C:\cocos2d-x-work\Project\LSF_Project_git\cocos2d\external\json\document.h"
-#include "C:\cocos2d-x-work\Project\LSF_Project_git\cocos2d\external\json\stringbuffer.h"
-#include "C:\cocos2d-x-work\Project\LSF_Project_git\cocos2d\external\json\writer.h"
+#include "D:\LSF_Project\cocos2d\external\json\rapidjson.h"
+#include "D:\LSF_Project\cocos2d\external\json\document.h"
+#include "D:\LSF_Project\cocos2d\external\json\stringbuffer.h"
+#include "D:\LSF_Project\cocos2d\external\json\writer.h"
 
 using namespace cocos2d;
 

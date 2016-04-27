@@ -191,7 +191,7 @@ void SpriteFrameCache::addSpriteFramesWithJson(const std::string & json)
 					Size((float)ow, (float)oh)
 					);
 				// add sprite frame
-				log("%s\n", spriteFrameName.c_str());
+				//log("%s\n", spriteFrameName.c_str());
 				_spriteFrames.insert(spriteFrameName, sprFrame);
 			}
 		}
