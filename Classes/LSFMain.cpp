@@ -24,19 +24,19 @@ bool LSFMain::init()
 	/////////////////////////////
 
 	//스프라이트 캐시
-	auto backFrameCache = SpriteFrameCache::getInstance();
-	backFrameCache->addSpriteFramesWithJson("Sprites/Main.json");
+	auto MainFrameCache = SpriteFrameCache::getInstance();
+	MainFrameCache->addSpriteFramesWithJson("Sprites/Main.json");
 
-	Sprite* back = Sprite::createWithSpriteFrame(backFrameCache->getSpriteFrameByName("Main 0.png"));
+	Sprite* back = Sprite::createWithSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
 	back->setPosition(Vec2(0, 0));
 	back->setScale(0.5f);
 	this->addChild(back);
 
-	auto logoFrameCache = SpriteFrameCache::getInstance();
-	logoFrameCache->addSpriteFramesWithJson("Sprites/Logo.json");
+	MainFrameCache = SpriteFrameCache::getInstance();
+	MainFrameCache->addSpriteFramesWithJson("Sprites/Logo.json");
 
-	Sprite* logo = Sprite::createWithSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 0.png"));
+	Sprite* logo = Sprite::createWithSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 0.png"));
 	logo->setAnchorPoint(Vec2::ZERO);
 	logo->setPosition(Vec2(0, 0));
 	logo->setScale(0.5f);
@@ -62,53 +62,53 @@ bool LSFMain::init()
 	//Background
 	auto mainBackgroundAnimation = Animation::create();
 	mainBackgroundAnimation->setDelayPerUnit(0.1f);
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 0.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 1.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 2.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 3.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 4.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 5.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 6.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 7.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 8.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 9.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 10.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 11.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 12.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 13.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 14.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 15.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 16.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 17.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 18.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 19.png"));
-	mainBackgroundAnimation->addSpriteFrame(backFrameCache->getSpriteFrameByName("Main 20.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 0.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 1.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 2.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 3.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 4.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 5.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 6.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 7.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 8.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 9.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 10.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 11.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 12.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 13.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 14.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 15.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 16.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 17.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 18.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 19.png"));
+	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 20.png"));
 	mainBackgroundAnimation->retain();
 
 	//Logo
 	auto mainLogoAnimation = Animation::create();
 	mainLogoAnimation->setDelayPerUnit(0.1f);
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 0.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 1.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 2.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 3.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 4.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 5.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 6.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 7.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 8.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 9.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 10.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 11.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 12.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 13.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 14.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 15.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 16.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 17.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 18.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 19.png"));
-	mainLogoAnimation->addSpriteFrame(logoFrameCache->getSpriteFrameByName("Logo 20.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 0.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 1.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 2.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 3.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 4.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 5.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 6.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 7.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 8.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 9.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 10.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 11.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 12.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 13.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 14.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 15.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 16.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 17.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 18.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 19.png"));
+	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 20.png"));
 	mainLogoAnimation->retain();
 
 	////애니메이션 실행

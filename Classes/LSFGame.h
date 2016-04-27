@@ -2,6 +2,9 @@
 #define __LSFGame_SCENE_H__
 
 #include "cocos2d.h"
+#include "Box2D\Box2D.h"
+#include <GLES-Render.h>
+#include "vrope-x\vrope.h"
 
 using namespace cocos2d;
 
@@ -13,11 +16,16 @@ public:
 	virtual bool init();
 
 	CREATE_FUNC(LSFGame);
+
 	Size winSize;
+	Sprite* ship;
+	Sprite* fhisherman;
 	Sprite* inventory;
 	Sprite* craftUsel;
 	Sprite* craftSel;
 	Sprite* craft;
+	Sprite* rainDrop;
+	Sprite* snowDrop;
 	LayerColor* invenLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;

@@ -20,6 +20,7 @@ bool LSFGame::init()
 	}
 	
 	//////////////////////////////
+	
 	winSize = Director::getInstance()->getWinSize();
 	btnCount = 0;
 	cbtnCount = 0;
@@ -34,7 +35,24 @@ bool LSFGame::init()
 	back->setScaleY(0.5f);
 	this->addChild(back);
 	
+	auto weatherFrameCache = SpriteFrameCache::getInstance();
+	weatherFrameCache->addSpriteFramesWithJson("Sprites/RainDrop.json");
+
+	rainDrop = Sprite::createWithSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 0.png"));
+	rainDrop->setAnchorPoint(Vec2(0.5, 0.5));
+	rainDrop->setPosition(Vec2(180, 320));
+	this->addChild(rainDrop);
+
+	weatherFrameCache = SpriteFrameCache::getInstance();
+	weatherFrameCache->addSpriteFramesWithJson("Sprites/SnowDrop.json");
+
+	snowDrop = Sprite::createWithSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 0.png"));
+	snowDrop->setAnchorPoint(Vec2(0.5, 0.5));
+	snowDrop->setPosition(Vec2(190, 320));
+	this->addChild(snowDrop);
+
 	//가방 레이어 추가
+	//가방------------------------------------------------------------------------------------------------
 	invenLayer = LayerColor::create(Color4B(255, 255, 255, 125),
 		winSize.width, winSize.height);
 	invenLayer->setAnchorPoint(Vec2::ZERO);
@@ -69,16 +87,36 @@ bool LSFGame::init()
 	inventory->setVisible(false);
 	invenLayer->addChild(inventory);
 
-	auto CraftFrameCache = SpriteFrameCache::getInstance();
-	CraftFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
+	GameFrameCache = SpriteFrameCache::getInstance();
+	GameFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
 
-	craft = Sprite::createWithSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 0.png"));
+	craft = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 0.png"));
 	craft->setAnchorPoint(Vec2::ZERO);
 	craft->setPosition(Vec2(38, 40));
 	craft->setScale(0.8f);
 	//craft->setVisible(false);
 	invenLayer->addChild(craft);
+	//가방----------------------------------------------------------------------------------------------------
 
+
+	//환경 구조물배치------------------------------------------------------------------------------------------------
+
+	ship = Sprite::create("Sprites/Ship.png");
+	ship->setAnchorPoint(Vec2(0.5, 0.5));
+	ship->setPosition(Vec2(240, 210));
+	ship->setZOrder(2);
+	ship->setScale(1.5f);
+	this->addChild(ship);
+
+	fhisherman = Sprite::create("Sprites/Fisherman.png");
+	fhisherman->setAnchorPoint(Vec2::ZERO);
+	fhisherman->setPosition(Vec2(-4, 24));
+	fhisherman->setZOrder(1);
+	ship->addChild(fhisherman);
+	
+
+
+	//환경 구조물배치------------------------------------------------------------------------------------------------
 
 	//메뉴
 	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png",
@@ -120,11 +158,27 @@ bool LSFGame::init()
 	
 	auto craftAnimation = Animation::create();
 	craftAnimation->setDelayPerUnit(0.1f);
-	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 0.png"));
-	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 1.png"));
-	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 2.png"));
-	craftAnimation->addSpriteFrame(CraftFrameCache->getSpriteFrameByName("Button_craft 3.png"));
+	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 0.png"));
+	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 1.png"));
+	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 2.png"));
+	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 3.png"));
 	craftAnimation->retain();
+
+	auto rainAnimation = Animation::create();
+	rainAnimation->setDelayPerUnit(0.1f);
+	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 0.png"));
+	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 1.png"));
+	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 2.png"));
+	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 3.png"));
+	rainAnimation->retain();
+
+	auto snowAnimation = Animation::create();
+	snowAnimation->setDelayPerUnit(0.1f);
+	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 0.png"));
+	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 1.png"));
+	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 2.png"));
+	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 3.png"));
+	snowAnimation->retain();
 
 
 	////애니메이션 실행
@@ -137,6 +191,15 @@ bool LSFGame::init()
 	auto craftAnimate = Animate::create(craftAnimation);
 	auto craftRep = RepeatForever::create(craftAnimate);
 	craft->runAction(craftRep);
+
+	auto rainAnimate = Animate::create(rainAnimation);
+	auto rainRep = RepeatForever::create(rainAnimate);
+	rainDrop->runAction(rainRep);
+
+	auto snowAnimate = Animate::create(snowAnimation);
+	auto snowRep = RepeatForever::create(snowAnimate);
+	snowDrop->runAction(snowRep);
+
 	return true;
 }
 
