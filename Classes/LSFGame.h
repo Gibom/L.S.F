@@ -10,7 +10,7 @@
 #include "WaterNode.h"
 using namespace cocos2d;
 
-class LSFGame : public cocos2d::LayerColor
+class LSFGame : public cocos2d::LayerColor 
 {
 public:
 	static cocos2d::Scene* createScene();
@@ -31,6 +31,7 @@ public:
 
 	//낚시
 	b2Body* addNewSpriteAt(Vec2 point);
+	b2Body* addNewSpriteAtWater(Vec2 point);
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
 	void ropeTick(float dt);
@@ -44,6 +45,7 @@ public:
 	
 	//날씨
 	WaterNode* water;
+	int weatherCount;
 	
 
 
@@ -58,6 +60,8 @@ public:
 	//Box2D----------------------------------------------------------------------------
 
 	//환경구성
+
+	//World
 	Size winSize;
 	Sprite* back;
 	Sprite* ship;
@@ -71,11 +75,18 @@ public:
 	LayerColor* invenLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
-	
+	b2Body* water1;
+	bool playerIsFlying = false;
+	float playerVelocity = 0;
+	RepeatForever* rainRep;
+	//Ship
+	SpriteFrameCache* ShipFrameCache;
+	RepeatForever* shipRep;
 	
 	//카운트
 	int btnCount;
 	int cbtnCount;
+	int waterCount;
 	bool ropeTickCount;
 	bool ropeTouchCount;
 	bool fishingStat;

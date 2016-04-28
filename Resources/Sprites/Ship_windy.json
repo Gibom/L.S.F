@@ -1,0 +1,71 @@
+{ "frames": [
+   {
+    "filename": "Ship 0.ase",
+    "frame": { "x": 0, "y": 0, "w": 120, "h": 94 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 94 },
+    "sourceSize": { "w": 120, "h": 94 },
+    "duration": 100
+   },
+   {
+    "filename": "Ship 1.ase",
+    "frame": { "x": 120, "y": 0, "w": 120, "h": 94 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 94 },
+    "sourceSize": { "w": 120, "h": 94 },
+    "duration": 100
+   },
+   {
+    "filename": "Ship 2.ase",
+    "frame": { "x": 240, "y": 0, "w": 120, "h": 94 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 94 },
+    "sourceSize": { "w": 120, "h": 94 },
+    "duration": 100
+   },
+   {
+    "filename": "Ship 3.ase",
+    "frame": { "x": 360, "y": 0, "w": 120, "h": 94 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 94 },
+    "sourceSize": { "w": 120, "h": 94 },
+    "duration": 100
+   },
+   {
+    "filename": "Ship 4.ase",
+    "frame": { "x": 480, "y": 0, "w": 120, "h": 94 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 94 },
+    "sourceSize": { "w": 120, "h": 94 },
+    "duration": 100
+   },
+   {
+    "filename": "Ship 5.ase",
+    "frame": { "x": 600, "y": 0, "w": 120, "h": 94 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 120, "h": 94 },
+    "sourceSize": { "w": 120, "h": 94 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.4.1",
+  "image": "D:\\LSF_Project\\Resources\\Sprites\\Ship_windy.png",
+  "format": "RGBA8888",
+  "size": { "w": 720, "h": 94 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "nomal", "opacity": 255, "blendMode": "normal" },
+   { "name": "Windy", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}

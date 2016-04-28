@@ -25,6 +25,7 @@ bool LSFGame::init()
 	winSize = Director::getInstance()->getWinSize();
 	btnCount = 0;
 	cbtnCount = 0;
+	waterCount = 0;
 	fishingStat = false;
 	ropeTickCount = false;
 	craftSwitch = false;
@@ -36,7 +37,7 @@ bool LSFGame::init()
 	back->setAnchorPoint(Vec2::ZERO);
 	back->setPosition(Vec2(0, 0));
 	back->setScaleY(0.5f);
-	this->addChild(back);
+	//this->addChild(back);
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
 	weatherFrameCache->addSpriteFramesWithJson("Sprites/RainDrop.json");
@@ -102,9 +103,17 @@ bool LSFGame::init()
 	//가방----------------------------------------------------------------------------------------------------
 
 
-	//환경 구조물배치------------------------------------------------------------------------------------------------
-
-	ship = Sprite::create("Sprites/Ship.png");
+	//환경 구조물배치-----------------------------------------------------------------------------------------
+	weatherCount = 2;
+	auto ShipFrameCache = SpriteFrameCache::getInstance();
+	if (weatherCount == 1) {
+		ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_normal.json");
+	}
+	else if (weatherCount == 2) {
+		ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_Windy.json");
+	}
+	//ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_normal.json");
+	ship = Sprite::createWithSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
 	ship->setAnchorPoint(Vec2(0.5, 0.5));
 	ship->setPosition(Vec2(240, 210));
 	ship->setZOrder(2);
@@ -119,7 +128,7 @@ bool LSFGame::init()
 
 
 
-	//환경 구조물배치------------------------------------------------------------------------------------------------
+	//환경 구조물배치----------------------------------------------------------------------------------------
 
 	//메뉴
 	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png",
@@ -159,6 +168,28 @@ bool LSFGame::init()
 	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 15.png"));
 	gameAnimation->retain();
 
+	
+	auto shipNormal = Animation::create();
+	shipNormal->setDelayPerUnit(0.1f);
+	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
+	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 1.png"));
+	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 2.png"));
+	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 3.png"));
+	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 4.png"));
+	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 5.png"));
+	shipNormal->retain();
+
+	auto shipWindy = Animation::create();
+	shipWindy->setDelayPerUnit(0.1f);
+	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
+	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 1.png"));
+	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 2.png"));
+	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 3.png"));
+	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 4.png"));
+	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 5.png"));
+	shipWindy->retain();
+
+
 	auto craftAnimation = Animation::create();
 	craftAnimation->setDelayPerUnit(0.1f);
 	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 0.png"));
@@ -196,13 +227,17 @@ bool LSFGame::init()
 	craft->runAction(craftRep);
 
 	auto rainAnimate = Animate::create(rainAnimation);
-	auto rainRep = RepeatForever::create(rainAnimate);
+	rainRep = RepeatForever::create(rainAnimate);
 	rainDrop->runAction(rainRep);
 
 	auto snowAnimate = Animate::create(snowAnimation);
 	auto snowRep = RepeatForever::create(snowAnimate);
 	snowDrop->runAction(snowRep);
 
+
+	auto shipAnimate = Animate::create(shipWindy);
+	auto shipRep = RepeatForever::create(shipAnimate);
+	ship->runAction(shipRep);
 
 	//월드 생성
 	if (this->createBox2dWorld(true))
@@ -242,6 +277,7 @@ void LSFGame::onExit()
 }
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
+	weatherCount = 1;
 	Vec2 touchPoint = touch->getLocation();
 
 	log("onTOuchBegan id = %d, x = %f, y= %f", touch->getID(), touchPoint.x, touchPoint.y);
@@ -266,7 +302,8 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			fishingStat = true;
 		}
 	}
-
+	//playerVelocity = 0.01f;
+	//playerIsFlying = true;
 	// 가방이 열려있고 craft가 선택 됐을 때
 	if (bTouch_craft && cbtnCount == 1)
 	{
@@ -325,6 +362,8 @@ void LSFGame::onTouchEnded(Touch* touch, Event* event)
 	log("%f",test);
 	this->scheduleOnce(schedule_selector(LSFGame::ropeTouch), test/470);
 	//log("onTouchEnded id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
+	playerIsFlying = false;
+	playerVelocity = 0.0f;
 }
 void LSFGame::doPushSceneTran(Ref * pSender)
 {
@@ -508,8 +547,11 @@ bool LSFGame::createBox2dWorld(bool debug)
 	//에지 모양의 객체에 Set( 점1, 점2)로 선을 만든다.
 	//그리고 바디(groundBody)에 모양(groundEdge)을 고정시킨다.
 
+	//가운데(바다 중간)
+	groundEdge.Set(b2Vec2(0, 1.4f), b2Vec2(winSize.width / PTM_RATIO, 1.4f));
+	groundBody->CreateFixture(&boxShapeDef);
 	//아래쪽
-	groundEdge.Set(b2Vec2(0,0.5f), b2Vec2(winSize.width / PTM_RATIO, 0.5f));
+	groundEdge.Set(b2Vec2(0, 0), b2Vec2(winSize.width / PTM_RATIO, 0));
 	groundBody->CreateFixture(&boxShapeDef);
 
 	//왼쪽
@@ -526,6 +568,7 @@ bool LSFGame::createBox2dWorld(bool debug)
 		b2Vec2(winSize.width / PTM_RATIO, 0));
 	groundBody->CreateFixture(&boxShapeDef);
 
+
 	//월드 생성 끝 ---------------------------------------------------
 
 	//컨택 리스너
@@ -537,8 +580,7 @@ bool LSFGame::createBox2dWorld(bool debug)
 	this->addChild(ropeSpriteSheet);
 
 	//아이템 추가
-	//b2Body* body1 = this->addNewSpriteAt(Vec2(winSize.width / 2, winSize.height * 2 / 3));
-
+	
 	//Add a bunch of ropes
 	/*this->createRope(groundBody, b2Vec2((winSize.width / 2) / PTM_RATIO, winSize.height / PTM_RATIO),
 		body1,
@@ -549,7 +591,8 @@ bool LSFGame::createBox2dWorld(bool debug)
 b2Body* LSFGame::addNewSpriteAt(Vec2 point)
 {
 	//Get the sprite frome the sprite sheet
-	Sprite* sprite = Sprite::create("Sprites/Fishes/Fish098.png");
+	Sprite* sprite = Sprite::create("Sprites/needle.png");
+	sprite->setAnchorPoint(Vec2(0.5, 0.8));
 	this->addChild(sprite);
 	
 	//Defines the body of your candy
@@ -562,26 +605,51 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point)
 
 	//Define the fixture as a polygon
 	b2FixtureDef fixtureDef;
-	b2PolygonShape spriteShape;
+	b2CircleShape spriteShape;
 	
-	b2Vec2 verts[] = {
-		b2Vec2(-7.6f / PTM_RATIO, -34.4f / PTM_RATIO),
-		b2Vec2(8.3f / PTM_RATIO, -34.4f / PTM_RATIO),
-		b2Vec2(15.55f / PTM_RATIO, -27.15f / PTM_RATIO),
-		b2Vec2(13.8f / PTM_RATIO, 23.05f / PTM_RATIO),
-		b2Vec2(-3.35f / PTM_RATIO, 35.25f / PTM_RATIO),
-		b2Vec2(-16.25f / PTM_RATIO, 25.55f / PTM_RATIO),
-		b2Vec2(-15.55f / PTM_RATIO, -23.95f / PTM_RATIO),
-	};
-	spriteShape.Set(verts, 7);
+	spriteShape.m_radius = 0.08;
 
 	fixtureDef.shape = &spriteShape;
-	fixtureDef.density = 30.0f;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.2f;
+	fixtureDef.restitution = 0.7f;
 	fixtureDef.filter.categoryBits = 0x01;
 	fixtureDef.filter.maskBits = 0x01;
 
 	body->CreateFixture(&fixtureDef);
 	
+	return body;
+}
+b2Body* LSFGame::addNewSpriteAtWater(Vec2 point)
+{
+	//Get the sprite frome the sprite sheet
+	Sprite* sprite = Sprite::create("Sprites/WaterSplash.png");
+	sprite->setAnchorPoint(Vec2(0.5, 0.8));
+	this->addChild(sprite);
+
+	//Defines the body of your candy
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position = b2Vec2(point.x / PTM_RATIO, point.y / PTM_RATIO);
+	bodyDef.userData = sprite;
+	bodyDef.linearDamping = 0.3f;
+	b2Body* body = _world->CreateBody(&bodyDef);
+
+	//Define the fixture as a polygon
+	b2FixtureDef fixtureDef;
+	b2CircleShape spriteShape;
+
+	spriteShape.m_radius = 0.03;
+
+	fixtureDef.shape = &spriteShape;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.2f;
+	fixtureDef.restitution = 0.7f;
+	fixtureDef.filter.categoryBits = 0x01;
+	fixtureDef.filter.maskBits = 0x01;
+
+	body->CreateFixture(&fixtureDef);
+
 	return body;
 }
 void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag)
@@ -682,10 +750,33 @@ void LSFGame::tick(float dt)
 			spriteData->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 		}
 	}
+
+
 	if (ropeTickCount == false) {
 		this->schedule(schedule_selector(LSFGame::ropeTick), 0.095);
 		ropeTickCount = true;
 	}
+	
+	if(waterCount < 20){
+		water1 = this->addNewSpriteAtWater(Vec2(10, 120));
+		water1 = this->addNewSpriteAtWater(Vec2(12, 120));
+		water1 = this->addNewSpriteAtWater(Vec2(winSize.width - 12, 120));
+		water1 = this->addNewSpriteAtWater(Vec2(winSize.width -10, 120));
+		waterCount++;
+	}
+
+	//if (playerIsFlying)
+	//{
+	//	
+	//	water1->ApplyLinearImpulse(b2Vec2(-playerVelocity, -playerVelocity),
+	//		water1->GetWorldCenter(),
+	//		true);
+	//	//playerVelocity += 0.00000000001f;
+
+	//	if (playerVelocity > 1.5f)
+	//		playerVelocity = 1.5f;
+	//}
+
 }
 void LSFGame::ropeTick(float dt)
 {
@@ -718,9 +809,12 @@ bool LSFGame::checkLineIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4)
 	}
 	return false;
 }
+int contactcount = 1;
 void ContactListener::BeginContact(b2Contact* contact)
 {
-	log("!!");
+	
+	log("!! %d", contactcount);
+	contactcount++;
 }
 b2Body* LSFGame::createRopeTipBody()
 {
@@ -731,7 +825,7 @@ b2Body* LSFGame::createRopeTipBody()
 
 	b2FixtureDef circleDef;
 	b2CircleShape circle;
-	circle.m_radius = 1.0f / PTM_RATIO;
+	circle.m_radius = 0.4f / PTM_RATIO;
 	circleDef.shape = &circle;
 	circleDef.density = 10.0f;
 

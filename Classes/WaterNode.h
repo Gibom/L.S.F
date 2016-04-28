@@ -34,8 +34,8 @@ static const int kWaterHeight = 150;
 static const float kTension = 0.025;
 static const float kDampening = 0.025;
 static const float kSpread = 0.25;
-static cocos2d::Color4B topColor = cocos2d::Color4B(0, 50, 200, 255);
-static cocos2d::Color4B bottomColor = cocos2d::Color4B(0, 50, 100, 100);
+static cocos2d::Color4B topColor = cocos2d::Color4B(0, 50, 200, 240);
+static cocos2d::Color4B bottomColor = cocos2d::Color4B(0, 50, 100, 255);
 
 // define a struct for Vertex we are going to use to draw primitives
 struct Vertex
@@ -82,7 +82,7 @@ public:
     Vertex vertexArray[kColumnCount * 2];   // the array of Vertex
     Color colorArray[kColumnCount * 2];     // the array of Colors
     cocos2d::CustomCommand customCommand;   // we need a CustomCommand to properly set the zOrder of the Node
-    
+    float surface;
     // functions (read .cpp for comments)
     bool init() override;                   
     void initColors();
