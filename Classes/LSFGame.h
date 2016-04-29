@@ -6,11 +6,12 @@
 #include <GLES-Render.h>
 #include "vrope-x\vrope.h"
 #include "ContactListener.h"
-
+#include "AnimateCreate.h"
 #include "WaterNode.h"
 using namespace cocos2d;
 
-class LSFGame : public cocos2d::LayerColor 
+class LSFGame : public cocos2d::LayerColor , public AnimateCreate
+
 {
 public:
 	static cocos2d::Scene* createScene();
@@ -60,6 +61,8 @@ public:
 	//Box2D----------------------------------------------------------------------------
 
 	//환경구성
+	//Animation
+	AnimateCreate* animCreate;
 
 	//World
 	Size winSize;
@@ -105,7 +108,9 @@ public:
 
 	b2Vec2 axis;
 
-
+	//상태변화  WeatherStatus - Normal(1), Windy(2), Snowy(3), Rainny(4), ThunderStorm(5)
+	int statusCheck(const std::string & kindof);
+	int ShipStat;
 
 
 
@@ -116,6 +121,8 @@ public:
 	SpriteFrameCache* ShipFrameCache;
 	RepeatForever* shipRep;
 	
+
+
 	//카운트
 	int btnCount;
 	int cbtnCount;

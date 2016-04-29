@@ -56,152 +56,25 @@ bool LSFMain::init()
 	
 	this->addChild(startMenu);
 
-
-	//애니메이션 - (코드 개선 작업 시 addSpriteFramesWithJson 함수에서 for 문으로 animation 생성하는 기능 추가, animation 생성여부 파라미터 bool값으로 )
+	//애니메이션 
 	
 	//Background
-	auto mainBackgroundAnimation = Animation::create();
-	mainBackgroundAnimation->setDelayPerUnit(0.1f);
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 0.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 1.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 2.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 3.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 4.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 5.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 6.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 7.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 8.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 9.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 10.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 11.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 12.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 13.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 14.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 15.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 16.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 17.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 18.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 19.png"));
-	mainBackgroundAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 20.png"));
-	mainBackgroundAnimation->retain();
-
+	auto mainAnim = animCreate->CreateAnim("Sprites/Main.json", "Main", 20, 0.1f);
+	auto mainAnimate = Animate::create(mainAnim);
+	auto repMain = RepeatForever::create(mainAnimate);
+	back->runAction(repMain);
+	
 	//Logo
-	auto mainLogoAnimation = Animation::create();
-	mainLogoAnimation->setDelayPerUnit(0.1f);
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 0.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 1.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 2.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 3.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 4.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 5.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 6.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 7.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 8.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 9.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 10.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 11.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 12.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 13.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 14.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 15.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 16.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 17.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 18.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 19.png"));
-	mainLogoAnimation->addSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 20.png"));
-	mainLogoAnimation->retain();
-
-	////애니메이션 실행
-
-	//Background
-	auto backAnimate = Animate::create(mainBackgroundAnimation);
-	auto rep = RepeatForever::create(backAnimate);
-
-	//Logo
-	auto logoAnimate = Animate::create(mainLogoAnimation);
+	auto logoAnim = animCreate->CreateAnim("Sprites/Main.json", "Logo", 20, 0.1f);
+	auto logoAnimate = Animate::create(logoAnim);
 	auto delayLogo = DelayTime::create(5.f);
 	auto seqLogo = Sequence::create(logoAnimate, delayLogo, nullptr);
 	auto seqLogoRep = RepeatForever::create(seqLogo);
 	logo->runAction(seqLogoRep);
-	back->runAction(rep);
 
 	return true;
 }
 
-//Aseprite -> Json으로 Export한 것을 Parsing하는 함수 생성[addSpriteFramesWithJson(const std::string & json)]
-//CCSpriteFrameCache.h에 'void addSpriteFramesWidthJson(const std::string & json);' 추가하고 여기서 정의함
-//CCSpriteFrameCache.cpp에 따로 정의하지 않았음(할필요없음..)
-void SpriteFrameCache::addSpriteFramesWithJson(const std::string & json)
-{
-	CCASSERT(json.size() > 0, "json filename should not be nullptr");
-	std::string fullPath = FileUtils::getInstance()->fullPathForFilename(json);
-	if (fullPath.size() == 0)
-	{
-		// return json 파일을 찾지 못했음.
-		log("cocos2d: SpriteFrameCache: can not find %s", json.c_str());
-		return;
-	}
-	std::string data = FileUtils::getInstance()->getStringFromFile(fullPath);
-	// build texture path by replacing file extension
-	std::string texturePath = json;
-	// remove .xxx
-	size_t startPos = texturePath.find_last_of(".");
-	texturePath = texturePath.erase(startPos);
-	// append .png
-	texturePath = texturePath.append(".png");
-	Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(texturePath.c_str());
-	texture->setAliasTexParameters();
-	if (texture)
-	{
-		Document document;
-		if (!document.Parse<0>(data.c_str()).HasParseError())
-		{
-			const rapidjson::Value& documentFrames = document["frames"];
-			for (SizeType i = 0; i < documentFrames.Size(); i++)
-			{
-				std::string spriteFrameName = documentFrames[i]["filename"].GetString();
-				// remove .xxx
-				size_t startPos = spriteFrameName.find_last_of(".");
-				spriteFrameName = spriteFrameName.erase(startPos);
-				// append .png
-				spriteFrameName = spriteFrameName.append(".png");
-
-				SpriteFrame* spriteFrame = _spriteFrames.at(spriteFrameName);
-				float x = static_cast<float>(documentFrames[i]["frame"]["x"].GetDouble());
-				float y = static_cast<float>(documentFrames[i]["frame"]["y"].GetDouble());
-				float w = static_cast<float>(documentFrames[i]["frame"]["w"].GetDouble());
-				float h = static_cast<float>(documentFrames[i]["frame"]["h"].GetDouble());
-				float ox = static_cast<float>(documentFrames[i]["spriteSourceSize"]["x"].GetDouble());
-				float oy = static_cast<float>(documentFrames[i]["spriteSourceSize"]["y"].GetDouble());
-				float ow = static_cast<float>(documentFrames[i]["spriteSourceSize"]["w"].GetDouble());
-				float oh = static_cast<float>(documentFrames[i]["spriteSourceSize"]["h"].GetDouble());
-				// check ow/oh
-				if (!ow || !oh)
-				{
-					CCLOGWARN("cocos2d: WARNING: originalWidth/Height not found on the SpriteFrame. AnchorPoint won't work as expected. Regenrate the .json");
-				}
-				// abs ow/oh
-				ow = abs(ow);
-				oh = abs(oh);
-				// create frame
-				SpriteFrame* sprFrame = SpriteFrame::createWithTexture(texture,
-					Rect(x, y, w, h),
-					false,
-					Vec2(ox, oy),
-					Size((float)ow, (float)oh)
-					);
-				// add sprite frame
-				//log("%s\n", spriteFrameName.c_str());
-				_spriteFrames.insert(spriteFrameName, sprFrame);
-			}
-		}
-		else
-		{
-			log("cocos2d: SpriteFrameCache: Couldn't load texture");
-		}
-		_loadedFileNames->insert(json);
-	}
-}
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
 	auto pScene = LSFGame::createScene();

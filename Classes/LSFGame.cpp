@@ -33,7 +33,10 @@ bool LSFGame::init()
 	fishingStat = false;
 	ropeTickCount = false;
 	craftSwitch = false;
-	//스프라이트 캐시
+
+	
+	
+	//스프라이트 위치설정 및 addChild
 	auto GameFrameCache = SpriteFrameCache::getInstance();
 	GameFrameCache->addSpriteFramesWithJson("Sprites/Game.json");
 
@@ -120,14 +123,14 @@ bool LSFGame::init()
 	ship = Sprite::createWithSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
 	ship->setAnchorPoint(Vec2(0.5, 0.5));
 	ship->setPosition(Vec2(240, 210));
-	ship->setZOrder(2);
+	ship->setLocalZOrder(2);
 	ship->setScale(1.5f);
 	this->addChild(ship);
 
 	fisherman = Sprite::create("Sprites/Fisherman.png");
 	fisherman->setAnchorPoint(Vec2::ZERO);
 	fisherman->setPosition(Vec2(-4, 24));
-	fisherman->setZOrder(1);
+	fisherman->setLocalZOrder(1);
 	ship->addChild(fisherman);
 
 
@@ -146,102 +149,54 @@ bool LSFGame::init()
 	inventoryMenu->alignItemsHorizontally();
 	this->addChild(inventoryMenu, 4);
 
-
-
-	//this->addChild(btn_inventory);
-	////애니메이션 - (코드 개선 작업 시 addSpriteFramesWithJson 함수에서 for 문으로 animation 생성하는 기능 추가, animation 생성여부 파라미터 bool값으로 )
-
+	////애니메이션
 	//Background
-	auto gameAnimation = Animation::create();
-	gameAnimation->setDelayPerUnit(0.5f);
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 0.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 1.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 2.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 3.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 4.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 5.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 6.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 7.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 8.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 9.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 10.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 11.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 12.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 13.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 14.png"));
-	gameAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 15.png"));
-	gameAnimation->retain();
+	auto mainAnim = animCreate->CreateAnim("Sprites/Game.json", "Game", 15, 0.1f);
+	auto mainAnimate = Animate::create(mainAnim);
+	auto repMain = RepeatForever::create(mainAnimate);
+	back->runAction(repMain);
 
+	//Ship	(Normal(1), Windy(2), Snowy(3), Rainny(4), ThunderStorm(5))
+	ShipStat = 1;
 
-	auto shipNormal = Animation::create();
-	shipNormal->setDelayPerUnit(0.1f);
-	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
-	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 1.png"));
-	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 2.png"));
-	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 3.png"));
-	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 4.png"));
-	shipNormal->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 5.png"));
-	shipNormal->retain();
+	if(ShipStat == 1){
+		if (ship->getNumberOfRunningActions() != 0) {
+			ship->cleanup();
+		}
+		auto shipNormalAnim = animCreate->CreateAnim("Sprites/Ship_normal.json", "Ship", 5, 0.1f);
+		auto shipAnimate = Animate::create(shipNormalAnim);
+		auto repShip = RepeatForever::create(shipAnimate);
+		ship->runAction(repShip);
+	}
+	else if(ShipStat == 2){
+		if (ship->getNumberOfRunningActions() != 0) {
+			ship->cleanup();
+		}
+		auto shipWindyAnim = animCreate->CreateAnim("Sprites/Ship_windy.json", "Ship", 5, 0.1f);
+		auto shipAnimate = Animate::create(shipWindyAnim);
+		auto repShip = RepeatForever::create(shipAnimate);
+		ship->runAction(repShip);
+	}
 
-	auto shipWindy = Animation::create();
-	shipWindy->setDelayPerUnit(0.1f);
-	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
-	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 1.png"));
-	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 2.png"));
-	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 3.png"));
-	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 4.png"));
-	shipWindy->addSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 5.png"));
-	shipWindy->retain();
+	//Button_craft
+	auto craftAnim = animCreate->CreateAnim("Sprites/Button_craft.json", "Button_craft", 3, 0.1f);
+	auto craftAnimate = Animate::create(craftAnim);
+	auto repCraft = RepeatForever::create(craftAnimate);
+	craft->runAction(repCraft);
 
+	//Weather effect	(Wind, Rain, Snow, Tunder)
+	//Rain
+	auto rainAnim = animCreate->CreateAnim("Sprites/RainDrop.json", "RainDrop", 3, 0.1f);
+	auto rainAnimate = Animate::create(rainAnim);
+	auto repRain = RepeatForever::create(rainAnimate);
+	rainDrop->runAction(repRain);
 
-	auto craftAnimation = Animation::create();
-	craftAnimation->setDelayPerUnit(0.1f);
-	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 0.png"));
-	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 1.png"));
-	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 2.png"));
-	craftAnimation->addSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 3.png"));
-	craftAnimation->retain();
+	//Snow
+	auto snowAnim = animCreate->CreateAnim("Sprites/SnowDrop.json", "SnowDrop", 3, 0.1f);
+	auto snowAnimate = Animate::create(snowAnim);
+	auto repSnow = RepeatForever::create(snowAnimate);
+	snowDrop->runAction(repSnow);
 
-	auto rainAnimation = Animation::create();
-	rainAnimation->setDelayPerUnit(0.1f);
-	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 0.png"));
-	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 1.png"));
-	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 2.png"));
-	rainAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 3.png"));
-	rainAnimation->retain();
-
-	auto snowAnimation = Animation::create();
-	snowAnimation->setDelayPerUnit(0.1f);
-	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 0.png"));
-	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 1.png"));
-	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 2.png"));
-	snowAnimation->addSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 3.png"));
-	snowAnimation->retain();
-
-
-	////애니메이션 실행
-
-	//Background
-	auto backAnimate = Animate::create(gameAnimation);
-	auto backRep = RepeatForever::create(backAnimate);
-	back->runAction(backRep);
-
-	auto craftAnimate = Animate::create(craftAnimation);
-	auto craftRep = RepeatForever::create(craftAnimate);
-	craft->runAction(craftRep);
-
-	auto rainAnimate = Animate::create(rainAnimation);
-	rainRep = RepeatForever::create(rainAnimate);
-	rainDrop->runAction(rainRep);
-
-	auto snowAnimate = Animate::create(snowAnimation);
-	auto snowRep = RepeatForever::create(snowAnimate);
-	snowDrop->runAction(snowRep);
-
-
-	auto shipAnimate = Animate::create(shipWindy);
-	auto shipRep = RepeatForever::create(shipAnimate);
-	ship->runAction(shipRep);
 
 	//월드 생성
 	if (this->createBox2dWorld(true))
@@ -364,118 +319,6 @@ void LSFGame::doPushInventory(Ref * pSender)
 		btnCount = 0;
 		cbtnCount = 0;
 	}
-}
-TransitionScene* LSFGame::createTransition(int nIndex, float t, Scene* s)
-{
-	Director::getInstance()->setDepthTest(false);
-
-
-	switch (nIndex)
-	{
-		// 점프하면서 Zoom
-	case 0: return TransitionJumpZoom::create(t, s);
-
-
-		// 시계방향으로 침이 돌면서 장면이 바뀜
-	case 1: return TransitionProgressRadialCCW::create(t, s);
-		// 시계반대방향으로 침이 돌면서 장면이 바뀜
-	case 2: return TransitionProgressRadialCW::create(t, s);
-	case 3: return TransitionProgressHorizontal::create(t, s);
-	case 4: return TransitionProgressVertical::create(t, s);
-	case 5: return TransitionProgressInOut::create(t, s);
-	case 6: return TransitionProgressOutIn::create(t, s);
-
-		// 교차
-	case 7: return TransitionCrossFade::create(t, s);
-
-
-		// 페이지넘김형식 : PageTransitionForward
-	case 8: return TransitionPageTurn::create(t, s, false);
-		// 페이지넘김형식 : PageTransitionBackward
-	case 9: return TransitionPageTurn::create(t, s, true);
-		// 바둑판무늬 좌측하단부터 우측상단순으로 사라짐
-	case 10: return TransitionFadeTR::create(t, s);
-		// 바툭판무늬 우측상단부터 좌측하단순으로 사라짐
-	case 11: return TransitionFadeBL::create(t, s);
-		// 하단에서 상단으로 잘라냄
-	case 12: return TransitionFadeUp::create(t, s);
-		// 상단에서 하단으로 잘라냄
-	case 13: return TransitionFadeDown::create(t, s);
-
-
-
-		// 바둑판무늬 뿌리기
-	case 14: return TransitionTurnOffTiles::create(t, s);
-
-
-		// 가로로 세등분 나눔
-	case 15: return TransitionSplitRows::create(t, s);
-		// 세로로 세등분 나눔, 양끝의 두둥분은 밑으로 나머지는 위로
-	case 16: return TransitionSplitCols::create(t, s);
-
-
-		// 페이드인아웃 : 검정 화면
-	case 17: return TransitionFade::create(t, s);
-		// 페이드인아웃 : 하얀 화면
-	case 18: return TransitionFade::create(t, s, Color3B::WHITE);
-
-
-		// X축(횡선)을 기준으로 회전 : FlipXLeftOver
-	case 19: return TransitionFlipX::create(t, s, TransitionScene::Orientation::LEFT_OVER);
-		// X축(횡선)을 기준으로 회전 : FlipXRightOver
-	case 20: return TransitionFlipX::create(t, s, TransitionScene::Orientation::RIGHT_OVER);
-		// Y축(종선)을 기준으로 회전 : FlipYUpOver
-	case 21: return TransitionFlipY::create(t, s, TransitionScene::Orientation::UP_OVER);
-		// Y축(종선)을 기준으로 회전 : FlipYDownOver
-	case 22: return TransitionFlipY::create(t, s, TransitionScene::Orientation::DOWN_OVER);
-		// 뒤집어지면서 다음장면으로 넘어감 : FlipAngularLeftOver
-	case 23: return TransitionFlipAngular::create(t, s, TransitionScene::Orientation::LEFT_OVER);
-		// 뒤집어지면서 다음장면으로 넘어감 : FlipAngularRightOver
-	case 24: return TransitionFlipAngular::create(t, s, TransitionScene::Orientation::RIGHT_OVER);
-
-
-		// X축(횡선)을 기준으로 회전 (확대) : ZoomFlipXLeftOver
-	case 25: return TransitionZoomFlipX::create(t, s, TransitionScene::Orientation::LEFT_OVER);
-		// X축(횡선)을 기준으로 회전 (확대) : ZoomFlipXRightOver
-	case 26: return TransitionZoomFlipX::create(t, s, TransitionScene::Orientation::RIGHT_OVER);
-		// Y축(종선)을 기준으로 회전 (확대) : ZoomFlipYUpOver
-	case 27: return TransitionZoomFlipY::create(t, s, TransitionScene::Orientation::UP_OVER);
-		// Y축(종선)을 기준으로 회전 (확대) : ZoomFlipYDownOver
-	case 28: return TransitionZoomFlipY::create(t, s, TransitionScene::Orientation::DOWN_OVER);
-		// 뒤집어지면서 다음장면으로 넘어감 (확대) : ZoomFlipAngularLeftOver
-	case 29: return TransitionZoomFlipAngular::create(t, s, TransitionScene::Orientation::LEFT_OVER);
-		// 뒤집어지면서 다음장면으로 넘어감 (확대) : ZoomFlipAngularRightOver
-	case 30: return TransitionZoomFlipAngular::create(t, s, TransitionScene::Orientation::RIGHT_OVER);
-
-
-		// 이전장면 수축 다음장면 확대
-	case 31: return TransitionShrinkGrow::create(t, s);
-		// 회전하면서 Zoom
-	case 32: return TransitionRotoZoom::create(t, s);
-
-
-		// 왼쪽에서 다음장면이 나타나서 이전장면을 덮어씀
-	case 33: return TransitionMoveInL::create(t, s);
-		// 오른쪽에서 다음장면이 나타남
-	case 34: return TransitionMoveInR::create(t, s);
-		// 위쪽에서 다음장면이 나타남
-	case 35: return TransitionMoveInT::create(t, s);
-		// 아래쪽에서 다음장면이 나타남
-	case 36: return TransitionMoveInB::create(t, s);
-
-
-		// 왼쪽에서 다음장면이 나타나서 이전장면을 밀어냄
-	case 37: return TransitionSlideInL::create(t, s);
-		// 오른쪽에서 다음장면이 나타나서 이전장면을 밀어냄
-	case 38: return TransitionSlideInR::create(t, s);
-		// 위쪽에서 다음장면이 나타나서 이전장면을 밀어냄
-	case 39: return TransitionSlideInT::create(t, s);
-		// 아래쪽에서 다음장면이 나타나서 이전장면을 밀어냄
-	case 40: return TransitionSlideInB::create(t, s);
-
-	default: break;
-	}
-	return NULL;
 }
 bool LSFGame::createBox2dWorld(bool debug)
 {
@@ -809,6 +652,25 @@ void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 an
 	//Create Joints..
 
 }
+b2Body* LSFGame::createRopeTipBody()
+{
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.linearDamping = 0.5f;
+	b2Body* body = _world->CreateBody(&bodyDef);
+
+	b2FixtureDef circleDef;
+	b2CircleShape circle;
+	circle.m_radius = 0.4f / PTM_RATIO;
+	circleDef.shape = &circle;
+	circleDef.density = 10.0f;
+
+	//Since these tips don't have to collide with anything
+	//set the mask bits to zero
+	circleDef.filter.maskBits = 0;
+	body->CreateFixture(&circleDef);
+	return body;
+}
 void LSFGame::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 {
 	Layer::draw(renderer, transform, flags);
@@ -830,6 +692,7 @@ void LSFGame::onDraw(const Mat4 &transform, uint32_t flags)
 
 	director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
+
 void LSFGame::tick(float dt)
 {
 	int velocityIterations = 8;
@@ -958,24 +821,13 @@ void ContactListener::BeginContact(b2Contact* contact)
 		}
 	}
 }
-b2Body* LSFGame::createRopeTipBody()
+int LSFGame::statusCheck(const std::string & kindof)
 {
-	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.linearDamping = 0.5f;
-	b2Body* body = _world->CreateBody(&bodyDef);
+	if (kindof == "ship")
+	{
 
-	b2FixtureDef circleDef;
-	b2CircleShape circle;
-	circle.m_radius = 0.4f / PTM_RATIO;
-	circleDef.shape = &circle;
-	circleDef.density = 10.0f;
-
-	//Since these tips don't have to collide with anything
-	//set the mask bits to zero
-	circleDef.filter.maskBits = 0;
-	body->CreateFixture(&circleDef);
-	return body;
+	}
+	return 0;
 }
 LSFGame::~LSFGame()
 {
