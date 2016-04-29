@@ -76,6 +76,39 @@ public:
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
 	b2Body* water1;
+	b2Body* water2;
+	b2Body* water3;
+	//World - Flow
+	b2Body* addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, const char* spriteName, int type);
+	b2WheelJoint* m_spring1;
+	b2WheelJoint* m_spring2;
+	b2WheelJoint* m_spring3;
+	b2WheelJoint* m_spring4;
+	b2WheelJoint* m_spring5;
+	b2WheelJoint* m_spring6;
+
+	b2WheelJointDef flowJd1;
+	b2WheelJointDef flowJd2;
+	b2WheelJointDef flowJd3;
+	b2WheelJointDef flowJd4;
+	b2WheelJointDef flowJd5;
+	b2WheelJointDef flowJd6;
+	b2Body *flowBody0;
+	b2Body *flowBody1;
+	b2Body *flowBody2;
+	b2Body *flowBody3;
+	b2Body *flowBody4;
+	b2Body *flowBody5;
+	b2Body *flowBody6;
+	b2Body *flowBody7;
+	b2Body *flowBody8;
+
+	b2Vec2 axis;
+
+
+
+
+
 	bool playerIsFlying = false;
 	float playerVelocity = 0;
 	RepeatForever* rainRep;
@@ -89,7 +122,7 @@ public:
 	int waterCount;
 	bool ropeTickCount;
 	bool ropeTouchCount;
-	bool fishingStat;
+	
 	bool craftSwitch;
 	bool modeSwitch;
 	virtual void onEnter();
@@ -99,7 +132,7 @@ public:
 	virtual void onTouchEnded(Touch* touch, Event* event);
 
 	//Inventory Scene transition
-	void doPushSceneTran(Ref * pSender);
+	void doPushInventory(Ref * pSender);
 	cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
 
 protected:

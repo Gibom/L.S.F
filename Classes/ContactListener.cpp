@@ -29,9 +29,10 @@ void ContactListener::PostSolve(b2Contact* contact, const b2ContactImpulse* impu
 
 	b2Body *bodyA = fixA->GetBody();
 	b2Body *bodyB = fixB->GetBody();
-
-	if (bodyA->GetType() == b2_dynamicBody || bodyB->GetType() == b2_dynamicBody) {
-		//log("Contact:impulse .. %f", impulse->normalImpulses[0]);
-	}
-
+	
+	
+	//if (bodyA->GetType() == b2_dynamicBody || bodyB->GetType() == b2_dynamicBody) {
+	//	//log("Contact:impulse .. %f", impulse->normalImpulses[0]);
+	//}
+	
 }
