@@ -22,15 +22,14 @@ bool LSFMain::init()
 	}
 
 	/////////////////////////////
-
+	winSize = Director::getInstance()->getWinSize();
 	//스프라이트 캐시
 	auto MainFrameCache = SpriteFrameCache::getInstance();
 	MainFrameCache->addSpriteFramesWithJson("Sprites/Main.json");
 
 	Sprite* back = Sprite::createWithSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
-	back->setPosition(Vec2(0, 0));
-	back->setScale(0.5f);
+	back->setPosition(Vec2(0, -100));
 	this->addChild(back);
 
 	MainFrameCache = SpriteFrameCache::getInstance();
@@ -39,31 +38,28 @@ bool LSFMain::init()
 	Sprite* logo = Sprite::createWithSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 0.png"));
 	logo->setAnchorPoint(Vec2::ZERO);
 	logo->setPosition(Vec2(0, 0));
-	logo->setScale(0.5f);
 	this->addChild(logo);
 
 	//메뉴
 	btn_Start = MenuItemImage::create("Sprites/Button_start_up.png",
-									  "Sprites/Button_start_down.png",
-									  CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
-	
+		"Sprites/Button_start_down.png",
+		CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
+
 	auto startMenu = Menu::create(btn_Start, nullptr);
 	startMenu->setAnchorPoint(Vec2(0.5, 0.5));
-	//startMenu->setPosition(Vec2(365, 300));
-	startMenu->setPosition(Vec2(80, 40));
-	startMenu->setScale(0.5f);
+	startMenu->setPosition(Vec2(winSize.width / 2, winSize.height / 3));
 	startMenu->alignItemsHorizontally();
-	
+
 	this->addChild(startMenu);
 
 	//애니메이션 
-	
+
 	//Background
 	auto mainAnim = animCreate->CreateAnim("Sprites/Main.json", "Main", 20, 0.1f);
 	auto mainAnimate = Animate::create(mainAnim);
 	auto repMain = RepeatForever::create(mainAnimate);
 	back->runAction(repMain);
-	
+
 	//Logo
 	auto logoAnim = animCreate->CreateAnim("Sprites/Main.json", "Logo", 20, 0.1f);
 	auto logoAnimate = Animate::create(logoAnim);
@@ -78,20 +74,18 @@ bool LSFMain::init()
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
 	auto pScene = LSFGame::createScene();
-	
+
 	Director::getInstance()->replaceScene(createTransition(7, 1, pScene));
-	
 }
+
 TransitionScene* LSFMain::createTransition(int nIndex, float t, Scene* s)
 {
 	Director::getInstance()->setDepthTest(false);
-
 
 	switch (nIndex)
 	{
 		// 점프하면서 Zoom
 	case 0: return TransitionJumpZoom::create(t, s);
-
 
 		// 시계방향으로 침이 돌면서 장면이 바뀜
 	case 1: return TransitionProgressRadialCCW::create(t, s);

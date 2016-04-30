@@ -5869,12 +5869,10 @@ proj.android/.project
 proj.android/.settings/org.eclipse.cdt.codan.core.prefs
 proj.android/.settings/org.eclipse.cdt.core.prefs
 proj.android/.settings/org.eclipse.ltk.core.refactoring.prefs
-proj.android/AndroidManifest.xml
 proj.android/ant.properties
 proj.android/build-cfg.json
 proj.android/build.xml
 proj.android/build_native.py
-proj.android/jni/Android.mk
 proj.android/jni/Application.mk
 proj.android/jni/hellocpp/main.cpp
 proj.android/proguard-project.txt

@@ -3,10 +3,6 @@
 
 #include "cocos2d.h"
 #include "AnimateCreate.h"
-#include "..\cocos2d\external\json\rapidjson.h"
-#include "..\cocos2d\external\json\document.h"
-#include "..\cocos2d\external\json\stringbuffer.h"
-#include "..\cocos2d\external\json\writer.h"
 
 using namespace cocos2d;
 
@@ -23,6 +19,7 @@ public:
 	AnimateCreate* animCreate;
 	void doPushSceneTran(Ref * pSender);
 	cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
+	Size winSize;
 };
 
 #endif // __LSFMain_SCENE_H__

@@ -25,7 +25,7 @@ bool LSFGame::init()
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
 	//flow
-	texture = Director::getInstance()->getTextureCache()->addImage("Sprites/flow.png");
+	
 	//flow
 	btnCount = 0;
 	cbtnCount = 0;
@@ -42,9 +42,8 @@ bool LSFGame::init()
 
 	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
-	back->setPosition(Vec2(0, 0));
-	back->setScaleY(0.5f);
-	this->addChild(back);
+	back->setPosition(Vec2(0,100));
+	//this->addChild(back);
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
 	weatherFrameCache->addSpriteFramesWithJson("Sprites/RainDrop.json");
@@ -74,15 +73,15 @@ bool LSFGame::init()
 	this->addChild(invenLayer, 4);
 
 	craftUsel = Sprite::create("Sprites/inventory_bg2.png");
-	craftUsel->setAnchorPoint(Vec2(0.5, 0.5));
-	craftUsel->setPosition(Vec2(180, 320));
+	craftUsel->setAnchorPoint(Vec2::ZERO);
+	craftUsel->setPosition(Vec2::ZERO);
 	craftUsel->setCascadeOpacityEnabled(true);
 	craftUsel->setOpacity(125);
 	invenLayer->addChild(craftUsel);
 
 	craftSel = Sprite::create("Sprites/inventory_bg3.png");
-	craftSel->setAnchorPoint(Vec2(0.5, 0.5));
-	craftSel->setPosition(Vec2(180, 320));
+	craftSel->setAnchorPoint(Vec2::ZERO);
+	craftSel->setPosition(Vec2::ZERO);
 	craftSel->setCascadeOpacityEnabled(true);
 	craftSel->setOpacity(125);
 	craftSel->setVisible(false);
@@ -90,8 +89,8 @@ bool LSFGame::init()
 
 
 	inventory = Sprite::create("Sprites/inventory_bg.png");
-	inventory->setAnchorPoint(Vec2(0.5, 0.5));
-	inventory->setPosition(Vec2(184, 320));
+	inventory->setAnchorPoint(Vec2::ZERO);
+	inventory->setPosition(Vec2::ZERO);
 	//inventory->setScale(0.5f,1.5f);
 	inventory->setCascadeOpacityEnabled(true);
 	inventory->setOpacity(255);
@@ -102,9 +101,9 @@ bool LSFGame::init()
 	GameFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
 
 	craft = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 0.png"));
-	craft->setAnchorPoint(Vec2::ZERO);
-	craft->setPosition(Vec2(38, 40));
-	craft->setScale(0.8f);
+	craft->setAnchorPoint(Vec2(0.5, 0.5));
+	craft->setPosition(Vec2(130, winSize.height / 5 - 100));
+	craft->setScale(1.5f);
 	//craft->setVisible(false);
 	invenLayer->addChild(craft);
 	//가방----------------------------------------------------------------------------------------------------
@@ -117,12 +116,12 @@ bool LSFGame::init()
 		ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_normal.json");
 	}
 	else if (weatherCount == 2) {
-		ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_Windy.json");
+		ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_windy.json");
 	}
 	//ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_normal.json");
 	ship = Sprite::createWithSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
 	ship->setAnchorPoint(Vec2(0.5, 0.5));
-	ship->setPosition(Vec2(240, 210));
+	ship->setPosition(Vec2(winSize.width-120, winSize.height/3));
 	ship->setLocalZOrder(2);
 	ship->setScale(1.5f);
 	this->addChild(ship);
@@ -141,11 +140,10 @@ bool LSFGame::init()
 	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png",
 		"Sprites/Button_bagopen.png",
 		CC_CALLBACK_1(LSFGame::doPushInventory, this));
-
+	btn_inventory->setScale(1.5f);
 	inventoryMenu = Menu::create(btn_inventory, nullptr);
-	inventoryMenu->setAnchorPoint(Vec2::ZERO);
-	inventoryMenu->setPosition(Vec2(290, 70));
-	inventoryMenu->setScale(1.f);
+	inventoryMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	inventoryMenu->setPosition(Vec2(winSize.width-140, winSize.height/5-100));
 	inventoryMenu->alignItemsHorizontally();
 	this->addChild(inventoryMenu, 4);
 
@@ -157,7 +155,7 @@ bool LSFGame::init()
 	back->runAction(repMain);
 
 	//Ship	(Normal(1), Windy(2), Snowy(3), Rainny(4), ThunderStorm(5))
-	ShipStat = 1;
+	ShipStat = 2;
 
 	if(ShipStat == 1){
 		if (ship->getNumberOfRunningActions() != 0) {
@@ -249,7 +247,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	if (cbtnCount == 0) {
 
 		if (fishingStat == false) {
-			b2Body* body1 = this->addNewSpriteAt(touchPoint);
+			b2Body* body1 = this->addNewSpriteAt(touchPoint,"Sprites/needle.png", 1);
 			Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
 			this->createRope(groundBody,
@@ -270,13 +268,13 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			craftUsel->setVisible(true);
 			craftSel->setVisible(false);
 			craftSwitch = false;
-			log("craftSwitch Status: Off", craftSwitch);
+			//log("craftSwitch Status: Off", craftSwitch);
 		}
 		else {
 			craftUsel->setVisible(false);
 			craftSel->setVisible(true);
 			craftSwitch = true;
-			log("craftSwitch Status: On", craftSwitch);
+			//log("craftSwitch Status: On", craftSwitch);
 		}
 
 	}
@@ -360,18 +358,19 @@ bool LSFGame::createBox2dWorld(bool debug)
 	b2EdgeShape groundEdge;
 	b2FixtureDef boxShapeDef;
 	boxShapeDef.shape = &groundEdge;
-
 	//에지 모양의 객체에 Set( 점1, 점2)로 선을 만든다.
 	//그리고 바디(groundBody)에 모양(groundEdge)을 고정시킨다.
 
 	//바다 아래
-	groundEdge.Set(b2Vec2(0, 1.4f), b2Vec2(winSize.width / PTM_RATIO, 1.4f));
+	groundEdge.Set(b2Vec2(0, 3.4f), b2Vec2(winSize.width / PTM_RATIO, 3.4f));
 	groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.Set(b2Vec2(0, 1.0f), b2Vec2(winSize.width / PTM_RATIO, 1.0f));
+	groundEdge.Set(b2Vec2(0, 2.8f), b2Vec2(winSize.width / PTM_RATIO, 2.8f));
 	groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.Set(b2Vec2(0, 0.6f), b2Vec2(winSize.width / PTM_RATIO, 0.6f));
+	groundEdge.Set(b2Vec2(0, 2.2f), b2Vec2(winSize.width / PTM_RATIO, 2.2f));
 	groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.Set(b2Vec2(0, 0), b2Vec2(winSize.width / PTM_RATIO, 0));
+	groundEdge.Set(b2Vec2(0, 1.6f), b2Vec2(winSize.width / PTM_RATIO, 1.6f));
+	groundBody->CreateFixture(&boxShapeDef);
+	groundEdge.Set(b2Vec2(0, 1.1f), b2Vec2(winSize.width / PTM_RATIO, 1.1f));
 	groundBody->CreateFixture(&boxShapeDef);
 
 	//왼쪽
@@ -389,36 +388,57 @@ bool LSFGame::createBox2dWorld(bool debug)
 	groundBody->CreateFixture(&boxShapeDef);
 
 
+	//바닥에 직사각형 지형을 만든다.
+	b2BodyDef bottomBodyDef;
+	bottomBodyDef.type = b2_dynamicBody;
+	bottomBodyDef.position.Set(winSize.width/2/PTM_RATIO, 1.2f);
+	bottomBodyDef.linearDamping = 0.3f;
+	
+	b2Body* bottomBody;
+	bottomBody = _world->CreateBody(&bottomBodyDef);
+	
+	b2FixtureDef botfixtureDef;
+	b2PolygonShape edgeBox;
+		
+	edgeBox.SetAsBox(3.4f, 0.18f);
+	botfixtureDef.shape = &edgeBox;
+	botfixtureDef.density = 1.0f;
+	botfixtureDef.friction = 0;
+	botfixtureDef.restitution = 0.0;
+	//botfixtureDef.filter.categoryBits = 0x02;
+	//botfixtureDef.filter.groupIndex = 1;
+	bottomBody->CreateFixture(&botfixtureDef);
+	
 	//월드 생성 끝 ---------------------------------------------------
 
 
 	//Flow
-	//bottom
-	flowBody0 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 30, 30), Size(100, 10), b2_dynamicBody, "flowimage", 0);
-	flowBody1 = this->addNewSpriteFlow(Vec2(winSize.width / 2, 20), Size(20, 20), b2_dynamicBody, nullptr, 0);
-	flowBody2 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 60, 20), Size(20, 20), b2_dynamicBody, nullptr, 0);
+	//top
+	flowBody0 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height /3-100), Size(100, 5), b2_dynamicBody, "fish1", 0);
+	flowBody1 = this->addNewSpriteFlow(Vec2((winSize.width / 2)-40, winSize.height / 3 -120), Size(10, 10), b2_dynamicBody, nullptr, 0);
+	flowBody2 = this->addNewSpriteFlow(Vec2((winSize.width / 2)+40, winSize.height / 3 -120), Size(10, 10), b2_dynamicBody, nullptr, 0);
 
 	b2Vec2 axis(0.0f, 1.0f);
 
 	flowJd1.Initialize(flowBody0, flowBody1, flowBody1->GetPosition(), axis);
-	flowJd1.motorSpeed = 30.0f;
-	flowJd1.maxMotorTorque = 30.0f;
+	flowJd1.motorSpeed = 15.0f;
+	flowJd1.maxMotorTorque = 15.0f;
 	flowJd1.enableMotor = true;
 	flowJd1.frequencyHz = 4.0f;
 	flowJd1.dampingRatio = 0.7f;
 
 
 	flowJd2.Initialize(flowBody0, flowBody2, flowBody2->GetPosition(), axis);
-	flowJd2.motorSpeed = 30.0f;
-	flowJd2.maxMotorTorque = 30.0f;
+	flowJd2.motorSpeed = 15.0f;
+	flowJd2.maxMotorTorque = 15.0f;
 	flowJd2.enableMotor = true;
 	flowJd2.frequencyHz = 4.0f;
 	flowJd2.dampingRatio = 1.0f;
 
 	//center
-	flowBody3 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 30, 80), Size(100, 5), b2_dynamicBody, "flowimage", 0);
-	flowBody4 = this->addNewSpriteFlow(Vec2(winSize.width / 2, 70), Size(10, 10), b2_dynamicBody, nullptr, 0);
-	flowBody5 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 60, 70), Size(10, 10), b2_dynamicBody, nullptr, 0);
+	flowBody3 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height/3 -160), Size(100, 10), b2_dynamicBody, "fish1", 0);
+	flowBody4 = this->addNewSpriteFlow(Vec2((winSize.width / 2)-40, winSize.height/3 -180), Size(20, 20), b2_dynamicBody, nullptr, 0);
+	flowBody5 = this->addNewSpriteFlow(Vec2((winSize.width / 2)+40, winSize.height/3 -180), Size(20, 20), b2_dynamicBody, nullptr, 0);
 
 	flowJd3.Initialize(flowBody3, flowBody4, flowBody4->GetPosition(), axis);
 	flowJd3.motorSpeed = 25.0f;
@@ -435,14 +455,14 @@ bool LSFGame::createBox2dWorld(bool debug)
 	flowJd4.frequencyHz = 4.0f;
 	flowJd4.dampingRatio = 1.0f;
 
-	//top
-	flowBody6 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 30, 130), Size(100, 5), b2_dynamicBody, "flowimage", 0);
-	flowBody7 = this->addNewSpriteFlow(Vec2(winSize.width / 2, 120), Size(10, 10), b2_dynamicBody, nullptr, 0);
-	flowBody8 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 60, 120), Size(10, 10), b2_dynamicBody, nullptr, 0);
+	//bottom
+	flowBody6 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height/3-220), Size(100, 15), b2_dynamicBody, "fish1", 0);
+	flowBody7 = this->addNewSpriteFlow(Vec2((winSize.width / 2)-40, winSize.height/3 - 240), Size(20, 20), b2_dynamicBody, nullptr, 0);
+	flowBody8 = this->addNewSpriteFlow(Vec2((winSize.width / 2)+40, winSize.height/3 - 240), Size(20, 20), b2_dynamicBody, nullptr, 0);
 
 
 	flowJd5.Initialize(flowBody6, flowBody7, flowBody7->GetPosition(), axis);
-	flowJd5.motorSpeed = 20.0f;
+	flowJd5.motorSpeed = 30.0f;
 	flowJd5.maxMotorTorque = 30.0f;
 	flowJd5.enableMotor = true;
 	flowJd5.frequencyHz = 4.0f;
@@ -481,69 +501,48 @@ bool LSFGame::createBox2dWorld(bool debug)
 		1.1f);*/
 	return true;
 }
-b2Body* LSFGame::addNewSpriteAt(Vec2 point)
+b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int tag)
 {
+	b2BodyDef bodyDef;
+	b2Body* body;
+	b2FixtureDef fixtureDef;
+	b2CircleShape spriteShape;
 	//Get the sprite frome the sprite sheet
-	Sprite* needle = Sprite::create("Sprites/needle.png");
-	needle->setAnchorPoint(Vec2(0.5, 0.8));
-	this->addChild(needle);
+	Sprite* sprite = Sprite::create(imagepath);
+	sprite->setAnchorPoint(Vec2(0.5, 0.8));
+	this->addChild(sprite);
 
+	
 	//Defines the body of needle
-	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position = b2Vec2(point.x / PTM_RATIO, point.y / PTM_RATIO);
-	bodyDef.userData = needle;
+	bodyDef.userData = sprite;
 	bodyDef.linearDamping = 0.3f;
-	b2Body* body = _world->CreateBody(&bodyDef);
-
-	//Define the fixture as a shape
-	b2FixtureDef fixtureDef;
-	b2CircleShape spriteShape;
-
-	spriteShape.m_radius = 0.08;
-
-	fixtureDef.shape = &spriteShape;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.2f;
-	fixtureDef.restitution = 0.7f;
-	fixtureDef.filter.categoryBits = 0x01;
-	fixtureDef.filter.groupIndex = -1;
+	body = _world->CreateBody(&bodyDef);
+	if (tag == 1) {
+		spriteShape.m_radius = 0.1;
+		fixtureDef.shape = &spriteShape;
+		fixtureDef.density = 1.0f;
+		fixtureDef.friction = 0.2f;
+		fixtureDef.restitution = 0.7f;
+		fixtureDef.filter.categoryBits = 0x01;
+		fixtureDef.filter.groupIndex = -1;
+		fixtureDef.filter.groupIndex = 1;
+	}
+	else if (tag == 2) {
+		spriteShape.m_radius = 0.03;
+		fixtureDef.shape = &spriteShape;
+		fixtureDef.density = 1.0f;
+		fixtureDef.friction = 0.2f;
+		fixtureDef.restitution = 0.7f;
+		fixtureDef.filter.categoryBits = 0x02;
+	}
 
 	body->CreateFixture(&fixtureDef);
 
 	return body;
 }
-b2Body* LSFGame::addNewSpriteAtWater(Vec2 point)
-{
-	//Get the sprite frome the sprite sheet
-	Sprite* water = Sprite::create("Sprites/WaterSplash.png");
-	water->setAnchorPoint(Vec2(0.5, 0.8));
-	this->addChild(water);
-
-	//Defines the body of water
-	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position = b2Vec2(point.x / PTM_RATIO, point.y / PTM_RATIO);
-	bodyDef.userData = water;
-	bodyDef.linearDamping = 0.3f;
-	b2Body* body = _world->CreateBody(&bodyDef);
-
-	//Define the fixture as a shape
-	b2FixtureDef fixtureDef;
-	b2CircleShape spriteShape;
-
-	spriteShape.m_radius = 0.03;
-
-	fixtureDef.shape = &spriteShape;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.2f;
-	fixtureDef.restitution = 0.7f;
-	fixtureDef.filter.categoryBits = 0x02;
-
-	body->CreateFixture(&fixtureDef);
-
-	return body;
-}
+int flowCount = 0;
 b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, const char* spriteName, int type)
 {
 	//스프라이트를 파라미터로 넘어온 위치에 만든다.
@@ -557,16 +556,18 @@ b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, co
 	bodyDef.position.Set(point.x / PTM_RATIO, point.y / PTM_RATIO);
 
 	if (spriteName) {
-		if (strcmp(spriteName, "flowimage") == 0) {
-			int idx = (CCRANDOM_0_1() > .5 ? 0 : 1);
-			int idy = (CCRANDOM_0_1() > .5 ? 0 : 1);
+		if (strcmp(spriteName, "fish1") == 0) {
+			//int idx = (CCRANDOM_0_1() > .5 ? 0 : 1);
+			//int idy = (CCRANDOM_0_1() > .5 ? 0 : 1);
+			auto flowSprite = Sprite::createWithTexture(texture = Director::getInstance()->getTextureCache()->addImage("Sprites/Fishes/Fish011.png"),
+				Rect(0, 0, 24, 16));
+			flow.pushBack(flowSprite);
+			flow.at(flowCount)->setPosition(point);
+			flow.at(flowCount)->setTag(flowCount);
+			this->addChild(flow.at(flowCount));
 
-			Sprite* flow = Sprite::createWithTexture(texture,
-				Rect(32 * idx, 32 * idy, 32, 32));
-			flow->setPosition(point);
-			this->addChild(flow);
-
-			bodyDef.userData = flow;
+			bodyDef.userData = flow.at(flowCount);
+			flowCount++;
 		}
 		else {
 			Sprite* flow = Sprite::create(spriteName);
@@ -576,13 +577,10 @@ b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, co
 			bodyDef.userData = flow;
 		}
 	}
-
-
 	//월드에 바디데프의 정보로 바디를 만든다.
 	b2Body* body = _world->CreateBody(&bodyDef);
 
 	//바디에 적용할 물리 속성용 바디의 모양을 만든다.
-
 	b2FixtureDef fixtureDef;
 	b2CircleShape circle;			//원 형태를 선택해 반지름을 지정한다.
 	b2PolygonShape dynamicBox;
@@ -597,7 +595,6 @@ b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, co
 
 		fixtureDef.shape = &circle;
 	}
-
 
 	fixtureDef.density = 1.0f;		//밀도
 	fixtureDef.friction = 0.2f;		//마찰력 - 0 ~ 1
@@ -621,7 +618,8 @@ void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 an
 
 	//Max length of joint = current distance between bodies * sag
 	float32 ropeLength = (bodyA->GetWorldPoint(anchorA) - bodyB->GetWorldPoint(anchorB)).Length()*sag;
-	if (ropeLength >= 1 && ropeLength <= 3) {
+	log("ropeLength: %f", ropeLength);
+	if (ropeLength >= 1 && ropeLength <= 4) {
 		log("ropeLength: %f", ropeLength);
 		log("ropeLength: %f", ropeLength);
 		log("ropeLength: %f", ropeLength);
@@ -633,11 +631,11 @@ void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 an
 
 		return;
 	}
-	else if (ropeLength < 1 || ropeLength>3) {
+	else if (ropeLength < 1 || ropeLength>4) {
 		log("else if ropeLength: %f", ropeLength);
 		log("else if ropeLength: %f", ropeLength);
 		log("else if ropeLength: %f", ropeLength);
-		jd.maxLength = 3;
+		jd.maxLength = 4;
 		ropeJoint = (b2RopeJoint*)_world->CreateJoint(&jd);
 
 		newRope = new VRope(ropeJoint, ropeSpriteSheet);
@@ -718,62 +716,63 @@ void LSFGame::tick(float dt)
 		this->schedule(schedule_selector(LSFGame::ropeTick));
 		ropeTickCount = true;
 	}
+	/*
 	//WA(Water Adder)
-	if (waterCount < 10) {
-		water1 = this->addNewSpriteAtWater(Vec2(10, 120));
-		water1 = this->addNewSpriteAtWater(Vec2(12, 120));
-		water1 = this->addNewSpriteAtWater(Vec2(winSize.width - 12, 120));
-		water1 = this->addNewSpriteAtWater(Vec2(winSize.width - 10, 120));
-
-		water2 = this->addNewSpriteAtWater(Vec2(10, 90));
-		water2 = this->addNewSpriteAtWater(Vec2(12, 90));
-		water2 = this->addNewSpriteAtWater(Vec2(winSize.width - 12, 90));
-		water2 = this->addNewSpriteAtWater(Vec2(winSize.width - 10, 90));
-
-		
+	if (waterCount < 30) {
+		//top
+		water1 = this->addNewSpriteAt(Vec2((winSize.width / 2), (winSize.height / 3 - 110)), "Sprites/WaterSplash.png",2);
+		water1 = this->addNewSpriteAt(Vec2((winSize.width / 2) - 2, (winSize.height / 3 - 110)), "Sprites/WaterSplash.png", 2);
+		//center
+		water2 = this->addNewSpriteAt(Vec2((winSize.width / 2), (winSize.height / 3 - 170)), "Sprites/WaterSplash.png", 2);
+		water2 = this->addNewSpriteAt(Vec2((winSize.width / 2) - 2, (winSize.height / 3 - 170)), "Sprites/WaterSplash.png", 2);
+		//bottom
+		water3 = this->addNewSpriteAt(Vec2((winSize.width / 2), (winSize.height / 3 - 230)), "Sprites/WaterSplash.png", 2);
+		water3 = this->addNewSpriteAt(Vec2((winSize.width / 2) - 2, (winSize.height / 3 - 230)), "Sprites/WaterSplash.png", 2);
+		water3 = this->addNewSpriteAt(Vec2((winSize.width / 2), (winSize.height / 3 - 230)), "Sprites/WaterSplash.png", 2);
+		water3 = this->addNewSpriteAt(Vec2((winSize.width / 2) - 2, (winSize.height / 3 - 230)), "Sprites/WaterSplash.png", 2);
 		waterCount++;
 	}
-	if (waterCount < 20) {
-		water3 = this->addNewSpriteAtWater(Vec2(14, 50));
-		water3 = this->addNewSpriteAtWater(Vec2(12, 50));
-		water3 = this->addNewSpriteAtWater(Vec2(10, 50));
-		water3 = this->addNewSpriteAtWater(Vec2(winSize.width - 14, 50));
-		water3 = this->addNewSpriteAtWater(Vec2(winSize.width - 12, 50));
-		water3 = this->addNewSpriteAtWater(Vec2(winSize.width - 10, 50));
-		waterCount++;
-	}
+	*/
 	//WF(Water flow)
+	//log("flowbody %f", flowBody0->GetPosition().x);
 	
 	if (flowBody0->GetPosition().x <=0.6)
 	{
 		m_spring1->SetMotorSpeed(-30.0f);
 		m_spring2->SetMotorSpeed(-30.0f);
+		flow.at(0)->setFlippedX(true);
+		
 	}
-	else if (flowBody0->GetPosition().x >= 3) {
+	else if (flowBody0->GetPosition().x >= 6.6) {
 		m_spring1->SetMotorSpeed(30.0f);
 		m_spring2->SetMotorSpeed(30.0f);
+		flow.at(0)->setFlippedX(false);
 	}
 
 	if (flowBody3->GetPosition().x <= 0.6)
 	{
 		m_spring3->SetMotorSpeed(-25.0f);
 		m_spring4->SetMotorSpeed(-25.0f);
+		flow.at(1)->setFlippedX(true);
 	}
-	else if (flowBody3->GetPosition().x >= 3) {
+	else if (flowBody3->GetPosition().x >= 6.6) {
 		m_spring3->SetMotorSpeed(25.0f);
 		m_spring4->SetMotorSpeed(25.0f);
+		flow.at(1)->setFlippedX(false);
 	}
 
 	if (flowBody6->GetPosition().x <= 0.6)
 	{
 		m_spring5->SetMotorSpeed(-20.0f);
 		m_spring6->SetMotorSpeed(-20.0f);
+		flow.at(2)->setFlippedX(true);
 	}
-	else if (flowBody6->GetPosition().x >= 3) {
+	else if (flowBody6->GetPosition().x >= 6.6) {
 		m_spring5->SetMotorSpeed(20.0f);
 		m_spring6->SetMotorSpeed(20.0f);
+		flow.at(2)->setFlippedX(false);
 	}
-
+	
 
 
 	//RHC(Rope Health Counter)
@@ -801,6 +800,7 @@ void LSFGame::ropeTick(float dt)
 	}
 }
 void LSFGame::ropeTouch(float dt) {
+	/*WaterSplash Effect Sound 추가 예정*/
 	water->splash(touchRope.x, -100);
 }
 void ContactListener::BeginContact(b2Contact* contact)

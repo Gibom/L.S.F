@@ -33,7 +33,8 @@ bool WaterNode::init()
 {
     // super init
     Node::init();
-    
+	Size winSize = Director::getInstance()->getWinSize();
+	kWaterHeight = winSize.height / 3.5;
     // setup the node information and the columsn (WaterColumn)
     scale = Director::getInstance()->getVisibleSize().width/(kColumnCount - 1);
 	log("scale %f",scale);

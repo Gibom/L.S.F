@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "Box2D\Box2D.h"
 #include <GLES-Render.h>
-#include "vrope-x\vrope.h"
+#include "vrope.h"
 #include "ContactListener.h"
 #include "AnimateCreate.h"
 #include "WaterNode.h"
@@ -31,8 +31,7 @@ public:
 	virtual void draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
 
 	//³¬½Ã
-	b2Body* addNewSpriteAt(Vec2 point);
-	b2Body* addNewSpriteAtWater(Vec2 point);
+	b2Body* addNewSpriteAt(Vec2 point, const std::string & imagepath, int tag);
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
 	void ropeTick(float dt);
@@ -51,7 +50,7 @@ public:
 
 
 
-	
+	Vector<Sprite*> flow;
 
 
 	Texture2D* texture;
