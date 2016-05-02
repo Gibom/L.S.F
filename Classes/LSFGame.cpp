@@ -44,7 +44,7 @@ bool LSFGame::init()
 	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
 	back->setPosition(Vec2(0,100));
-	this->addChild(back);
+	//this->addChild(back);
 	//!Debug on/off
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
@@ -621,7 +621,7 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 		needlefixtureDef.shape = &spriteShape;
 		needlefixtureDef.density = 1.0f;
 		needlefixtureDef.friction = 0.2f;
-		needlefixtureDef.restitution = 0.7f;
+		needlefixtureDef.restitution = 0.4f;
 		needlefixtureDef.filter.categoryBits = 0x01;
 		needlefixtureDef.filter.maskBits = 0x03;
 		needlefixtureDef.filter.groupIndex = -1;
