@@ -13,19 +13,16 @@ bool AnimateCreate::init()
 
 Animation* AnimateCreate::CreateAnim(const std::string & json, const std::string & framename, int frames, float dt)
 {
-	log("11");
 	char frName[20];
-	
 
 	auto AnimateFrameCache = SpriteFrameCache::getInstance();
 	AnimateFrameCache->addSpriteFramesWithJson(json);
 	
 	auto CreateAnimation = Animation::create();
 	CreateAnimation->setDelayPerUnit(dt);
-	log("22");
+
 	for (int frCount = 0; frCount <= frames; frCount++)
 	{
-	log("33");
 	sprintf(frName, "%s %d.png", framename.c_str(), frCount);
 	CreateAnimation->addSpriteFrame(AnimateFrameCache->getSpriteFrameByName(frName));
 	log("%s", frName);

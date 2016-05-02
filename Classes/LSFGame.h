@@ -10,7 +10,7 @@
 #include "WaterNode.h"
 using namespace cocos2d;
 
-class LSFGame : public cocos2d::LayerColor , public AnimateCreate
+class LSFGame : public cocos2d::LayerColor , public AnimateCreate 
 
 {
 public:
@@ -31,12 +31,16 @@ public:
 	virtual void draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
 
 	//낚시
+	b2Body* needle;
+	b2FixtureDef needlefixtureDef;
 	b2Body* addNewSpriteAt(Vec2 point, const std::string & imagepath, int tag);
+	b2Body* needlebody;
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
 	void ropeTick(float dt);
 	void ropeTouch(float dt);
 	Vec2 touchRope;
+	void startFishing(float dt);
 
 	//충돌처리
 	bool checkLineIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4);
@@ -51,7 +55,6 @@ public:
 
 
 	Vector<Sprite*> flow;
-
 
 	Texture2D* texture;
 	b2World* _world;
@@ -81,13 +84,15 @@ public:
 	b2Body* water2;
 	b2Body* water3;
 	//World - Flow
-	b2Body* addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, const char* spriteName, int type);
+	b2Body* addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, int flowtype, int type);
 	b2WheelJoint* m_spring1;
 	b2WheelJoint* m_spring2;
 	b2WheelJoint* m_spring3;
 	b2WheelJoint* m_spring4;
 	b2WheelJoint* m_spring5;
 	b2WheelJoint* m_spring6;
+	b2WheelJoint* m_spring7;
+	b2WheelJoint* m_spring8;
 
 	b2WheelJointDef flowJd1;
 	b2WheelJointDef flowJd2;
@@ -95,6 +100,8 @@ public:
 	b2WheelJointDef flowJd4;
 	b2WheelJointDef flowJd5;
 	b2WheelJointDef flowJd6;
+	b2WheelJointDef flowJd7;
+	b2WheelJointDef flowJd8;
 	b2Body *flowBody0;
 	b2Body *flowBody1;
 	b2Body *flowBody2;
@@ -104,6 +111,11 @@ public:
 	b2Body *flowBody6;
 	b2Body *flowBody7;
 	b2Body *flowBody8;
+	b2Body *flowBody9;
+	b2Body *flowBody10;
+	b2Body *flowBody11;
+
+
 
 	b2Vec2 axis;
 
@@ -126,6 +138,7 @@ public:
 	int btnCount;
 	int cbtnCount;
 	int waterCount;
+	int flowRand;
 	bool ropeTickCount;
 	bool ropeTouchCount;
 	
