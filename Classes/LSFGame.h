@@ -38,7 +38,7 @@ public:
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
 	void ropeTick(float dt);
-	void ropeTouch(float dt);
+	void waterSplash(float dt);
 	void ropeRemove(int type);
 	Vec2 touchRope;
 	float32 ropeLength;
@@ -47,7 +47,7 @@ public:
 	void timerFishing(float dt);
 	void endFishing(float dt);
 	void catchFishing(float dt);
-
+	void resetFishing();
 	int catchTime;
 	int randomTime;
 	int timer;

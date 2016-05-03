@@ -1,6 +1,44 @@
 
-
-	OnTouchBegan 
-		-> createRope ->
+낚시 동작 순서
+Tick = @
+	1)OnTouchBegan
+		2)-> fishingStat == flase -> createRope 
+			-> hangFish == true -> 낚기 발동(미구현) -> 낚시 카운트 초기화 (hangFish, fishingStat = false)
+			
+				3)-> OnTouchEnded  
+					4)-> cbtnCount == 0 && fishingStat == false  
+						!-> scheduleOnce(waterSplash)
+					5)-> startFishing(1)
+						6)-> fishingStat = true , randomTime, catchTime, ropeHealth, timer 변수 갱신
+							7)-> schedule(timerFishing,1.f)
+									
+	timerFishing
+	@)-> timer == 0		-> endFishing(1) -> ropeRemove(1)
+	@)-> catchtime == 0	-> hangFish = true
+	@> catchtime < -2	-> hangFish = false
+	
+	endFishing
+	-> unschedule(timerFishing)
+	-> ropeRemove(1)
+	
+	tick
+	@> ropeHealth == 0 -> ropeRemove(2)
+	
+	BeginContact
+	@> (ropeHealth > 0 && fishingStat == true) -> ropeHealth--
+	
+	ropeRemove
+	-> type 1 == Time Over 
+	-> type 2 == ropeHealth ZERO -> unschedule(timerFishing)
+	
+	-> ropeHealth = reset(default : 100)
+	-> ropes->clear()
+	-> _world->DestroyJoint(ropeJoint)
+	-> unschedule(ropeTick)
+	-> newRope->removeSprites()
+	-> needle->DestroyFixture(needle->GetFixtureList())
+	-> fishingStat = false
+	-> ropeTickCount = false;
+	
 		
 콤보낚시 ->카운트가 진행되고 hangFish가 true 일때 낚으면 콤보카운트 +1, 낚시는 계속진행
