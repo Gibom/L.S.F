@@ -39,8 +39,21 @@ public:
 	std::vector<VRope*>* ropes;
 	void ropeTick(float dt);
 	void ropeTouch(float dt);
+	void ropeRemove(int type);
 	Vec2 touchRope;
+	float32 ropeLength;
+	//낚시 - Timer
 	void startFishing(float dt);
+	void timerFishing(float dt);
+	void endFishing(float dt);
+	void catchFishing(float dt);
+
+	int catchTime;
+	int randomTime;
+	int timer;
+	//낚시 - 조작
+	bool bTouch_mode; //모드 스위치 구현 시 사용
+	bool hangFish;
 
 	//충돌처리
 	bool checkLineIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4);

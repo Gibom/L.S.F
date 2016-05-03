@@ -44,7 +44,7 @@ bool LSFGame::init()
 	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 0.png"));
 	back->setAnchorPoint(Vec2::ZERO);
 	back->setPosition(Vec2(0,100));
-	//this->addChild(back);
+	this->addChild(back);
 	//!Debug on/off
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
@@ -243,16 +243,15 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	weatherCount = 1;
 	Vec2 touchPoint = touch->getLocation();
 
-	log("onTOuchBegan id = %d, x = %f, y= %f", touch->getID(), touchPoint.x, touchPoint.y);
+	//log("onTOuchBegan id = %d, x = %f, y= %f", touch->getID(), touchPoint.x, touchPoint.y);
 
 	//touch check --------------------------------
 	bool bTouch_craft = craft->getBoundingBox().containsPoint(touchPoint);
-	bool bTouch_mode; //모드 스위치 구현 시 사용
-
+	
 	// 게임 화면
 	if (cbtnCount == 0) {
 
-		if (fishingStat == false) {
+		if (fishingStat == false) { //낚시 시작 전
 			needle = this->addNewSpriteAt(touchPoint,"Sprites/needle.png", 1);
 			Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 			
@@ -263,7 +262,13 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 				1.1f);
 
 			ropeTouchCount = true;
-
+			log("---------------------------Fishing 1");
+		}
+		else if (hangFish == true) {
+				log("---------------------------Fishing true ->Touch");
+				log("SUCCESS");
+				hangFish = false;
+				fishingStat = false;
 		}
 	}
 	// 가방이 열려있고 craft가 선택 됐을 때
@@ -298,11 +303,12 @@ void LSFGame::onTouchEnded(Touch* touch, Event* event)
 	float test;
 
 	test = touchPoint.y;
-	log("%f", test);
-	if (cbtnCount != 1 && fishingStat == false) {
+	//log("%f", test);
+	if (cbtnCount == 0 && fishingStat == false) {
+		log("---------------------------Fishing 2");
 		this->scheduleOnce(schedule_selector(LSFGame::ropeTouch), test / 700);
-		fishingStat = true;
-		this->scheduleOnce(schedule_selector(LSFGame::startFishing), test / 700);
+		log("---------------------------Fishing 3");
+		startFishing(1);
 	}
 	//log("onTouchEnded id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
 }
@@ -733,7 +739,7 @@ void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 an
 	jd.localAnchorB = anchorB;
 
 	//Max length of joint = current distance between bodies * sag
-	float32 ropeLength = (bodyA->GetWorldPoint(anchorA) - bodyB->GetWorldPoint(anchorB)).Length()*sag;
+	ropeLength = (bodyA->GetWorldPoint(anchorA) - bodyB->GetWorldPoint(anchorB)).Length()*sag;
 	log("ropeLength: %f", ropeLength);
 	if (ropeLength >= 1 && ropeLength <= 5) {
 		log("ropeLength: %f", ropeLength);
@@ -904,27 +910,95 @@ void LSFGame::tick(float dt)
 
 	//RHC(Rope Health Counter Start)-----------------------------
 	if (ropeHealth == 0) {
-		log("Fishing fail!");
-		ropeHealth = 100;
-		ropes->clear();
-		_world->DestroyJoint(ropeJoint);
-		this->unschedule(schedule_selector(LSFGame::ropeTick));
-		newRope->removeSprites();
-		needle->DestroyFixture(needle->GetFixtureList());
-
-		fishingStat = false;
-		ropeTickCount = false;
+		ropeRemove(2);
 	}
 	//RHC(Rope Health Counter End)-------------------------------
 		
 }
 void LSFGame::startFishing(float dt)
 {
-	int randomFish = rand() % 4 + 1;
-	int randomTime = rand() % 6 + 5;
+	fishingStat = true;
+	log("ropeLength: %f", ropeLength);
+	if(ropeLength >= 6)
+	{
+		randomTime = random(10,20);
+		catchTime = random(8,randomTime);
+		ropeHealth = ropeHealth * 12;
+	}
+	else if (ropeLength > 4 && ropeLength < 6)
+	{
+		randomTime = random(8, 15);
+		catchTime = random(6, randomTime);
+		ropeHealth = ropeHealth * 10;
+	}
+	else if (ropeLength >= 3 && ropeLength <= 4) 
+	{
+		randomTime = random(5,10);
+		catchTime = random(3, randomTime);
+		ropeHealth = ropeHealth * 5;
+	}
+	else if (ropeLength >= 1 && ropeLength < 3) {
+		randomTime = random(1 , 5);
+		catchTime = random(3, randomTime);
+		ropeHealth = ropeHealth * 3;
+	}
+
+	timer = randomTime;
 	log("randomTime: %d", randomTime);
-	
+	log("catchTime: %d", catchTime);
+	this->schedule(schedule_selector(LSFGame::timerFishing), 1.f);
+	log("---------------------------Fishing 4");
 	//Success
+}
+void LSFGame::timerFishing(float dt)
+{
+	log("timerFishing: %d", timer);
+	log("catchTime: %d", catchTime);
+	if (--timer == 0) {
+		endFishing(1);
+	}
+	if (--catchTime == 0) {
+		//catchTime = random(timer-1, timer);
+		log("Enable catch Fish !!!");
+		hangFish = true;
+	}
+	if (catchTime < -2) {
+		log("Disable catch Fish !!!");
+		hangFish = false;
+	}
+	log("---------------------------Fishing 5");
+}
+
+void LSFGame::endFishing(float dt) 
+{
+	log("EndFishing");
+	this->unschedule(schedule_selector(LSFGame::timerFishing));
+	log("---------------------------Fishing 6");
+	ropeRemove(1);
+}
+void LSFGame::ropeRemove(int type) 
+{
+	log("---------------------------Fishing 7");
+	if (type == 1) {
+		log("---------------------------Fishing 7-1");
+		log("TIME OVER");
+	}
+	else if (type == 2) {
+		log("---------------------------Fishing 7-2");
+		log("ropeHealth ZERO");
+		this->unschedule(schedule_selector(LSFGame::timerFishing));
+	}
+	
+	log("Fishing fail!");
+	ropeHealth = 100;
+	ropes->clear();
+	_world->DestroyJoint(ropeJoint);
+	this->unschedule(schedule_selector(LSFGame::ropeTick));
+	newRope->removeSprites();
+	needle->DestroyFixture(needle->GetFixtureList());
+
+	fishingStat = false;
+	ropeTickCount = false;
 }
 void LSFGame::ropeTick(float dt)
 {
@@ -946,16 +1020,14 @@ void ContactListener::BeginContact(b2Contact* contact)
 	b2Fixture* fixA = contact->GetFixtureA();
 	b2Fixture* fixB = contact->GetFixtureB();
 
-
 	b2Body *bodyA = fixA->GetBody();
 	b2Body *bodyB = fixB->GetBody();
 
 	if (bodyA->GetType() == b2_dynamicBody || bodyB->GetType() == b2_dynamicBody) {
-		//log("needle & water contact .. ");
 		if (ropeHealth > 0 && fishingStat == true)
 		{
 			ropeHealth--;
-			log("ropeHealth :%d", ropeHealth);
+			//log("ropeHealth :%d", ropeHealth);
 		}
 	}
 }

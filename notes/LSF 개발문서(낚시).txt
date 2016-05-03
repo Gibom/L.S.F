@@ -1,0 +1,6 @@
+
+
+	OnTouchBegan 
+		-> createRope ->
+		
+콤보낚시 ->카운트가 진행되고 hangFish가 true 일때 낚으면 콤보카운트 +1, 낚시는 계속진행

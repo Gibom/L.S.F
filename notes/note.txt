@@ -1,0 +1,5 @@
+[타이머 구현 참조]
+
+Schedule	
+http://injakaun.tistory.com/102
+http://horns.tistory.com/19
