@@ -56,7 +56,6 @@ public:
 	bool hangFish;
 
 	//面倒贸府
-	bool checkLineIntersection(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4);
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
 	
@@ -78,12 +77,20 @@ public:
 	//券版备己
 	//Animation
 	AnimateCreate* animCreate;
+	RepeatForever* repFstNormal;
+	Repeat* repFstHang;
+	Repeat* repFstSuccess;
+	Repeat* repFstFail;
+
+	void fstChange(int type);
+
 
 	//World
 	Size winSize;
 	Sprite* back;
 	Sprite* ship;
 	Sprite* fisherman;
+	Sprite* fstUpdate;
 	Sprite* inventory;
 	Sprite* craftUsel;
 	Sprite* craftSel;
@@ -152,6 +159,7 @@ public:
 	int cbtnCount;
 	int waterCount;
 	int flowRand;
+	int fstCount = 0;
 	bool ropeTickCount;
 	bool ropeTouchCount;
 	
@@ -160,12 +168,12 @@ public:
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool onTouchBegan(Touch* touch, Event* event);
-	virtual void onTouchMoved(Touch* touch, Event* event);
+	//virtual void onTouchMoved(Touch* touch, Event* event);
 	virtual void onTouchEnded(Touch* touch, Event* event);
 
 	//Inventory Scene transition
 	void doPushInventory(Ref * pSender);
-	cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
+	//cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
 
 protected:
 	void onDraw(const cocos2d::Mat4& transform, uint32_t flags);
