@@ -34,10 +34,8 @@ bool LSFGame::init()
 	fishingStat = false;
 	ropeTickCount = false;
 	craftSwitch = false;
-
 	
-	
-	//스프라이트 위치설정 및 addChild
+	//스프라이트 추가
 	auto GameFrameCache = SpriteFrameCache::getInstance();
 	GameFrameCache->addSpriteFramesWithJson("Sprites/Game.json");
 
@@ -135,6 +133,10 @@ bool LSFGame::init()
 	fisherman->setLocalZOrder(1);
 	ship->addChild(fisherman);
 
+	fstUpdate = Sprite::create("Sprites/FishingStat_default.png");
+	fstUpdate->setAnchorPoint(Vec2::ZERO);
+	fstUpdate->setPosition(Vec2(14, 24));
+	fisherman->addChild(fstUpdate);
 
 
 	//환경 구조물배치----------------------------------------------------------------------------------------
@@ -179,7 +181,8 @@ bool LSFGame::init()
 		ship->runAction(repShip);
 
 	}
-
+	
+	
 
 
 	//Button_craft
@@ -193,13 +196,13 @@ bool LSFGame::init()
 	auto rainAnim = animCreate->CreateAnim("Sprites/RainDrop.json", "RainDrop", 3, 0.1f);
 	auto rainAnimate = Animate::create(rainAnim);
 	auto repRain = RepeatForever::create(rainAnimate);
-	rainDrop->runAction(repRain);
+	//rainDrop->runAction(repRain);
 
 	//Snow
 	auto snowAnim = animCreate->CreateAnim("Sprites/SnowDrop.json", "SnowDrop", 3, 0.1f);
 	auto snowAnimate = Animate::create(snowAnim);
 	auto repSnow = RepeatForever::create(snowAnimate);
-	snowDrop->runAction(repSnow);
+	//snowDrop->runAction(repSnow);
 
 
 	//월드 생성
@@ -247,10 +250,31 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 
 	//touch check --------------------------------
 	bool bTouch_craft = craft->getBoundingBox().containsPoint(touchPoint);
-	
+	touchRope = touchPoint; // WaterSplash 발생 위치 지정을 위한 변수
+	float splashDelay = touchPoint.y;
+
 	// 게임 화면
 	if (cbtnCount == 0) {
+		if (cbtnCount == 0 && fishingStat == false) {
+			//낚시 시작 전
+			needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
+			Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
+			this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
+				needle, needle->GetLocalCenter(), 1.1f);
+			//ropeTouchCount = true;
+			log("---------------------------Fishing 1");
+
+			log("---------------------------Fishing 2");
+			this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
+			log("---------------------------Fishing 3");
+			startFishing(1);
+			log("---------------------------Fishing 3-1");
+		}
+		if (hangFish == true) {
+			log("---------------------------HangFish true -> Touch");
+			endFishing(3);
+		}
 		
 		
 	}
@@ -275,37 +299,13 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 
 	return true;
 }
-void LSFGame::onTouchMoved(Touch* touch, Event* event)
-{
-
-}
 void LSFGame::onTouchEnded(Touch* touch, Event* event)
 {
 	auto touchPoint = touch->getLocation();
-	touchRope = touchPoint;
-	float splashDelay = touchPoint.y;
+
 
 	//log("%f", test);
-	if (cbtnCount == 0 && fishingStat == false) {
-		 //낚시 시작 전
-			needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
-			Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
-
-			this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
-				needle, needle->GetLocalCenter(), 1.1f);
-			//ropeTouchCount = true;
-			log("---------------------------Fishing 1");
-		
-		log("---------------------------Fishing 2");
-		this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
-		log("---------------------------Fishing 3");
-		startFishing(1);
-		log("---------------------------Fishing 3-1");
-	}
-	if (hangFish == true) {
-		log("---------------------------HangFish true -> Touch");
-		endFishing(3);
-	}
+	
 	//log("onTouchEnded id = %d, x = %f, y = %f", touch->getID(), touchPoint.x, touchPoint.y);
 }
 void LSFGame::doPushInventory(Ref * pSender)
@@ -911,37 +911,39 @@ void LSFGame::tick(float dt)
 	//RHC(Rope Health Counter End)-------------------------------
 		
 }
+
 void LSFGame::startFishing(float dt)
 {
+	log("---------------------------Fishing 4");
 	fishingStat = true;
 	log("ropeLength: %f", ropeLength);
 	if(ropeLength >= 6)
 	{
 		randomTime = random(10,20);
-		catchTime = random(8,randomTime);
+		catchTime = random(8, randomTime - 3);
 		ropeHealth = ropeHealth * 12;
 	}
 	else if (ropeLength > 4 && ropeLength < 6)
 	{
 		randomTime = random(8, 15);
-		catchTime = random(6, randomTime);
+		catchTime = random(6, randomTime - 3);
 		ropeHealth = ropeHealth * 10;
 	}
 	else if (ropeLength >= 3 && ropeLength <= 4) 
 	{
 		randomTime = random(5,10);
-		catchTime = random(3, randomTime);
+		catchTime = random(3, randomTime - 3);
 		ropeHealth = ropeHealth * 5;
 	}
 	else if (ropeLength >= 1 && ropeLength < 3) {
 		randomTime = random(3 , 10);
-		catchTime = random(3, randomTime);
+		catchTime = random(3, randomTime - 3);
 		ropeHealth = ropeHealth * 5;
 	}
-
+	fstChange(1);
 	timer = randomTime;
 	this->schedule(schedule_selector(LSFGame::timerFishing), 1.f);
-	log("---------------------------Fishing 4");
+	log("---------------------------Fishing 4-END");
 	//Success
 }
 void LSFGame::timerFishing(float dt)
@@ -956,9 +958,11 @@ void LSFGame::timerFishing(float dt)
 			//catchTime = random(timer-1, timer);
 			log("Enable catch Fish !!!");
 			hangFish = true;
+			fstChange(2);
 		}
-		if (catchTime < -2) {
+		if (catchTime < -5) {
 			log("Disable catch Fish !!!");
+			fstChange(4);
 			hangFish = false;
 		}
 	}
@@ -971,16 +975,69 @@ void LSFGame::endFishing(float dt)
 	log("---------------------------Fishing 6");
 	ropeRemove(dt);
 }
+void LSFGame::fstChange(int type)
+{
+
+	//FishingStat
+	if (fstUpdate->numberOfRunningActions() == 0) {
+
+		if (type == 1) {
+			auto fstNormalAnim = animCreate->CreateAnim("Sprites/FishingStat_normal.json", "FishingStat", 4, 0.1f);
+			auto fstNormalAnimate = Animate::create(fstNormalAnim);
+			repFstNormal = RepeatForever::create(fstNormalAnimate);
+			fstUpdate->runAction(repFstNormal);
+			log("fstUpdate Type 1 Activate !!");
+		}
+		if (type == 2) {
+			auto fstHangAnim = animCreate->CreateAnim("Sprites/FishingStat_hang.json", "FishingStat", 4, 0.1f);
+			auto fstHangAnimate = Animate::create(fstHangAnim);
+			repFstHang = Repeat::create(fstHangAnimate, 1);
+			fstUpdate->runAction(repFstHang);
+			log("fstUpdate Type 2 Activate !!");
+		}
+		if (type == 3) {
+			auto fstSuccessAnim = animCreate->CreateAnim("Sprites/FishingStat_success.json", "FishingStat", 4, 0.1f);
+			auto fstSuccessAnimate = Animate::create(fstSuccessAnim);
+			repFstSuccess = Repeat::create(fstSuccessAnimate, 1);
+			fstUpdate->runAction(repFstSuccess);
+			log("fstUpdate Type 3 Activate !!");
+		}
+		if (type == 4) {
+			auto fstFailAnim = animCreate->CreateAnim("Sprites/FishingStat_fail.json", "FishingStat", 4, 0.1f);
+			auto fstFailAnimate = Animate::create(fstFailAnim);
+			repFstFail = Repeat::create(fstFailAnimate, 1);
+			fstUpdate->runAction(repFstFail);
+			log("fstUpdate Type 4 Activate !!");
+		}
+	}
+	else {
+		if (fstCount == 1)
+		{
+			fstCount = 0;
+			return;
+		}
+		log("fstUpdate stopAllAction!!");
+		fstUpdate->stopAllActions();
+		fstCount++;
+		fstChange(type);
+
+	}
+}
+
 void LSFGame::ropeRemove(int type) 
 {
 	log("---------------------------Fishing 7");
 	if (type == 1) {
+		
 		log("---------------------------Fishing 7-1");
+		fstChange(4);
 		log("Fishing fail!");
 		log("TIME OVER");
+		
 	}
 	else if (type == 2) {
 		log("---------------------------Fishing 7-2");
+		fstChange(4);
 		log("Fishing fail!");
 		log("ropeHealth ZERO");
 		this->unschedule(schedule_selector(LSFGame::timerFishing));
@@ -988,7 +1045,9 @@ void LSFGame::ropeRemove(int type)
 	else if (type == 3) {
 		log("---------------------------Fishing 7-3");
 		this->unschedule(schedule_selector(LSFGame::timerFishing));
+		fstChange(3);
 		log("Fishing Success");
+		
 	}
 	
 	ropeHealth = 100;
