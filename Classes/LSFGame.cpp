@@ -36,13 +36,19 @@ bool LSFGame::init()
 	craftSwitch = false;
 	
 	//스프라이트 추가
-	auto GameFrameCache = SpriteFrameCache::getInstance();
-	GameFrameCache->addSpriteFramesWithJson("Sprites/Game.json");
+	Sprite* backDefault = Sprite::create("Sprites/Game_bg.png");
+	backDefault->setAnchorPoint(Vec2::ZERO);
+	backDefault->setPosition(Vec2::ZERO);
+	//this->addChild(backDefault);
+	//!Debug on/off
 
-	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game 0.png"));
-	back->setAnchorPoint(Vec2::ZERO);
-	back->setPosition(Vec2(0,100));
-	this->addChild(back);
+	auto GameFrameCache = SpriteFrameCache::getInstance();
+	GameFrameCache->addSpriteFramesWithJson("Sprites/Game_cloudcut.json");
+
+	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game_cloudcut 0.png"));
+	back->setAnchorPoint(Vec2(0, 1));
+	back->setPosition(Vec2(0,winSize.height));
+	//this->addChild(back);
 	//!Debug on/off
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
@@ -154,7 +160,7 @@ bool LSFGame::init()
 
 	////애니메이션
 	//Background
-	auto mainAnim = animCreate->CreateAnim("Sprites/Game.json", "Game", 15, 0.1f);
+	auto mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut.json", "Game_cloudcut", 15, 0.1f);
 	auto mainAnimate = Animate::create(mainAnim);
 	auto repMain = RepeatForever::create(mainAnimate);
 	back->runAction(repMain);

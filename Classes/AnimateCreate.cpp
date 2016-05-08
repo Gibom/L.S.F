@@ -13,7 +13,7 @@ bool AnimateCreate::init()
 
 Animation* AnimateCreate::CreateAnim(const std::string & json, const std::string & framename, int frames, float dt)
 {
-	char frName[20];
+	char frName[30];
 
 	auto AnimateFrameCache = SpriteFrameCache::getInstance();
 	AnimateFrameCache->addSpriteFramesWithJson(json);
