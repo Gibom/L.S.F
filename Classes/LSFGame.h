@@ -160,19 +160,23 @@ public:
 	int waterCount;
 	int flowRand;
 	int fstCount = 0;
+	bool touchCount;
 	bool ropeTickCount;
 	bool ropeTouchCount;
 	
 	bool craftSwitch;
 	bool modeSwitch;
+
+	void touchCounter(float dt);
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool onTouchBegan(Touch* touch, Event* event);
 	//virtual void onTouchMoved(Touch* touch, Event* event);
 	virtual void onTouchEnded(Touch* touch, Event* event);
 
-	//Inventory Scene transition
+	//Inventory 
 	void doPushInventory(Ref * pSender);
+	
 	//cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
 
 protected:
