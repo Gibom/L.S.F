@@ -54,7 +54,7 @@ public:
 	//낚시 - 조작
 	bool bTouch_mode; //모드 스위치 구현 시 사용
 	bool hangFish;
-
+	void doChangeMode(Ref* pSender);
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
@@ -100,6 +100,8 @@ public:
 	LayerColor* invenLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
+	MenuItemImage* btn_modeswitch;
+	Menu* modeswitchMenu;
 	b2Body* water1;
 	b2Body* water2;
 	b2Body* water3;
@@ -166,8 +168,8 @@ public:
 	
 	bool craftSwitch;
 	bool modeSwitch;
-
 	void touchCounter(float dt);
+	
 	virtual void onEnter();
 	virtual void onExit();
 	virtual bool onTouchBegan(Touch* touch, Event* event);

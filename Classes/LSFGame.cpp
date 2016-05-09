@@ -31,6 +31,7 @@ bool LSFGame::init()
 	btnCount = 0;
 	cbtnCount = 0;
 	waterCount = 0;
+	modeSwitch = false;
 	touchCount = false;
 	fishingStat = false;
 	ropeTickCount = false;
@@ -151,8 +152,7 @@ bool LSFGame::init()
 	//환경 구조물배치----------------------------------------------------------------------------------------
 
 	//메뉴
-	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png",
-		"Sprites/Button_bagopen.png",
+	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png","Sprites/Button_bagopen.png",
 		CC_CALLBACK_1(LSFGame::doPushInventory, this));
 	btn_inventory->setScale(1.5f);
 	inventoryMenu = Menu::create(btn_inventory, nullptr);
@@ -160,6 +160,14 @@ bool LSFGame::init()
 	inventoryMenu->setPosition(Vec2(winSize.width-140, winSize.height/5-100));
 	inventoryMenu->alignItemsHorizontally();
 	this->addChild(inventoryMenu, 4);
+
+	btn_modeswitch = MenuItemImage::create("Sprites/Button_modeauto.png", "Sprites/Button_modemanual.png",
+		CC_CALLBACK_1(LSFGame::doChangeMode, this));
+	modeswitchMenu = Menu::create(btn_modeswitch, nullptr);
+	modeswitchMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	modeswitchMenu->setPosition(Vec2(winSize.width - 140, winSize.height - 100));
+	modeswitchMenu->alignItemsHorizontally();
+	this->addChild(modeswitchMenu, 3); 
 
 	////애니메이션
 	//Background
@@ -217,6 +225,7 @@ bool LSFGame::init()
 	//월드 생성
 	if (this->createBox2dWorld(true))
 	{
+		
 		this->schedule(schedule_selector(LSFGame::tick));
 		water = WaterNode::create();
 		this->addChild(water, 3);
@@ -1058,7 +1067,18 @@ void LSFGame::fstChange(int type)
 
 	//}
 }
+void LSFGame::doChangeMode(Ref* pSender)
+{
+	if (modeSwitch == false) {
+		modeSwitch = true;
+		btn_modeswitch->selected();
+	}
+	else if (modeSwitch == true) {
+		modeSwitch = false;
+		btn_modeswitch->unselected();
+	}
 
+}
 void LSFGame::ropeRemove(int type) 
 {
 	log("---------------------------Fishing 7");
