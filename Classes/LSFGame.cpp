@@ -28,9 +28,9 @@ bool LSFGame::init()
 	//flow
 	
 	//flow
-	btnCount = 0;
 	cbtnCount = 0;
 	waterCount = 0;
+	btnCount = false;
 	modeSwitch = false;
 	touchCount = false;
 	fishingStat = false;
@@ -264,8 +264,6 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	log("Touched! %d", touchCount);
 	weatherCount = 1;
 	Vec2 touchPoint = touch->getLocation();
-	
-	//touch check --------------------------------
 	bool bTouch_craft = craft->getBoundingBox().containsPoint(touchPoint);
 	touchRope = touchPoint; // WaterSplash 발생 위치 지정을 위한 변수
 	float splashDelay = touchPoint.y;
@@ -291,7 +289,13 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			}
 			if (hangFish == true) {
 				log("---------------------------HangFish true -> Touch");
-				endFishing(3);
+				if(modeSwitch == false) // 반자동모드
+				{
+					endFishing(3);
+				}
+				else {					// 수동모드
+
+				}
 			}
 		}
 	}
@@ -322,12 +326,12 @@ void LSFGame::onTouchEnded(Touch* touch, Event* event)
 }
 void LSFGame::doPushInventory(Ref * pSender)
 {
-	if (btnCount == 0) {
+	if (btnCount == false) {
 		invenLayer->setVisible(true);
 		inventory->setVisible(true);
 		//craft->setVisible(true);
 		btn_inventory->selected();
-		btnCount++;
+		btnCount = true;
 		cbtnCount = 1;
 	}
 	else {
@@ -335,7 +339,7 @@ void LSFGame::doPushInventory(Ref * pSender)
 		inventory->setVisible(false);
 		//craft->setVisible(false);
 		btn_inventory->unselected();
-		btnCount = 0;
+		btnCount = false;
 		cbtnCount = 0;
 	}
 }
@@ -1073,7 +1077,7 @@ void LSFGame::doChangeMode(Ref* pSender)
 		modeSwitch = true;
 		btn_modeswitch->selected();
 	}
-	else if (modeSwitch == true) {
+	else {
 		modeSwitch = false;
 		btn_modeswitch->unselected();
 	}

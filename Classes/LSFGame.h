@@ -157,11 +157,11 @@ public:
 
 
 	//Ä«¿îÆ®
-	int btnCount;
 	int cbtnCount;
 	int waterCount;
 	int flowRand;
 	int fstCount = 0;
+	bool btnCount;
 	bool touchCount;
 	bool ropeTickCount;
 	bool ropeTouchCount;
