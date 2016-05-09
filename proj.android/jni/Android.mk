@@ -15,6 +15,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 				   ../../Classes/AnimateCreate.cpp \
 				   ../../Classes/WaterColumn.cpp \
 				   ../../Classes/WaterNode.cpp \
+				   ../../Classes/Joystick.cpp \
 				   ../../Classes/vrope.cpp \
 				   ../../Classes/vstick.cpp \
 				   ../../Classes/vpoint.cpp \
