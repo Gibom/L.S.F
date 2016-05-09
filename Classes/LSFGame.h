@@ -5,6 +5,7 @@
 #include "Box2D\Box2D.h"
 #include <GLES-Render.h>
 #include "vrope.h"
+#include "Joystick.h"
 #include "ContactListener.h"
 #include "AnimateCreate.h"
 #include "WaterNode.h"
@@ -55,6 +56,8 @@ public:
 	bool bTouch_mode; //모드 스위치 구현 시 사용
 	bool hangFish;
 	void doChangeMode(Ref* pSender);
+	Joystick* joystick;
+
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
@@ -98,6 +101,7 @@ public:
 	Sprite* rainDrop;
 	Sprite* snowDrop;
 	LayerColor* invenLayer;
+	LayerColor* manualLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
 	MenuItemImage* btn_modeswitch;
@@ -170,10 +174,11 @@ public:
 	bool modeSwitch;
 	void touchCounter(float dt);
 	
-	virtual void onEnter();
-	virtual void onExit();
+	//virtual void onEnter();
+	//virtual void onExit();
+	EventListenerTouchOneByOne* listener;
 	virtual bool onTouchBegan(Touch* touch, Event* event);
-	//virtual void onTouchMoved(Touch* touch, Event* event);
+	virtual void onTouchMoved(Touch* touch, Event* event);
 	virtual void onTouchEnded(Touch* touch, Event* event);
 
 	//Inventory 

@@ -22,12 +22,19 @@ bool LSFGame::init()
 	}
 
 	//////////////////////////////
+	listener = EventListenerTouchOneByOne::create();
+	listener->setSwallowTouches(true);
+	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
+	listener->onTouchMoved = CC_CALLBACK_2(LSFGame::onTouchMoved, this);
+	listener->onTouchEnded = CC_CALLBACK_2(LSFGame::onTouchEnded, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+	
 	srand(time(nullptr));
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
-	//flow
-	
-	//flow
+
+
+
 	cbtnCount = 0;
 	waterCount = 0;
 	btnCount = false;
@@ -37,8 +44,20 @@ bool LSFGame::init()
 	ropeTickCount = false;
 	craftSwitch = false;
 	
-	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f);
+	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
 
+	//조이스틱
+	//manualLayer = LayerColor::create(Color4B(255, 255, 255, 0),
+	//	winSize.width, winSize.height);
+	//manualLayer->setAnchorPoint(Vec2::ZERO);
+	//manualLayer->setPosition(Vec2(0, 0));
+	//manualLayer->setVisible(false);
+	//this->addChild(manualLayer, 4);
+
+	joystick = Joystick::create();
+	joystick->setVisible(false);
+	this->addChild(joystick, 4);
+	
 	//스프라이트 추가
 	Sprite* backDefault = Sprite::create("Sprites/Game_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
@@ -236,29 +255,23 @@ bool LSFGame::init()
 
 }
 
-void LSFGame::onEnter()
-{
-	Layer::onEnter();
-	//Touch 
-	//싱글 터치 모드로 터치 리스너 등록
-	auto listener = EventListenerTouchOneByOne::create();
-	//Swallow touches only available in OneByOne mode.
-	//핸들링된 터치 이벤트를 터치 이벤트 array에서 지우겠다는 의미다.
-	listener->setSwallowTouches(true);
-
-	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
-	listener->onTouchMoved = CC_CALLBACK_2(LSFGame::onTouchMoved, this);
-	listener->onTouchEnded = CC_CALLBACK_2(LSFGame::onTouchEnded, this);
-
-	// The prioriry of the touch listener is based on the draw order of sprite
-	// 터치 리스너의 우선순위를 (노드가) 화면에 그려진 순서대로 한다
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-}
-void LSFGame::onExit()
-{
-	_eventDispatcher->removeAllEventListeners();
-	Layer::onExit();
-}
+//void LSFGame::onEnter()
+//{
+//	Layer::onEnter();
+//	
+//	auto listener = EventListenerTouchOneByOne::create();
+//	
+//	listener->setSwallowTouches(true);
+//	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
+//	listener->onTouchMoved = CC_CALLBACK_2(LSFGame::onTouchMoved, this);
+//	listener->onTouchEnded = CC_CALLBACK_2(LSFGame::onTouchEnded, this);
+//	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+//}
+//void LSFGame::onExit()
+//{
+//	_eventDispatcher->removeAllEventListeners();
+//	Layer::onExit();
+//}
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
 	log("Touched! %d", touchCount);
@@ -269,32 +282,56 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	float splashDelay = touchPoint.y;
 
 	// 게임 화면
-	if (touchCount == true) {
-		if (cbtnCount == 0) {
-			if (cbtnCount == 0 && fishingStat == false) {
-				//낚시 시작 전
-				needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
-				Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
+	//반자동 모드
+	if (modeSwitch != true) {
+		if (touchCount == true) {
+			if (cbtnCount == 0) {
+				if (cbtnCount == 0 && fishingStat == false) {
+					//낚시 시작 전
+					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
+					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
-				this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
-					needle, needle->GetLocalCenter(), 1.1f);
-				//ropeTouchCount = true;
-				log("---------------------------Fishing 1");
+					this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
+						needle, needle->GetLocalCenter(), 1.1f);
+					//ropeTouchCount = true;
+					log("---------------------------Fishing 1 SA");
 
-				log("---------------------------Fishing 2");
-				this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
-				log("---------------------------Fishing 3");
-				startFishing(1);
-				log("---------------------------Fishing 3-1");
-			}
-			if (hangFish == true) {
-				log("---------------------------HangFish true -> Touch");
-				if(modeSwitch == false) // 반자동모드
-				{
+					log("---------------------------Fishing 2 SA");
+					this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
+					log("---------------------------Fishing 3 SA");
+					startFishing(1);
+					log("---------------------------Fishing 3-1 SA");
+				}
+				if (hangFish == true) {
+					log("---------------------------HangFish true -> Touch SA");
 					endFishing(3);
 				}
-				else {					// 수동모드
+			}
+		}
+	}
+	//수동 모드
+	else {
+		if (touchCount == true) {
+			if (cbtnCount == 0) {
+				if (cbtnCount == 0 && fishingStat == false) {
+					//낚시 시작 전
+					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
+					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
+					this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
+						needle, needle->GetLocalCenter(), 1.1f);
+					//ropeTouchCount = true;
+					log("---------------------------Fishing 1 MA");
+
+					log("---------------------------Fishing 2 MA");
+					this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
+					log("---------------------------Fishing 3 MA");
+					startFishing(1);
+					log("---------------------------Fishing 3-1 MA");
+				}
+				if (hangFish == true) {
+					log("---------------------------HangFish true -> Touch MA");
+					//endFishing(3);
 				}
 			}
 		}
@@ -320,10 +357,15 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 
 	return true;
 }
+void LSFGame::onTouchMoved(Touch* touch, Event* event)
+{
+
+}
 void LSFGame::onTouchEnded(Touch* touch, Event* event)
 {
 	
 }
+
 void LSFGame::doPushInventory(Ref * pSender)
 {
 	if (btnCount == false) {
@@ -996,7 +1038,9 @@ void LSFGame::timerFishing(float dt)
 	}
 	if (timer != 0) {
 		if (catchTime-- == 0) {
-			//catchTime = random(timer-1, timer);
+			if (modeSwitch == true) {
+				listener->setSwallowTouches(false);
+			}
 			log("Enable catch Fish !!!");
 			hangFish = true;
 			fstChange(2);
@@ -1012,6 +1056,9 @@ void LSFGame::timerFishing(float dt)
 void LSFGame::endFishing(float dt) 
 {
 	log("EndFishing");
+	if (modeSwitch == true) {
+		listener->setSwallowTouches(true);
+	}
 	this->unschedule(schedule_selector(LSFGame::timerFishing));
 	log("---------------------------Fishing 6");
 	ropeRemove(dt);
@@ -1076,10 +1123,14 @@ void LSFGame::doChangeMode(Ref* pSender)
 	if (modeSwitch == false) {
 		modeSwitch = true;
 		btn_modeswitch->selected();
+		//manualLayer->setVisible(true);
+		joystick->setVisible(true);
 	}
 	else {
 		modeSwitch = false;
 		btn_modeswitch->unselected();
+		//manualLayer->setVisible(false);
+		joystick->setVisible(false);
 	}
 
 }
