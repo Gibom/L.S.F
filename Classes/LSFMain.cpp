@@ -22,9 +22,10 @@ bool LSFMain::init()
 	}
 
 	/////////////////////////////
+	soundEffect->doSoundAction("main", 0);
 	winSize = Director::getInstance()->getWinSize();
-	//스프라이트 캐시
 	
+	//스프라이트 캐시
 	Sprite* backDefault = Sprite::create("Sprites/Main_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
 	backDefault->setPosition(Vec2::ZERO);
@@ -80,8 +81,8 @@ bool LSFMain::init()
 
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
+	soundEffect->doSoundAction("main", 1);
 	auto pScene = LSFGame::createScene();
-
 	Director::getInstance()->replaceScene(createTransition(7, 0.5, pScene));
 }
 

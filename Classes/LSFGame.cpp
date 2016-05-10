@@ -22,6 +22,9 @@ bool LSFGame::init()
 	}
 
 	//////////////////////////////
+
+	soundEffect->doSoundAction("game", 0);
+
 	listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
@@ -257,23 +260,6 @@ bool LSFGame::init()
 
 }
 
-//void LSFGame::onEnter()
-//{
-//	Layer::onEnter();
-//	
-//	auto listener = EventListenerTouchOneByOne::create();
-//	
-//	listener->setSwallowTouches(true);
-//	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
-//	listener->onTouchMoved = CC_CALLBACK_2(LSFGame::onTouchMoved, this);
-//	listener->onTouchEnded = CC_CALLBACK_2(LSFGame::onTouchEnded, this);
-//	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-//}
-//void LSFGame::onExit()
-//{
-//	_eventDispatcher->removeAllEventListeners();
-//	Layer::onExit();
-//}
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
 	log("Touched! %d", touchCount);
@@ -290,6 +276,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			if (cbtnCount == 0) {
 				if (cbtnCount == 0 && fishingStat == false) {
 					//낚시 시작 전
+					soundEffect->doSoundAction("game", 1);
 					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
 					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
@@ -317,6 +304,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			if (cbtnCount == 0) {
 				if (cbtnCount == 0 && fishingStat == false) {
 					//낚시 시작 전
+					soundEffect->doSoundAction("game", 1);
 					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
 					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
@@ -1088,6 +1076,7 @@ void LSFGame::fstChange(int type)
 	}
 	
 		if (type == 1) {
+			soundEffect->doSoundAction("game", 3);
 			auto fstNormalAnim = animCreate->CreateAnim("Sprites/FishingStat_normal.json", "FishingStat", 4, 0.1f);
 			auto fstNormalAnimate = Animate::create(fstNormalAnim);
 			repFstNormal = RepeatForever::create(fstNormalAnimate);
@@ -1208,6 +1197,7 @@ void LSFGame::ropeTick(float dt)
 void LSFGame::waterSplash(float dt) {
 	/*WaterSplash Effect Sound 추가 예정*/
 	water->splash(touchRope.x, -100);
+	soundEffect->doSoundAction("game", 2);
 }
 void ContactListener::BeginContact(b2Contact* contact)
 {

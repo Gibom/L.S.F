@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "AnimateCreate.h"
-
+#include "SoundEffect.h"
 using namespace cocos2d;
 
 class LSFMain : public cocos2d::LayerColor
@@ -14,7 +14,7 @@ public:
     virtual bool init();
 
     CREATE_FUNC(LSFMain);
-
+	SoundEffect* soundEffect;
 	MenuItemImage* btn_Start;
 	AnimateCreate* animCreate;
 	void doPushSceneTran(Ref * pSender);

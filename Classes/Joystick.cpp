@@ -139,7 +139,7 @@ void Joystick::onTouchesMoved(const std::vector<Touch*>& touches, Event  *event)
         this->updateVelocity(touchPoint);
 		
 		log("fishingGauge: %d", fishingGauge);
-		fishingGauge+= 2;
+		fishingGauge++;
     }
 }
 

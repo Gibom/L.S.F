@@ -9,6 +9,7 @@
 #include "ContactListener.h"
 #include "AnimateCreate.h"
 #include "WaterNode.h"
+#include "SoundEffect.h"
 using namespace cocos2d;
 
 class LSFGame : public cocos2d::LayerColor , public AnimateCreate 
@@ -20,7 +21,8 @@ public:
 	virtual bool init();
 
 	CREATE_FUNC(LSFGame);
-
+	SoundEffect* soundEffect;
+	
 	//Box2D----------------------------------------------------------------------------
 	bool createBox2dWorld(bool debug);
 	SpriteBatchNode* ropeSpriteSheet;

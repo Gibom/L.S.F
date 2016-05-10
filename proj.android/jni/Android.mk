@@ -16,6 +16,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 				   ../../Classes/WaterColumn.cpp \
 				   ../../Classes/WaterNode.cpp \
 				   ../../Classes/Joystick.cpp \
+				   ../../Classes/SoundEffect.cpp \
 				   ../../Classes/vrope.cpp \
 				   ../../Classes/vstick.cpp \
 				   ../../Classes/vpoint.cpp \
