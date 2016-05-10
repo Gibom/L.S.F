@@ -10,6 +10,7 @@
 #define __JoyStickEx__Joystick__
 
 #include "cocos2d.h"
+#include "AnimateCreate.h"
 
 using namespace cocos2d;
 
@@ -19,17 +20,25 @@ class Joystick : public Layer
 public:
     virtual bool init();
     CREATE_FUNC(Joystick);
-
+	
     Vec2 getVelocity(){ return velocity; }
-
+	void doJoyAnimate(int type);
+	int fishingGauge = 0;
 private:
-    
+	Size winSize;
     Vec2 kCenter;
-    Sprite* thumb;
+	Sprite* bg;
+	Sprite* thumb;
     bool isPressed;
     
     Vec2 velocity;
-    
+	
+	AnimateCreate* animCreate;
+	Animation* joystickAnim;
+	Animate* joystickAnimate;
+	RepeatForever* repJoystick;
+	
+
     void updateVelocity(Vec2 point);
     void resetJoystick();
     bool handleLastTouch();

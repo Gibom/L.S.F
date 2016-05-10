@@ -57,7 +57,8 @@ public:
 	bool hangFish;
 	void doChangeMode(Ref* pSender);
 	Joystick* joystick;
-
+	Sprite* fishBowl;
+	void fishBowlProgress();
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;

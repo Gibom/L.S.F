@@ -11,7 +11,7 @@
 #define JOYSTICK_OFFSET_X 5.0f
 #define JOYSTICK_OFFSET_Y 5.0f
 
-#define JOYSTICK_RADIUS 64.0f
+#define JOYSTICK_RADIUS 120.0f
 #define THUMB_RADIUS 26.0f
 
 static bool isPointInCircle(Vec2 point, Vec2 center, float radius)
@@ -29,11 +29,11 @@ bool Joystick::init()
     }
 
     //////////////////////////////////////////////////////////////////////////
-
+	winSize = Director::getInstance()->getWinSize();
     /*kCenter = Vec2(JOYSTICK_RADIUS + JOYSTICK_OFFSET_X,
                    JOYSTICK_RADIUS + JOYSTICK_OFFSET_Y);*/
-	kCenter = Vec2(338, 240);
-    
+	//kCenter = Vec2(338, 240);
+	kCenter = Vec2(winSize.width/2, winSize.height/3);
     auto listener = EventListenerTouchAllAtOnce::create();
     listener->onTouchesBegan = CC_CALLBACK_2(Joystick::onTouchesBegan, this);
     listener->onTouchesMoved = CC_CALLBACK_2(Joystick::onTouchesMoved, this);
@@ -42,15 +42,26 @@ bool Joystick::init()
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
     velocity = Vec2::ZERO;
-    
-    Sprite* bg = Sprite::create("Sprites/joystick_background.png");
+	
+	auto JoystickFrameCache = SpriteFrameCache::getInstance();
+	JoystickFrameCache->addSpriteFramesWithJson("Sprites/Joystick.json");
+
+	bg = Sprite::createWithSpriteFrame(JoystickFrameCache->getSpriteFrameByName("Joystick 0.png"));
+	bg->setPosition(kCenter);
+	bg->setScale(1.4f);
+	this->addChild(bg);
+
+  /*  bg = Sprite::create("Sprites/joystick_background.png");
     bg->setPosition(kCenter);
-    this->addChild(bg, 0);
+    this->addChild(bg, 0);*/
     
     thumb = Sprite::create("Sprites/joystick_thumb.png");
     thumb->setPosition(kCenter);
     this->addChild(thumb, 1);
-    
+
+	
+	
+
     return true;
 }
 
@@ -98,16 +109,21 @@ bool Joystick::handleLastTouch()
 
 void Joystick::onTouchesBegan(const std::vector<Touch*>& touches, Event  *event)
 {
+
 	log("joy touch1");
-    Touch* touch = touches[0];
+	Touch* touch = touches[0];
     Vec2 touchPoint = touch->getLocation();
 	log("joy touchPoint x: %f y: %f", touchPoint.x, touchPoint.y);
 	log("joy kCenter x: %f y: %f", kCenter.x, kCenter.y);
     if (isPointInCircle(touchPoint, kCenter, JOYSTICK_RADIUS))
     {
+
+
 		log("joy touch2");
         isPressed = true;
         this->updateVelocity(touchPoint);
+		doJoyAnimate(1);
+		
     }
 }
 
@@ -117,16 +133,20 @@ void Joystick::onTouchesMoved(const std::vector<Touch*>& touches, Event  *event)
     if (isPressed)
     {
 		log("joy moved 2");
+		
         Touch* touch = touches[0];
         Vec2 touchPoint = touch->getLocation();
-
         this->updateVelocity(touchPoint);
+		
+		log("fishingGauge: %d", fishingGauge);
+		fishingGauge+= 2;
     }
 }
 
 void Joystick::onTouchesEnded(const std::vector<Touch*>& touches, Event  *event)
 {
 	log("joy Ended");
+	doJoyAnimate(2);
     this->handleLastTouch();
 }
 
@@ -136,4 +156,16 @@ void Joystick::onTouchesCancelled(const std::vector<Touch*>& touches, Event  *ev
     this->handleLastTouch();
 }
 
-
+void Joystick::doJoyAnimate(int type)
+{
+	if(type == 1){
+		joystickAnim = animCreate->CreateAnim("Sprites/Joystick.json", "Joystick", 15, 0.05f);
+		joystickAnimate = Animate::create(joystickAnim);
+		repJoystick = RepeatForever::create(joystickAnimate);
+		bg->runAction(repJoystick);
+	}
+	else {
+		bg->stopAllActions();
+	}
+	
+}

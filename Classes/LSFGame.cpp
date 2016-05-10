@@ -3,7 +3,7 @@
 
 using namespace cocos2d;
 
-int ropeHealth = 100;
+int ropeHealth = 500;
 bool fishingStat;
 Scene* LSFGame::createScene()
 {
@@ -47,12 +47,14 @@ bool LSFGame::init()
 	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
 
 	//조이스틱
-	//manualLayer = LayerColor::create(Color4B(255, 255, 255, 0),
-	//	winSize.width, winSize.height);
-	//manualLayer->setAnchorPoint(Vec2::ZERO);
-	//manualLayer->setPosition(Vec2(0, 0));
-	//manualLayer->setVisible(false);
-	//this->addChild(manualLayer, 4);
+	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0),
+		winSize.width, winSize.height);
+	manualLayer->setAnchorPoint(Vec2::ZERO);
+	manualLayer->setPosition(Vec2(0, 0));
+	manualLayer->setVisible(false);
+	this->addChild(manualLayer, 4);
+
+	
 
 	joystick = Joystick::create();
 	joystick->setVisible(false);
@@ -375,6 +377,7 @@ void LSFGame::doPushInventory(Ref * pSender)
 		btn_inventory->selected();
 		btnCount = true;
 		cbtnCount = 1;
+		modeswitchMenu->setEnabled(false);
 	}
 	else {
 		invenLayer->setVisible(false);
@@ -383,6 +386,9 @@ void LSFGame::doPushInventory(Ref * pSender)
 		btn_inventory->unselected();
 		btnCount = false;
 		cbtnCount = 0;
+		craftUsel->setVisible(true);
+		craftSel->setVisible(false);
+		modeswitchMenu->setEnabled(true);
 	}
 }
 bool LSFGame::createBox2dWorld(bool debug)
@@ -964,10 +970,13 @@ void LSFGame::tick(float dt)
 
 	//RHC(Rope Health Counter Start)-----------------------------
 	if (ropeHealth == 0) {
-		ropeRemove(2);
+		endFishing(2);
 	}
 	//RHC(Rope Health Counter End)-------------------------------
-		
+	
+	if (joystick->fishingGauge >= 200) {
+		endFishing(3);
+	}
 }
 void LSFGame::touchCounter(float dt)
 {
@@ -980,6 +989,7 @@ void LSFGame::touchCounter(float dt)
 }
 void LSFGame::startFishing(float dt)
 {
+	modeswitchMenu->setEnabled(false);
 	log("---------------------------Fishing 4");
 	fishingStat = true;
 	log("ropeLength: %f", ropeLength);
@@ -1013,7 +1023,7 @@ void LSFGame::startFishing(float dt)
 		ropeHealth = ropeHealth * 5;
 		log("3333-4");
 	}
-	else if (ropeLength >= 1 && ropeLength < 3)
+	else if (ropeLength >= 0 && ropeLength < 3)
 	{
 		log("4444-1");
 		randomTime = random(5, 10);
@@ -1038,30 +1048,37 @@ void LSFGame::timerFishing(float dt)
 	}
 	if (timer != 0) {
 		if (catchTime-- == 0) {
-			if (modeSwitch == true) {
-				listener->setSwallowTouches(false);
-			}
 			log("Enable catch Fish !!!");
 			hangFish = true;
 			fstChange(2);
+			if (modeSwitch == true) {
+				listener->setSwallowTouches(false);
+				joystick->setVisible(true);
+				manualLayer->setVisible(true);
+				this->fishBowlProgress();
+			}
 		}
 		if (catchTime < -5) {
 			log("Disable catch Fish !!!");
 			fstChange(4);
 			hangFish = false;
 		}
+		
 	}
 	log("---------------------------Fishing 5");
 }
 void LSFGame::endFishing(float dt) 
 {
+	
 	log("EndFishing");
 	if (modeSwitch == true) {
 		listener->setSwallowTouches(true);
+		joystick->setVisible(false);
 	}
 	this->unschedule(schedule_selector(LSFGame::timerFishing));
 	log("---------------------------Fishing 6");
 	ropeRemove(dt);
+	joystick->doJoyAnimate(2);
 }
 void LSFGame::fstChange(int type)
 {
@@ -1124,7 +1141,7 @@ void LSFGame::doChangeMode(Ref* pSender)
 		modeSwitch = true;
 		btn_modeswitch->selected();
 		//manualLayer->setVisible(true);
-		joystick->setVisible(true);
+		
 	}
 	else {
 		modeSwitch = false;
@@ -1137,13 +1154,15 @@ void LSFGame::doChangeMode(Ref* pSender)
 void LSFGame::ropeRemove(int type) 
 {
 	log("---------------------------Fishing 7");
+	modeswitchMenu->setEnabled(true);
 	if (type == 1) {
 		
 		log("---------------------------Fishing 7-1");
 		fstChange(4);
 		log("Fishing fail!");
 		log("TIME OVER");
-		
+		joystick->fishingGauge = 0;
+		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
 	}
 	else if (type == 2) {
 		log("---------------------------Fishing 7-2");
@@ -1151,16 +1170,20 @@ void LSFGame::ropeRemove(int type)
 		log("Fishing fail!");
 		log("ropeHealth ZERO");
 		this->unschedule(schedule_selector(LSFGame::timerFishing));
+		joystick->fishingGauge = 0;
+		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
 	}
 	else if (type == 3) {
 		log("---------------------------Fishing 7-3");
 		this->unschedule(schedule_selector(LSFGame::timerFishing));
 		fstChange(3);
 		log("Fishing Success");
+		joystick->fishingGauge = 0;
+		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
 		
 	}
 	
-	ropeHealth = 100;
+	ropeHealth = 500;
 	ropes->clear();
 	_world->DestroyJoint(ropeJoint);
 	this->unschedule(schedule_selector(LSFGame::ropeTick));
@@ -1211,6 +1234,21 @@ int LSFGame::statusCheck(const std::string & kindof)
 
 	}
 	return 0;
+}
+
+//수동모드 낚시 progress 수정필요
+void LSFGame::fishBowlProgress()
+{
+	fishBowl = Sprite::create("Sprites/FishBowl.png");
+	manualLayer->removeAllChildrenWithCleanup(true);
+	auto left = ProgressTimer::create(fishBowl);
+	left->setType(ProgressTimer::Type::BAR);
+	left->setMidpoint(Vec2(0, 0));
+	left->setPercentage(0);
+	left->setBarChangeRate(Vec2(0, 1));
+	manualLayer->addChild(left);
+	left->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	//left->runAction(RepeatForever::create(to1));
 }
 LSFGame::~LSFGame()
 {

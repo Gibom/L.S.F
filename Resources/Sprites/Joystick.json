@@ -1,0 +1,161 @@
+{ "frames": [
+   {
+    "filename": "Joystick 0.ase",
+    "frame": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 1.ase",
+    "frame": { "x": 164, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 2.ase",
+    "frame": { "x": 328, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 3.ase",
+    "frame": { "x": 492, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 4.ase",
+    "frame": { "x": 656, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 5.ase",
+    "frame": { "x": 820, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 6.ase",
+    "frame": { "x": 984, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 7.ase",
+    "frame": { "x": 1148, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 8.ase",
+    "frame": { "x": 1312, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 9.ase",
+    "frame": { "x": 1476, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 10.ase",
+    "frame": { "x": 1640, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 11.ase",
+    "frame": { "x": 1804, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 12.ase",
+    "frame": { "x": 1968, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 13.ase",
+    "frame": { "x": 2132, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 14.ase",
+    "frame": { "x": 2296, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   },
+   {
+    "filename": "Joystick 15.ase",
+    "frame": { "x": 2460, "y": 0, "w": 164, "h": 128 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 164, "h": 128 },
+    "sourceSize": { "w": 164, "h": 128 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.4.1",
+  "image": "C:\\cocos2d-x-work\\Project\\LSF_Project_git\\Resources\\Sprites\\joystick.png",
+  "format": "I8",
+  "size": { "w": 2624, "h": 128 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "body", "opacity": 255, "blendMode": "normal" },
+   { "name": "bar", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}
