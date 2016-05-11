@@ -54,8 +54,6 @@ bool LSFGame::init()
 	manualLayer->setVisible(false);
 	this->addChild(manualLayer, 4);
 
-	
-
 	joystick = Joystick::create();
 	joystick->setVisible(false);
 	this->addChild(joystick, 4);

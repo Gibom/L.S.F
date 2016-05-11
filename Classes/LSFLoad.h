@@ -1,12 +1,10 @@
-//  LSFLoad.h
-//  LSF Loading process
-
 #ifndef __LFSLOAD_H__
 #define __LFSLOAD_H__
 
 #include "cocos2d.h"
 #include "AnimateCreate.h"
 #include "LSFSingleton.h"
+
 using namespace cocos2d;
 
 class LSFLoad : public LayerColor
