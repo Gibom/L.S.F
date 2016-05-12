@@ -1081,7 +1081,7 @@ void LSFGame::endFishing(float dt)
 void LSFGame::fstChange(int type)
 {
 	//FishingStat
-	if (fstUpdate->numberOfRunningActions() != 0) {
+	if (fstUpdate->getNumberOfRunningActions() != 0) {
 		fstUpdate->stopAllActions();
 	}
 	
