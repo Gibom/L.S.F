@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "AnimateCreate.h"
+#include "LSFSingleton.h"
 
 using namespace cocos2d;
 

@@ -1,5 +1,6 @@
 ﻿#include "AppDelegate.h"
-#include "LSFLoad.h"
+//#include "LSFLoad.h"
+#include "LSFMain.h"
 
 USING_NS_CC;
 
@@ -80,7 +81,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	register_all_packages();
 
 	// create a scene. it's an autorelease object
-	auto scene = LSFLoad::createScene();
+	auto scene = LSFMain::createScene();
 
 	// run
 	director->runWithScene(scene);

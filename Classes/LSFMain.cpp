@@ -29,23 +29,18 @@ bool LSFMain::init()
 	backDefault->setAnchorPoint(Vec2::ZERO);
 	backDefault->setPosition(Vec2::ZERO);
 	this->addChild(backDefault);
-	
-	auto MainFrameCache = SpriteFrameCache::getInstance();
-	MainFrameCache->addSpriteFramesWithJson("Sprites/Main.json");
 
-	Sprite* back = Sprite::createWithSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 0.png"));
-	back->setAnchorPoint(Vec2(0,1));
+	Sprite* back = LSFSingleton::getInstance()->GetmBack();
+	back->setAnchorPoint(Vec2(0, 1));
 	back->setPosition(Vec2(0, winSize.height));
 	this->addChild(back);
+	back->runAction(LSFSingleton::getInstance()->GetmainRep());
 
-
-	MainFrameCache = SpriteFrameCache::getInstance();
-	MainFrameCache->addSpriteFramesWithJson("Sprites/Logo.json");
-
-	Sprite* logo = Sprite::createWithSpriteFrame(MainFrameCache->getSpriteFrameByName("Logo 0.png"));
+	Sprite* logo = LSFSingleton::getInstance()->GetmLogo();
 	logo->setAnchorPoint(Vec2(0.5, 0.5));
 	logo->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
 	this->addChild(logo);
+	logo->runAction(LSFSingleton::getInstance()->GetlogoSeqRep());
 
 	//메뉴
 	btn_Start = MenuItemImage::create("Sprites/Button_start_up.png",
@@ -58,22 +53,6 @@ bool LSFMain::init()
 	startMenu->alignItemsHorizontally();
 
 	this->addChild(startMenu);
-
-	//애니메이션 
-
-	//Background
-	auto mainAnim = animCreate->CreateAnim("Sprites/Main.json", "Main", 20, 0.1f);
-	auto mainAnimate = Animate::create(mainAnim);
-	auto repMain = RepeatForever::create(mainAnimate);
-	back->runAction(repMain);
-
-	//Logo
-	auto logoAnim = animCreate->CreateAnim("Sprites/Logo.json", "Logo", 20, 0.1f);
-	auto logoAnimate = Animate::create(logoAnim);
-	auto delayLogo = DelayTime::create(5.f);
-	auto seqLogo = Sequence::create(logoAnimate, delayLogo, nullptr);
-	auto seqLogoRep = RepeatForever::create(seqLogo);
-	logo->runAction(seqLogoRep);
 
 	return true;
 }

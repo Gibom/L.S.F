@@ -23,11 +23,13 @@ bool LSFLoad::init()
 
 	log("%d", LSFSingleton::getInstance()->value);
 
-	auto MainFrameCache = SpriteFrameCache::getInstance();
-	MainFrameCache->addSpriteFramesWithJson("Sprites/Main.json");
-	LSFSingleton::getInstance()->GetmBack()->createWithSpriteFrame(MainFrameCache->getSpriteFrameByName("Main 0.png"));
+	Sprite* back = LSFSingleton::getInstance()->GetmBack();
+	back->setAnchorPoint(Vec2(0, 1));
+	back->setPosition(Vec2(0, winSize.height));
+	this->addChild(back);
 	
-	this->addChild(LSFSingleton::getInstance()->GetmBack());
+	back->runAction(LSFSingleton::getInstance()->GetmainRep());
+	
 
 	return true;
 }
