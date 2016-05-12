@@ -28,7 +28,34 @@ private:
 	//---------------------------- MainScene End
 	//////////////////////////////////////////////
 	//---------------------------- GameScene Begin
-	
+	Sprite* gBack;
+	Sprite* gCraft;
+	Sprite* gRainDrop;
+	Sprite* gSnowDrop;
+	Animation* craftAnim;
+	Animation* rainAnim;
+	Animation* snowAnim;
+	Animation* gameAnim;
+	Animation* fstNormalAnim;
+	Animation* fstHangAnim;
+	Animation* fstSuccessAnim;
+	Animation* fstFailAnim;
+	Animate* craftAnimate;
+	Animate* rainAnimate;
+	Animate* snowAnimate;
+	Animate* gameAnimate;
+	Animate* fstNormalAnimate;
+	Animate* fstHangAnimate;
+	Animate* fstSuccessAnimate;
+	Animate* fstFailAnimate;
+	RepeatForever* gameRep;
+	RepeatForever* rainRep;
+	RepeatForever* snowRep;
+	RepeatForever* craftRep;
+	RepeatForever* fstNormalRep;
+	Repeat* fstHangRep;
+	Repeat* fstSuccessRep;
+	Repeat* fstFailRep;
 	//---------------------------- GameScene End
 
 
