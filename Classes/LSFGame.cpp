@@ -1,10 +1,12 @@
 #include "LSFGame.h"
+#include "LSFSingleton.h"
 #include <ctime>
 
 using namespace cocos2d;
 
 int ropeHealth = 500;
 bool fishingStat;
+
 Scene* LSFGame::createScene()
 {
 	auto scene = Scene::create();
@@ -31,9 +33,7 @@ bool LSFGame::init()
 	
 	srand(time(nullptr));
 	ropes = new std::vector<VRope*>;
-	winSize = Director::getInstance()->getWinSize();
-
-
+	winSize = LSFSingleton::getInstance()->winSize;
 
 	cbtnCount = 0;
 	waterCount = 0;
@@ -65,30 +65,26 @@ bool LSFGame::init()
 	this->addChild(backDefault);
 	//!Debug on/off
 
-	auto GameFrameCache = SpriteFrameCache::getInstance();
-	GameFrameCache->addSpriteFramesWithJson("Sprites/Game_cloudcut.json");
-
-	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game_cloudcut 0.png"));
+	//싱글톤 작업 후
+	back = LSFSingleton::getInstance()->GetgBack();
 	back->setAnchorPoint(Vec2(0, 1));
 	back->setPosition(Vec2(0,winSize.height));
 	this->addChild(back);
+	back->runAction(LSFSingleton::getInstance()->GetgameRep());
 	//!Debug on/off
-
-	auto weatherFrameCache = SpriteFrameCache::getInstance();
-	weatherFrameCache->addSpriteFramesWithJson("Sprites/RainDrop.json");
-
-	rainDrop = Sprite::createWithSpriteFrame(weatherFrameCache->getSpriteFrameByName("RainDrop 0.png"));
+	
+	//싱글톤 작업 후
+	rainDrop = LSFSingleton::getInstance()->GetgRainDrop();
 	rainDrop->setAnchorPoint(Vec2(0.5, 0.5));
 	rainDrop->setPosition(Vec2(180, 320));
 	this->addChild(rainDrop);
+	rainDrop->runAction(LSFSingleton::getInstance()->GetrainRep());
 
-	weatherFrameCache = SpriteFrameCache::getInstance();
-	weatherFrameCache->addSpriteFramesWithJson("Sprites/SnowDrop.json");
-
-	snowDrop = Sprite::createWithSpriteFrame(weatherFrameCache->getSpriteFrameByName("SnowDrop 0.png"));
+	snowDrop = LSFSingleton::getInstance()->GetgSnowDrop();
 	snowDrop->setAnchorPoint(Vec2(0.5, 0.5));
 	snowDrop->setPosition(Vec2(190, 320));
 	this->addChild(snowDrop);
+	snowDrop->runAction(LSFSingleton::getInstance()->GetsnowRep());
 
 	//가방 레이어 추가
 	//가방------------------------------------------------------------------------------------------------
@@ -116,29 +112,28 @@ bool LSFGame::init()
 	craftSel->setVisible(false);
 	invenLayer->addChild(craftSel);
 
-
 	inventory = Sprite::create("Sprites/inventory_bg.png");
 	inventory->setAnchorPoint(Vec2::ZERO);
 	inventory->setPosition(Vec2::ZERO);
-	//inventory->setScale(0.5f,1.5f);
 	inventory->setCascadeOpacityEnabled(true);
 	inventory->setOpacity(255);
 	inventory->setVisible(false);
 	invenLayer->addChild(inventory);
 
-	GameFrameCache = SpriteFrameCache::getInstance();
-	GameFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
-
-	craft = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Button_craft 0.png"));
+	//Button_craft
+	// 싱글톤 작업 후
+	craft = LSFSingleton::getInstance()->GetgCraft();
 	craft->setAnchorPoint(Vec2(0.5, 0.5));
 	craft->setPosition(Vec2(130, winSize.height / 5 - 100));
 	craft->setScale(1.5f);
-	//craft->setVisible(false);
 	invenLayer->addChild(craft);
+	craft->runAction(LSFSingleton::getInstance()->GetcraftRep());
+	
 	//가방----------------------------------------------------------------------------------------------------
 
 
 	//환경 구조물배치-----------------------------------------------------------------------------------------
+	//싱글톤 작업 보류 (Ship)
 	weatherCount = 2;
 	auto ShipFrameCache = SpriteFrameCache::getInstance();
 	if (weatherCount == 1) {
@@ -147,7 +142,6 @@ bool LSFGame::init()
 	else if (weatherCount == 2) {
 		ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_windy.json");
 	}
-	//ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_normal.json");
 
 	ship = Sprite::createWithSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
 	ship->setAnchorPoint(Vec2(0.5, 0.1));
@@ -189,13 +183,8 @@ bool LSFGame::init()
 	this->addChild(modeswitchMenu, 3); 
 
 	////애니메이션
-	//Background
-	auto mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut.json", "Game_cloudcut", 15, 0.1f);
-	auto mainAnimate = Animate::create(mainAnim);
-	auto repMain = RepeatForever::create(mainAnimate);
-	back->runAction(repMain);
 
-	//Ship	(Normal(1), Windy(2), Snowy(3), Rainny(4), ThunderStorm(5))
+	//싱글톤 작업 보류 Ship	(Normal(1), Windy(2), Snowy(3), Rainny(4), ThunderStorm(5))
 	ShipStat = 2;
 
 	if(ShipStat == 1){
@@ -218,29 +207,6 @@ bool LSFGame::init()
 
 	}
 	
-	
-
-
-	//Button_craft
-	auto craftAnim = animCreate->CreateAnim("Sprites/Button_craft.json", "Button_craft", 3, 0.1f);
-	auto craftAnimate = Animate::create(craftAnim);
-	auto repCraft = RepeatForever::create(craftAnimate);
-	craft->runAction(repCraft);
-
-	//Weather effect	(Wind, Rain, Snow, Tunder)
-	//Rain
-	auto rainAnim = animCreate->CreateAnim("Sprites/RainDrop.json", "RainDrop", 3, 0.1f);
-	auto rainAnimate = Animate::create(rainAnim);
-	auto repRain = RepeatForever::create(rainAnimate);
-	//rainDrop->runAction(repRain);
-
-	//Snow
-	auto snowAnim = animCreate->CreateAnim("Sprites/SnowDrop.json", "SnowDrop", 3, 0.1f);
-	auto snowAnimate = Animate::create(snowAnim);
-	auto repSnow = RepeatForever::create(snowAnimate);
-	//snowDrop->runAction(repSnow);
-
-
 	//월드 생성
 	if (this->createBox2dWorld(true))
 	{
@@ -255,23 +221,6 @@ bool LSFGame::init()
 
 }
 
-//void LSFGame::onEnter()
-//{
-//	Layer::onEnter();
-//	
-//	auto listener = EventListenerTouchOneByOne::create();
-//	
-//	listener->setSwallowTouches(true);
-//	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
-//	listener->onTouchMoved = CC_CALLBACK_2(LSFGame::onTouchMoved, this);
-//	listener->onTouchEnded = CC_CALLBACK_2(LSFGame::onTouchEnded, this);
-//	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-//}
-//void LSFGame::onExit()
-//{
-//	_eventDispatcher->removeAllEventListeners();
-//	Layer::onExit();
-//}
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
 	log("Touched! %d", touchCount);
@@ -698,11 +647,6 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 int flowCount = 0;
 b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, int flowtype, int type)
 {
-	//스프라이트를 파라미터로 넘어온 위치에 만든다.
-	//Sprite* pSprite = Sprite::createWithTexture(texture, Rect(0, 0, 37, 37));
-	//pSprite->setPosition(Vec2(location.x, location.y));
-	//this->addChild(pSprite);
-
 	//바디데프를 만들고 속성들을 지정한다.
 	b2BodyDef bodyDef;
 	bodyDef.type = bodytype;
@@ -1086,52 +1030,27 @@ void LSFGame::fstChange(int type)
 	}
 	
 		if (type == 1) {
-			auto fstNormalAnim = animCreate->CreateAnim("Sprites/FishingStat_normal.json", "FishingStat", 4, 0.1f);
-			auto fstNormalAnimate = Animate::create(fstNormalAnim);
-			repFstNormal = RepeatForever::create(fstNormalAnimate);
-			fstUpdate->runAction(repFstNormal);
+			fstUpdate->runAction(LSFSingleton::getInstance()->GetfstNormalRep());
 			touchCount = false;
 			log("fstUpdate Type 1 Activate !!");
 		}
 		if (type == 2) {
-			auto fstHangAnim = animCreate->CreateAnim("Sprites/FishingStat_hang.json", "FishingStat", 4, 0.1f);
-			auto fstHangAnimate = Animate::create(fstHangAnim);
-			repFstHang = Repeat::create(fstHangAnimate, 1);
-			fstUpdate->runAction(repFstHang);
+			fstUpdate->runAction(LSFSingleton::getInstance()->GetfstHangRep());
 			touchCount = true;
 			log("fstUpdate Type 2 Activate !!");
 		}
 		if (type == 3) {
-			auto fstSuccessAnim = animCreate->CreateAnim("Sprites/FishingStat_success.json", "FishingStat", 4, 0.1f);
-			auto fstSuccessAnimate = Animate::create(fstSuccessAnim);
-			repFstSuccess = Repeat::create(fstSuccessAnimate, 1);
-			fstUpdate->runAction(repFstSuccess);
+			fstUpdate->runAction(LSFSingleton::getInstance()->GetfstSuccessRep());
 			touchCount = false;
 			this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 3.f);
 			log("fstUpdate Type 3 Activate !!");
 		}
 		if (type == 4) {
+			fstUpdate->runAction(LSFSingleton::getInstance()->GetfstFailRep());
 			touchCount = false;
-			auto fstFailAnim = animCreate->CreateAnim("Sprites/FishingStat_fail.json", "FishingStat", 4, 0.1f);
-			auto fstFailAnimate = Animate::create(fstFailAnim);
-			repFstFail = Repeat::create(fstFailAnimate, 1);
-			fstUpdate->runAction(repFstFail);
 			this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 3.f);
 			log("fstUpdate Type 4 Activate !!");
 		}
-	
-	//else {
-	//	if (fstCount == 1)
-	//	{
-	//		fstCount = 0;
-	//		return;
-	//	}
-	//	log("fstUpdate stopAllAction!!");
-	//	fstUpdate->stopAllActions();
-	//	fstCount++;
-	//	fstChange(type);
-
-	//}
 }
 void LSFGame::doChangeMode(Ref* pSender)
 {

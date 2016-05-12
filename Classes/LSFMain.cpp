@@ -1,5 +1,6 @@
 ﻿#include "LSFMain.h"
 #include "LSFGame.h"
+#include "LSFLoad.h"
 
 using namespace cocos2d;
 using namespace rapidjson;
@@ -22,7 +23,7 @@ bool LSFMain::init()
 	}
 
 	/////////////////////////////
-	winSize = Director::getInstance()->getWinSize();
+	winSize = LSFSingleton::getInstance()->winSize;
 	//스프라이트 캐시
 	
 	Sprite* backDefault = Sprite::create("Sprites/Main_bg.png");
@@ -59,8 +60,8 @@ bool LSFMain::init()
 
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
-	auto pScene = LSFGame::createScene();
-
+	auto pScene = LSFLoad::createScene();
+	
 	Director::getInstance()->replaceScene(createTransition(7, 0.5, pScene));
 }
 

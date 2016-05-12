@@ -23,12 +23,12 @@ private:
 	Sequence* logoSeq;			
 	RepeatForever* logoSeqRep;	
 
-	AnimateCreate* mAnimCreate;
+	AnimateCreate* animCreate;
 	MenuItemImage* mBtn_Start;
 	//---------------------------- MainScene End
 	//////////////////////////////////////////////
 	//---------------------------- GameScene Begin
-
+	
 	//---------------------------- GameScene End
 
 
@@ -56,9 +56,20 @@ public:
 	AnimateCreate* GetmAnimCreate();
 	MenuItemImage* GetmBtn_Start();
 	//---------------------------- MainScene End
-	//////////////////////////////////////////////
+	///////////////////////////////////////////////
 	//---------------------------- GameScene Begin
-
+	Sprite* GetgBack();
+	Sprite* GetgCraft();
+	Sprite* GetgRainDrop();
+	Sprite* GetgSnowDrop();
+	RepeatForever* GetgameRep();
+	RepeatForever* GetrainRep();
+	RepeatForever* GetsnowRep();
+	RepeatForever* GetcraftRep();
+	RepeatForever* GetfstNormalRep();
+	Repeat* GetfstHangRep();
+	Repeat* GetfstSuccessRep();
+	Repeat* GetfstFailRep();
 	//---------------------------- GameScene End
 
 
