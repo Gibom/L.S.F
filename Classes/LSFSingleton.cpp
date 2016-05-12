@@ -115,6 +115,7 @@ RepeatForever* LSFSingleton::GetrainRep() { return rainRep; }
 RepeatForever* LSFSingleton::GetsnowRep() { return snowRep; }
 RepeatForever* LSFSingleton::GetcraftRep() { return craftRep; }
 RepeatForever* LSFSingleton::GetfstNormalRep() { return fstNormalRep; }
+Animate* LSFSingleton::GetfstNormalAnim() { return fstNormalAnimate; }
 Repeat* LSFSingleton::GetfstHangRep() { return fstHangRep; }
 Repeat* LSFSingleton::GetfstSuccessRep() { return fstSuccessRep; }
 Repeat* LSFSingleton::GetfstFailRep() { return fstFailRep; }

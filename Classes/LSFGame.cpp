@@ -237,9 +237,10 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			if (cbtnCount == 0) {
 				if (cbtnCount == 0 && fishingStat == false) {
 					//³¬½Ã ½ÃÀÛ Àü
+					log("---------------------------Rope1");
 					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
 					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
-
+					
 					this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
 						needle, needle->GetLocalCenter(), 1.1f);
 					//ropeTouchCount = true;
@@ -734,6 +735,7 @@ VRope* newRope;
 b2RopeJoint* ropeJoint;
 void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag)
 {
+	log("---------------------------Rope2");
 	b2RopeJointDef jd;
 	jd.bodyA = bodyA;
 	jd.bodyB = bodyB;
@@ -1024,13 +1026,16 @@ void LSFGame::endFishing(float dt)
 }
 void LSFGame::fstChange(int type)
 {
+	log("fst1");
 	//FishingStat
 	if (fstUpdate->numberOfRunningActions() != 0) {
 		fstUpdate->stopAllActions();
 	}
 	
 		if (type == 1) {
-			fstUpdate->runAction(LSFSingleton::getInstance()->GetfstNormalRep());
+			log("fst2");
+			RepeatForever* test = RepeatForever::create(LSFSingleton::getInstance()->GetfstNormalAnim());
+			fstUpdate->runAction(test);
 			touchCount = false;
 			log("fstUpdate Type 1 Activate !!");
 		}

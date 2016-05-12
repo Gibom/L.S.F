@@ -89,6 +89,7 @@ public:
 	Sprite* GetgCraft();
 	Sprite* GetgRainDrop();
 	Sprite* GetgSnowDrop();
+	Animate* GetfstNormalAnim();
 	RepeatForever* GetgameRep();
 	RepeatForever* GetrainRep();
 	RepeatForever* GetsnowRep();
