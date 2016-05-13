@@ -33,8 +33,6 @@ bool LSFGame::init()
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
 
-
-
 	cbtnCount = 0;
 	waterCount = 0;
 	btnCount = false;
@@ -46,14 +44,13 @@ bool LSFGame::init()
 	
 	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
 
-	//조이스틱
-	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0),
-		winSize.width, winSize.height);
+	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0),	winSize.width, winSize.height);
 	manualLayer->setAnchorPoint(Vec2::ZERO);
 	manualLayer->setPosition(Vec2(0, 0));
-	manualLayer->setVisible(false);
+	manualLayer->setVisible(true);
 	this->addChild(manualLayer, 4);
-
+	
+	//조이스틱
 	joystick = Joystick::create();
 	joystick->setVisible(false);
 	this->addChild(joystick, 4);
@@ -254,24 +251,6 @@ bool LSFGame::init()
 
 
 }
-
-//void LSFGame::onEnter()
-//{
-//	Layer::onEnter();
-//	
-//	auto listener = EventListenerTouchOneByOne::create();
-//	
-//	listener->setSwallowTouches(true);
-//	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
-//	listener->onTouchMoved = CC_CALLBACK_2(LSFGame::onTouchMoved, this);
-//	listener->onTouchEnded = CC_CALLBACK_2(LSFGame::onTouchEnded, this);
-//	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-//}
-//void LSFGame::onExit()
-//{
-//	_eventDispatcher->removeAllEventListeners();
-//	Layer::onExit();
-//}
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
 	log("Touched! %d", touchCount);
@@ -315,6 +294,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			if (cbtnCount == 0) {
 				if (cbtnCount == 0 && fishingStat == false) {
 					//낚시 시작 전
+					manualLayer->setVisible(false);
 					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
 					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
@@ -972,9 +952,9 @@ void LSFGame::tick(float dt)
 	}
 	//RHC(Rope Health Counter End)-------------------------------
 	
-	if (joystick->fishingGauge >= 200) {
-		endFishing(3);
-	}
+	if (joystick->fishingGauge >= 200) { endFishing(3); }
+	
+
 }
 void LSFGame::touchCounter(float dt)
 {
@@ -1053,7 +1033,6 @@ void LSFGame::timerFishing(float dt)
 				listener->setSwallowTouches(false);
 				joystick->setVisible(true);
 				manualLayer->setVisible(true);
-				this->fishBowlProgress();
 			}
 		}
 		if (catchTime < -5) {
@@ -1102,6 +1081,7 @@ void LSFGame::fstChange(int type)
 			log("fstUpdate Type 2 Activate !!");
 		}
 		if (type == 3) {
+			fishBowlProgress(1);
 			auto fstSuccessAnim = animCreate->CreateAnim("Sprites/FishingStat_success.json", "FishingStat", 4, 0.1f);
 			auto fstSuccessAnimate = Animate::create(fstSuccessAnim);
 			repFstSuccess = Repeat::create(fstSuccessAnimate, 1);
@@ -1111,6 +1091,7 @@ void LSFGame::fstChange(int type)
 			log("fstUpdate Type 3 Activate !!");
 		}
 		if (type == 4) {
+			fishBowlProgress(2);
 			touchCount = false;
 			auto fstFailAnim = animCreate->CreateAnim("Sprites/FishingStat_fail.json", "FishingStat", 4, 0.1f);
 			auto fstFailAnimate = Animate::create(fstFailAnim);
@@ -1235,18 +1216,20 @@ int LSFGame::statusCheck(const std::string & kindof)
 }
 
 //수동모드 낚시 progress 수정필요
-void LSFGame::fishBowlProgress()
+void LSFGame::fishBowlProgress(int type)
 {
-	fishBowl = Sprite::create("Sprites/FishBowl.png");
-	manualLayer->removeAllChildrenWithCleanup(true);
-	auto left = ProgressTimer::create(fishBowl);
-	left->setType(ProgressTimer::Type::BAR);
-	left->setMidpoint(Vec2(0, 0));
-	left->setPercentage(0);
-	left->setBarChangeRate(Vec2(0, 1));
-	manualLayer->addChild(left);
-	left->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
-	//left->runAction(RepeatForever::create(to1));
+	log("!!");
+	if (type == 1) { fishBowl = Sprite::create("Sprites/FishBowl.png"); }
+	else if (type == 2) { fishBowl = Sprite::create("Sprites/FishBowl_fail.png"); }
+	
+	fishingPrg = ProgressTimer::create(fishBowl);
+	fishingPrg->setType(ProgressTimer::Type::BAR);
+	fishingPrg->setMidpoint(Vec2(0, 0));
+	fishingPrg->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	fishingPrg->setBarChangeRate(Vec2(0, 1));
+	manualLayer->addChild(fishingPrg);
+	auto to1 = Sequence::createWithTwoActions(ProgressTo::create(4, 100), ProgressTo::create(0, 0));
+	fishingPrg->runAction(to1);
 }
 LSFGame::~LSFGame()
 {

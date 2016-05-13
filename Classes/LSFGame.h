@@ -53,12 +53,14 @@ public:
 	int randomTime;
 	int timer;
 	//낚시 - 조작
+	float fishingGauge;
 	bool bTouch_mode; //모드 스위치 구현 시 사용
 	bool hangFish;
 	void doChangeMode(Ref* pSender);
 	Joystick* joystick;
 	Sprite* fishBowl;
-	void fishBowlProgress();
+	void fishBowlProgress(int type);
+	ProgressTimer* fishingPrg;
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
