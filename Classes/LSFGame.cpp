@@ -43,7 +43,7 @@ bool LSFGame::init()
 	craftSwitch = false;
 	
 	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
-
+	//수동모드 레이어 추가
 	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0),	winSize.width, winSize.height);
 	manualLayer->setAnchorPoint(Vec2::ZERO);
 	manualLayer->setPosition(Vec2(0, 0));
@@ -59,7 +59,7 @@ bool LSFGame::init()
 	Sprite* backDefault = Sprite::create("Sprites/Game_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
 	backDefault->setPosition(Vec2::ZERO);
-	this->addChild(backDefault);
+	//this->addChild(backDefault);
 	//!Debug on/off
 
 	auto GameFrameCache = SpriteFrameCache::getInstance();
@@ -68,7 +68,7 @@ bool LSFGame::init()
 	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game_cloudcut 0.png"));
 	back->setAnchorPoint(Vec2(0, 1));
 	back->setPosition(Vec2(0,winSize.height));
-	this->addChild(back);
+	//this->addChild(back);
 	//!Debug on/off
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
@@ -94,8 +94,6 @@ bool LSFGame::init()
 	invenLayer->setAnchorPoint(Vec2::ZERO);
 	invenLayer->setPosition(Vec2(0, 0));
 	invenLayer->setVisible(false);
-	//invenLayer->setScaleY(2.f);
-	//invenLayer->setCascadeOpacityEnabled(true);
 	this->addChild(invenLayer, 4);
 
 	craftUsel = Sprite::create("Sprites/inventory_bg2.png");
@@ -145,10 +143,10 @@ bool LSFGame::init()
 		ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_windy.json");
 	}
 	//ShipFrameCache->addSpriteFramesWithJson("Sprites/Ship_normal.json");
-
+	Vec2 shipPosition = Vec2((winSize.width + 470) / 2 / PTM_RATIO, ((winSize.height / 3) - 60) / PTM_RATIO);
 	ship = Sprite::createWithSpriteFrame(ShipFrameCache->getSpriteFrameByName("Ship 0.png"));
 	ship->setAnchorPoint(Vec2(0.5, 0.1));
-	ship->setPosition(Vec2(winSize.width-120, winSize.height/3));
+	ship->setPosition((winSize.width + 470) / 2 / PTM_RATIO, ((winSize.height / 3) - 60) / PTM_RATIO);
 	ship->setLocalZOrder(2);
 	ship->setScale(1.5f);
 	this->addChild(ship);
@@ -334,6 +332,8 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 		}
 
 	}
+	
+	
 
 	return true;
 }
@@ -406,6 +406,8 @@ bool LSFGame::createBox2dWorld(bool debug)
 	boxShapeDef.shape = &groundEdge;
 
 	//바다 아래
+	groundEdge.Set(b2Vec2(0, 3.5f), b2Vec2(winSize.width / PTM_RATIO, 3.5f));
+	groundBody->CreateFixture(&boxShapeDef);
 	groundEdge.Set(b2Vec2(0, 3.4f), b2Vec2(winSize.width / PTM_RATIO, 3.4f));
 	groundBody->CreateFixture(&boxShapeDef);
 	groundEdge.Set(b2Vec2(0, 2.8f), b2Vec2(winSize.width / PTM_RATIO, 2.8f));
@@ -623,8 +625,8 @@ bool LSFGame::createBox2dWorld(bool debug)
 
 	//배
 	b2BodyDef shipBodyDef;
-	shipBodyDef.type = b2_staticBody; 
-	shipBodyDef.position.Set((winSize.width + 470) / 2 / PTM_RATIO, ((winSize.height / 3)-60) / PTM_RATIO);
+	shipBodyDef.type = b2_dynamicBody; 
+	shipBodyDef.position.Set((winSize.width + 470) / 2 / PTM_RATIO, ((winSize.height / 3)) / PTM_RATIO);
 	shipBodyDef.userData = ship;
 
 	b2Body* shipBody = _world->CreateBody(&shipBodyDef);
@@ -639,6 +641,34 @@ bool LSFGame::createBox2dWorld(bool debug)
 	shipFixtureDef.filter.groupIndex = -1;
 	
 	shipBody->CreateFixture(&shipFixtureDef);
+
+	//수표면
+	b2BodyDef waterBodyDef;
+	waterBodyDef.type = b2_kinematicBody;
+	waterBodyDef.position.Set((winSize.width) / 2 / PTM_RATIO, ((winSize.height / 3)-80) / PTM_RATIO);
+	waterBodyDef.linearVelocity = b2Vec2(-1.0f, 0);
+	
+	b2Body* waterBody = _world->CreateBody(&waterBodyDef);
+	b2CircleShape kinematicCircle;
+	kinematicCircle.m_radius = 0.05;
+	
+	b2FixtureDef waterfixtureDef;
+	waterfixtureDef.shape = &kinematicCircle;
+	waterfixtureDef.density = 1.0f;
+	waterfixtureDef.filter.groupIndex = -1;
+	waterBody->CreateFixture(&waterfixtureDef);
+	
+	b2BodyDef waterBodyDef2;
+	waterBodyDef2.type = b2_kinematicBody;
+	waterBodyDef2.position.Set((winSize.width) / 2 / PTM_RATIO, ((winSize.height / 3) - 80) / PTM_RATIO);
+	waterBodyDef2.linearVelocity = b2Vec2(1.0f, 0);
+	
+	b2Body* waterBody2 = _world->CreateBody(&waterBodyDef2);
+	b2FixtureDef waterfixtureDef2;
+	waterfixtureDef2.shape = &kinematicCircle;
+	waterfixtureDef2.density = 1.0f;
+	waterfixtureDef2.filter.groupIndex = -1;
+	waterBody2->CreateFixture(&waterfixtureDef2);
 	
 	return true;
 }
@@ -781,8 +811,6 @@ void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 an
 	log("ropeLength: %f", ropeLength);
 	if (ropeLength >= 1 && ropeLength <= 5) {
 		log("ropeLength: %f", ropeLength);
-		log("ropeLength: %f", ropeLength);
-		log("ropeLength: %f", ropeLength);
 		jd.maxLength = ropeLength;
 		ropeJoint = (b2RopeJoint*)_world->CreateJoint(&jd);
 
@@ -792,8 +820,6 @@ void LSFGame::createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 an
 		return;
 	}
 	else if (ropeLength < 1 || ropeLength>5) {
-		log("else if ropeLength: %f", ropeLength);
-		log("else if ropeLength: %f", ropeLength);
 		log("else if ropeLength: %f", ropeLength);
 		jd.maxLength = 5;
 		ropeJoint = (b2RopeJoint*)_world->CreateJoint(&jd);
@@ -869,6 +895,17 @@ void LSFGame::tick(float dt)
 				b->GetPosition().y *PTM_RATIO));
 			spriteData->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 		}
+
+		if (b->GetType() == b2_kinematicBody)
+		{
+			b2Vec2 v = b->GetPosition();
+			if (v.x*PTM_RATIO > winSize.width) {
+				b->SetLinearVelocity(b2Vec2(-1.0f, 0));
+			}
+			else if (v.x < 0) {
+				b->SetLinearVelocity(b2Vec2(1.0f, 0));
+			}
+		}
 	}
 	//RUT(Rope Update Timer)
 	if (ropeTickCount == false) {
@@ -895,6 +932,7 @@ void LSFGame::tick(float dt)
 	*/
 
 	//WF(Water flow Start)---------------------------------------
+
 	//log("flowbody %f", flowBody0->GetPosition().x);
 	if (flowBody0->GetPosition().x <=0.6)
 	{
@@ -968,6 +1006,7 @@ void LSFGame::touchCounter(float dt)
 void LSFGame::startFishing(float dt)
 {
 	modeswitchMenu->setEnabled(false);
+	
 	log("---------------------------Fishing 4");
 	fishingStat = true;
 	log("ropeLength: %f", ropeLength);

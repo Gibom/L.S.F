@@ -64,6 +64,7 @@ public:
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
+	b2Body* shipBody;
 	
 	//날씨
 	WaterNode* water;
