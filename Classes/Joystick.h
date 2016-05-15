@@ -42,7 +42,7 @@ private:
     void updateVelocity(Vec2 point);
     void resetJoystick();
     bool handleLastTouch();
-
+	
     virtual void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     virtual void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     virtual void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
