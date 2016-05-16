@@ -59,7 +59,7 @@ bool LSFGame::init()
 	Sprite* backDefault = Sprite::create("Sprites/Game_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
 	backDefault->setPosition(Vec2::ZERO);
-	//this->addChild(backDefault);
+	this->addChild(backDefault);
 	//!Debug on/off
 
 	auto GameFrameCache = SpriteFrameCache::getInstance();
@@ -68,7 +68,7 @@ bool LSFGame::init()
 	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game_cloudcut 0.png"));
 	back->setAnchorPoint(Vec2(0, 1));
 	back->setPosition(Vec2(0,winSize.height));
-	//this->addChild(back);
+	this->addChild(back);
 	//!Debug on/off
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
@@ -96,14 +96,14 @@ bool LSFGame::init()
 	invenLayer->setVisible(false);
 	this->addChild(invenLayer, 4);
 
-	craftUsel = Sprite::create("Sprites/inventory_bg2.png");
+	craftUsel = Sprite::create("Sprites/inventory_guide.png");
 	craftUsel->setAnchorPoint(Vec2::ZERO);
 	craftUsel->setPosition(Vec2::ZERO);
 	craftUsel->setCascadeOpacityEnabled(true);
 	craftUsel->setOpacity(125);
 	invenLayer->addChild(craftUsel);
 
-	craftSel = Sprite::create("Sprites/inventory_bg3.png");
+	craftSel = Sprite::create("Sprites/inventory_guide_craft.png");
 	craftSel->setAnchorPoint(Vec2::ZERO);
 	craftSel->setPosition(Vec2::ZERO);
 	craftSel->setCascadeOpacityEnabled(true);
@@ -705,23 +705,15 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 
 	return needlebody;
 }
-int flowCount = 0;
+
 b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, int flowtype, int type)
 {
-	//스프라이트를 파라미터로 넘어온 위치에 만든다.
-	//Sprite* pSprite = Sprite::createWithTexture(texture, Rect(0, 0, 37, 37));
-	//pSprite->setPosition(Vec2(location.x, location.y));
-	//this->addChild(pSprite);
-
-	//바디데프를 만들고 속성들을 지정한다.
 	b2BodyDef bodyDef;
 	bodyDef.type = bodytype;
 	bodyDef.position.Set(point.x / PTM_RATIO, point.y / PTM_RATIO);
 
 	if (flowtype) {
 		if (flowtype == 1) {
-			//int idx = (CCRANDOM_0_1() > .5 ? 0 : 1);
-			//int idy = (CCRANDOM_0_1() > .5 ? 0 : 1);
 			auto flowSprite = Sprite::createWithTexture(texture = Director::getInstance()->getTextureCache()->addImage("Sprites/Fishes/Fish011.png"),
 				Rect(0, 0, 24, 16));
 			flow.pushBack(flowSprite);
@@ -998,6 +990,7 @@ void LSFGame::touchCounter(float dt)
 {
 	if(touchCount == false){
 		touchCount = true;
+		joystick->setVisible(false);
 	}
 	else if (touchCount == true) {
 		touchCount = false;
@@ -1089,7 +1082,6 @@ void LSFGame::endFishing(float dt)
 	log("EndFishing");
 	if (modeSwitch == true) {
 		listener->setSwallowTouches(true);
-		joystick->setVisible(false);
 	}
 	this->unschedule(schedule_selector(LSFGame::timerFishing));
 	log("---------------------------Fishing 6");

@@ -168,6 +168,7 @@ public:
 	int cbtnCount;
 	int waterCount;
 	int flowRand;
+	int flowCount = 0;
 	int fstCount = 0;
 	bool btnCount;
 	bool touchCount;

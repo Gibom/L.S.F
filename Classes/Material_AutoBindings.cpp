@@ -12,29 +12,13 @@ static void printProperties(Properties* properties, int indent);
 /*
 * Custom material auto-binding resolver for terrain.
 */
-
-
-
-Scene* Material_AutoBindings::createScene()
-{
-	auto scene = Scene::create();
-	auto layer = Material_AutoBindings::create();
-	scene->addChild(layer);
-
-	return scene;
-}
-
 bool Material_AutoBindings::init()
 {
-	if (!LayerColor::initWithColor(Color4B(255, 255, 255, 255)))
-	{
-		return false;
-	}
-
-	/////////////////////////////
-	Material_AutoBindings::onEnter();
+	init();
+	
 	return true;
 }
+
 class EffectAutoBindingResolver : public GLProgramState::AutoBindingResolver
 {
 	bool resolveAutoBinding(GLProgramState* glProgramState, Node* node, const std::string& uniform, const std::string& autoBinding);
@@ -83,21 +67,15 @@ Material_AutoBindings::~Material_AutoBindings()
 	delete _resolver;
 }
 
-
-void Material_AutoBindings::onEnter()
+void Material_AutoBindings::mAutoBinding(Sprite* image)
 {
-	//    auto properties = Properties::createNonRefCounted("Materials/2d_effects.material#sample");
 	auto properties = Properties::createNonRefCounted("Materials/auto_binding_test.material#sample");
-
 	// Print the properties of every namespace within this one.
 	printProperties(properties, 0);
 
 	Material *mat1 = Material::createWithProperties(properties);
-
-	auto spriteOutline = Sprite::create("Images/grossini.png");
-	spriteOutline->setNormalizedPosition(Vec2(0.4f, 0.5f));
-	this->addChild(spriteOutline);
-	spriteOutline->setGLProgramState(mat1->getTechniqueByName("outline")->getPassByIndex(0)->getGLProgramState());
+	
+	image->setGLProgramState(mat1->getTechniqueByName("outline")->getPassByIndex(0)->getGLProgramState());
 
 	// properties is not a "Ref" object
 	CC_SAFE_DELETE(properties);
