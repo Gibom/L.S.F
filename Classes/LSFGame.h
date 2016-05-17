@@ -9,6 +9,8 @@
 #include "ContactListener.h"
 #include "AnimateCreate.h"
 #include "WaterNode.h"
+#include "Inventory.h"
+
 using namespace cocos2d;
 
 class LSFGame : public cocos2d::LayerColor , public AnimateCreate 
@@ -162,8 +164,12 @@ public:
 	SpriteFrameCache* ShipFrameCache;
 	RepeatForever* shipRep;
 	
-
-
+	//가방
+	Inventory* inv;
+	Size invSize;
+	Vec2 invPosition;
+	Sprite* invOpen;
+	std::vector <TableView*> invTable;
 	//카운트
 	int cbtnCount;
 	int waterCount;

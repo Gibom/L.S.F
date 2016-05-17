@@ -89,7 +89,7 @@ bool LSFGame::init()
 
 	//가방 레이어 추가
 	//가방------------------------------------------------------------------------------------------------
-	invenLayer = LayerColor::create(Color4B(255, 255, 255, 125),
+	invenLayer = LayerColor::create(Color4B(255, 255, 255, 0),
 		winSize.width, winSize.height);
 	invenLayer->setAnchorPoint(Vec2::ZERO);
 	invenLayer->setPosition(Vec2(0, 0));
@@ -111,15 +111,29 @@ bool LSFGame::init()
 	craftSel->setVisible(false);
 	invenLayer->addChild(craftSel);
 
-
 	inventory = Sprite::create("Sprites/inventory_bg.png");
 	inventory->setAnchorPoint(Vec2::ZERO);
 	inventory->setPosition(Vec2::ZERO);
-	//inventory->setScale(0.5f,1.5f);
 	inventory->setCascadeOpacityEnabled(true);
 	inventory->setOpacity(255);
 	inventory->setVisible(false);
 	invenLayer->addChild(inventory);
+
+	GameFrameCache = SpriteFrameCache::getInstance();
+	GameFrameCache->addSpriteFramesWithJson("Sprites/inventory_open.json");
+
+	//invOpen = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("inventory_guide 0.png"));
+	///*invOpen->setAnchorPoint(Vec2::ZERO);
+	//invOpen->setPosition(Vec2::ZERO);
+	//invOpen->setCascadeOpacityEnabled(true);
+	//invOpen->setOpacity(255);
+	//invOpen->setVisible(false);*/
+	//invenLayer->addChild(invOpen);
+
+	//auto invenAnim = animCreate->CreateAnim("Sprites/inventory_open.json", "inventory_open", 9, 0.2f);
+	//auto invenAnimate = Animate::create(invenAnim);
+	//auto repInven = RepeatForever::create(invenAnimate);
+	//invOpen->runAction(repInven);
 
 	GameFrameCache = SpriteFrameCache::getInstance();
 	GameFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
@@ -130,6 +144,24 @@ bool LSFGame::init()
 	craft->setScale(1.5f);
 	//craft->setVisible(false);
 	invenLayer->addChild(craft);
+
+	inv = new Inventory;
+
+	for (int invRow = 0; invRow < 8; invRow++)
+	{
+		invTable.push_back(inv->CreateTable(invRow));
+		invenLayer->addChild(invTable.at(invRow));
+	}
+
+	//invSize = invTable.at(0)->cellAtIndex(0)->getContentSize();
+	invPosition = invTable.at(0)->cellAtIndex(1)->getPosition();
+	invTable.at(0)->cellAtIndex(1)->removeAllChildren();
+	invTable.at(0)->cellAtIndex(1)->addChild(Sprite::create("Sprites/Fishes/Fish011.png"));
+	invTable.at(0)->cellAtIndex(1)->setTag(11);
+	invTable.at(0)->cellAtIndex(1)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+	invTable.at(0)->cellAtIndex(1)->setAnchorPoint(Vec2(0.5, 0.5));
+	log("invTable Tag : %d", invTable.at(0)->cellAtIndex(1)->getTag());
+
 	//가방----------------------------------------------------------------------------------------------------
 
 
@@ -210,11 +242,7 @@ bool LSFGame::init()
 		auto shipAnimate = Animate::create(shipWindyAnim);
 		auto repShip = RepeatForever::create(shipAnimate);
 		ship->runAction(repShip);
-
 	}
-	
-	
-
 
 	//Button_craft
 	auto craftAnim = animCreate->CreateAnim("Sprites/Button_craft.json", "Button_craft", 3, 0.1f);
@@ -235,7 +263,6 @@ bool LSFGame::init()
 	auto repSnow = RepeatForever::create(snowAnimate);
 	//snowDrop->runAction(repSnow);
 
-
 	//월드 생성
 	if (this->createBox2dWorld(true))
 	{
@@ -246,7 +273,6 @@ bool LSFGame::init()
 	}
 
 	return true;
-
 
 }
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
@@ -332,8 +358,6 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 		}
 
 	}
-	
-	
 
 	return true;
 }
@@ -676,13 +700,11 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 {
 	b2BodyDef bodyDef;
 	
-	
 	b2CircleShape spriteShape;
 	//Get the sprite frome the sprite sheet
 	Sprite* needle = Sprite::create(imagepath);
 	needle->setAnchorPoint(Vec2(0.5, 0.8));
 	this->addChild(needle);
-
 	
 	//Defines the body of needle
 	bodyDef.type = b2_dynamicBody;
@@ -1268,4 +1290,3 @@ LSFGame::~LSFGame()
 	delete _world;
 	_world = nullptr;
 }
-

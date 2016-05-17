@@ -1,0 +1,107 @@
+{ "frames": [
+   {
+    "filename": "inventory_guide 0.ase",
+    "frame": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 1.ase",
+    "frame": { "x": 720, "y": 0, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 2.ase",
+    "frame": { "x": 1440, "y": 0, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 3.ase",
+    "frame": { "x": 2160, "y": 0, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 4.ase",
+    "frame": { "x": 2880, "y": 0, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 5.ase",
+    "frame": { "x": 0, "y": 1146, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 6.ase",
+    "frame": { "x": 720, "y": 1146, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 7.ase",
+    "frame": { "x": 1440, "y": 1146, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 8.ase",
+    "frame": { "x": 2160, "y": 1146, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   },
+   {
+    "filename": "inventory_guide 9.ase",
+    "frame": { "x": 2880, "y": 1146, "w": 720, "h": 1146 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1146 },
+    "sourceSize": { "w": 720, "h": 1146 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.4.1",
+  "image": "C:\\cocos2d-x-work\\Project\\LSF_Project_git\\Resources\\Sprites\\inventory_open.png",
+  "format": "I8",
+  "size": { "w": 4096, "h": 4096 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "bag", "opacity": 255, "blendMode": "normal" },
+   { "name": "tab", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}

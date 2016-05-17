@@ -99,7 +99,9 @@ X조명시스템 - 2D lighting(밤 시간대에 캠프파이어나 야광찌 효
 	
 	timer != catchTime  같으면 물고기가 낚이지 않음. (확률적으로 낚이지 않는 경우를 만들수도 있을거 같긴한데..)
 	
-	
+LeaderBoard(순위서버)
+	native Android
+
 	
 	
 	
