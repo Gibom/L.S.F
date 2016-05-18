@@ -59,7 +59,7 @@ bool LSFGame::init()
 	Sprite* backDefault = Sprite::create("Sprites/Game_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
 	backDefault->setPosition(Vec2::ZERO);
-	this->addChild(backDefault);
+	//this->addChild(backDefault);
 	//!Debug on/off
 
 	auto GameFrameCache = SpriteFrameCache::getInstance();
@@ -68,7 +68,7 @@ bool LSFGame::init()
 	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game_cloudcut 0.png"));
 	back->setAnchorPoint(Vec2(0, 1));
 	back->setPosition(Vec2(0,winSize.height));
-	this->addChild(back);
+	//this->addChild(back);
 	//!Debug on/off
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
@@ -111,29 +111,24 @@ bool LSFGame::init()
 	craftSel->setVisible(false);
 	invenLayer->addChild(craftSel);
 
-	inventory = Sprite::create("Sprites/inventory_bg.png");
-	inventory->setAnchorPoint(Vec2::ZERO);
-	inventory->setPosition(Vec2::ZERO);
-	inventory->setCascadeOpacityEnabled(true);
-	inventory->setOpacity(255);
-	inventory->setVisible(false);
-	invenLayer->addChild(inventory);
+	//inventory = Sprite::create("Sprites/inventory_bg.png");
+	//inventory->setAnchorPoint(Vec2::ZERO);
+	//inventory->setPosition(Vec2(0,200));
+	//inventory->setCascadeOpacityEnabled(true);
+	//inventory->setOpacity(255);
+	//inventory->setVisible(false);
+	//invenLayer->addChild(inventory);
 
 	GameFrameCache = SpriteFrameCache::getInstance();
 	GameFrameCache->addSpriteFramesWithJson("Sprites/inventory_open.json");
 
-	//invOpen = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("inventory_guide 0.png"));
-	///*invOpen->setAnchorPoint(Vec2::ZERO);
-	//invOpen->setPosition(Vec2::ZERO);
-	//invOpen->setCascadeOpacityEnabled(true);
-	//invOpen->setOpacity(255);
-	//invOpen->setVisible(false);*/
-	//invenLayer->addChild(invOpen);
+	invOpen = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("inventory_open 0.png"));
+	invOpen->setAnchorPoint(Vec2::ZERO);
+	invOpen->setPosition(Vec2(0, 110));
+	invOpen->setCascadeOpacityEnabled(true);
+	invOpen->setOpacity(255);
+	invenLayer->addChild(invOpen);
 
-	//auto invenAnim = animCreate->CreateAnim("Sprites/inventory_open.json", "inventory_open", 9, 0.2f);
-	//auto invenAnimate = Animate::create(invenAnim);
-	//auto repInven = RepeatForever::create(invenAnimate);
-	//invOpen->runAction(repInven);
 
 	GameFrameCache = SpriteFrameCache::getInstance();
 	GameFrameCache->addSpriteFramesWithJson("Sprites/Button_craft.json");
@@ -151,6 +146,7 @@ bool LSFGame::init()
 	{
 		invTable.push_back(inv->CreateTable(invRow));
 		invenLayer->addChild(invTable.at(invRow));
+		invTable.at(invRow)->setVisible(false);
 	}
 
 	//invSize = invTable.at(0)->cellAtIndex(0)->getContentSize();
@@ -291,7 +287,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			if (cbtnCount == 0) {
 				if (cbtnCount == 0 && fishingStat == false) {
 					//낚시 시작 전
-					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
+					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
 					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
 					this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
@@ -319,7 +315,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 				if (cbtnCount == 0 && fishingStat == false) {
 					//낚시 시작 전
 					manualLayer->setVisible(false);
-					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 1);
+					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
 					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
 					this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
@@ -340,6 +336,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			}
 		}
 	}
+
 	// 가방이 열려있고 craft가 선택 됐을 때
 	if (bTouch_craft && cbtnCount == 1)
 	{
@@ -374,7 +371,14 @@ void LSFGame::doPushInventory(Ref * pSender)
 {
 	if (btnCount == false) {
 		invenLayer->setVisible(true);
-		inventory->setVisible(true);
+
+		//invOpen Animation
+		craftUsel->setVisible(false);
+		invenAnim = animCreate->CreateAnim("Sprites/inventory_open.json", "inventory_open", 9, 0.2f);
+		invenAnimate = Animate::create(invenAnim);
+		repInven = Repeat::create(invenAnimate, 1);
+		invOpen->runAction(repInven);
+		
 		//craft->setVisible(true);
 		btn_inventory->selected();
 		btnCount = true;
@@ -383,7 +387,10 @@ void LSFGame::doPushInventory(Ref * pSender)
 	}
 	else {
 		invenLayer->setVisible(false);
-		inventory->setVisible(false);
+		if (invOpen->numberOfRunningActions() != 0) {
+			invOpen->stopAllActions();
+		}
+		//inventory->setVisible(false);
 		//craft->setVisible(false);
 		btn_inventory->unselected();
 		btnCount = false;
@@ -391,6 +398,11 @@ void LSFGame::doPushInventory(Ref * pSender)
 		craftUsel->setVisible(true);
 		craftSel->setVisible(false);
 		modeswitchMenu->setEnabled(true);
+		invOpenCount = false;
+		for (int invRow = 0; invRow < 8; invRow++)
+		{
+			invTable.at(invRow)->setVisible(false);
+		}
 	}
 }
 bool LSFGame::createBox2dWorld(bool debug)
@@ -698,21 +710,21 @@ bool LSFGame::createBox2dWorld(bool debug)
 }
 b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int tag)
 {
-	b2BodyDef bodyDef;
-	
 	b2CircleShape spriteShape;
 	//Get the sprite frome the sprite sheet
-	Sprite* needle = Sprite::create(imagepath);
-	needle->setAnchorPoint(Vec2(0.5, 0.8));
-	this->addChild(needle);
-	
-	//Defines the body of needle
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position = b2Vec2(point.x / PTM_RATIO, point.y / PTM_RATIO);
-	bodyDef.userData = needle;
-	bodyDef.linearDamping = 0.3f;
-	needlebody = _world->CreateBody(&bodyDef);
-	if (tag == 1) {
+	addFish = Sprite::create(imagepath);
+	addFish->setAnchorPoint(Vec2(0.5, 0.8));
+	addFish->setTag(tag);
+	this->addChild(addFish);
+	if (tag == 0) {
+		//Defines the body of sprite
+		needlebodyDef.type = b2_dynamicBody;
+		needlebodyDef.position = b2Vec2(point.x / PTM_RATIO, point.y / PTM_RATIO);
+		needlebodyDef.userData = addFish;
+		needlebodyDef.linearDamping = 0.3f;
+		
+		needleBody = _world->CreateBody(&needlebodyDef);
+
 		spriteShape.m_radius = 0.1;
 		needlefixtureDef.shape = &spriteShape;
 		needlefixtureDef.density = 1.0f;
@@ -721,13 +733,19 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 		needlefixtureDef.filter.categoryBits = 0x01;
 		needlefixtureDef.filter.maskBits = 0x03;
 		needlefixtureDef.filter.groupIndex = -1;
+		
+
+		needleBody->CreateFixture(&needlefixtureDef);
+		needleBody->SetFixedRotation(true);
+		return needleBody;
+	} else {
+		needleBody->SetUserData(addFish);
 	}
-
-	needlebody->CreateFixture(&needlefixtureDef);
-
-	return needlebody;
 }
-
+void LSFGame::fishes(int tag)
+{
+	
+}
 b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, int flowtype, int type)
 {
 	b2BodyDef bodyDef;
@@ -1006,6 +1024,17 @@ void LSFGame::tick(float dt)
 	
 	if (joystick->fishingGauge >= 200) { endFishing(3); }
 	
+	//invOpen Animation
+	if (btnCount == true && invOpenCount == false) {
+		if (invOpen->numberOfRunningActions() == 0) {
+			craftUsel->setVisible(true);
+			invOpenCount = true;
+			for (int invRow = 0; invRow < 8; invRow++)
+			{
+				invTable.at(invRow)->setVisible(true);
+			}
+		}
+	}
 
 }
 void LSFGame::touchCounter(float dt)
@@ -1134,6 +1163,8 @@ void LSFGame::fstChange(int type)
 			log("fstUpdate Type 2 Activate !!");
 		}
 		if (type == 3) {
+			//물고기 낚이는 부분 (ropeRemove 수정 필요)
+			addNewSpriteAt(Vec2::ZERO, "Sprites/Fishes/Fish011.png", 1);
 			fishBowlProgress(1);
 			auto fstSuccessAnim = animCreate->CreateAnim("Sprites/FishingStat_success.json", "FishingStat", 4, 0.1f);
 			auto fstSuccessAnimate = Animate::create(fstSuccessAnim);

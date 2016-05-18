@@ -35,11 +35,17 @@ public:
 
 	//³¬½Ã
 	b2Body* needle;
+	b2Body* fish;
+	b2BodyDef needlebodyDef; 
 	b2FixtureDef needlefixtureDef;
 	b2Body* addNewSpriteAt(Vec2 point, const std::string & imagepath, int tag);
-	b2Body* needlebody;
+	b2Body* addNewSpriteAt(b2Vec2 point, const std::string & imagepath, int tag);
+	b2Body* needleBody;
+	b2Body* fishBody;
+	Sprite* addFish;
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
+	void fishes(int tag);
 	void ropeTick(float dt);
 	void waterSplash(float dt);
 	void ropeRemove(int type);
@@ -170,6 +176,9 @@ public:
 	Vec2 invPosition;
 	Sprite* invOpen;
 	std::vector <TableView*> invTable;
+	Animation* invenAnim;
+	Animate* invenAnimate;
+	Repeat* repInven;
 	//Ä«¿îÆ®
 	int cbtnCount;
 	int waterCount;
@@ -177,6 +186,7 @@ public:
 	int flowCount = 0;
 	int fstCount = 0;
 	bool btnCount;
+	bool invOpenCount = false;
 	bool touchCount;
 	bool ropeTickCount;
 	bool ropeTouchCount;
