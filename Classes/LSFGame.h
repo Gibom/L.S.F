@@ -43,6 +43,7 @@ public:
 	b2Body* needleBody;
 	b2Body* fishBody;
 	Sprite* addFish;
+	Sprite* item;
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
 	void fishes(int tag);
@@ -51,6 +52,7 @@ public:
 	void ropeRemove(int type);
 	Vec2 touchRope;
 	float32 ropeLength;
+	
 	//낚시 - Timer
 	void startFishing(float dt);
 	void timerFishing(float dt);
@@ -66,9 +68,18 @@ public:
 	bool hangFish;
 	void doChangeMode(Ref* pSender);
 	Joystick* joystick;
+	//프로그레스
+	bool prgInit = false;
+	Sprite* prgHangBack;
+	Sprite* prgFailBack;
 	Sprite* fishBowl;
+	Sprite* fishBowl_fail;
 	void fishBowlProgress(int type);
-	ProgressTimer* fishingPrg;
+	ProgressTimer* fishingPrg_S;
+	ProgressTimer* fishingPrg_F;
+	Sequence* to1;
+	Sequence* to2;
+	void fishRemove(float dt);
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
@@ -93,6 +104,12 @@ public:
 	//Animation
 	AnimateCreate* animCreate;
 	RepeatForever* repFstNormal;
+	Repeat* repPrgHang;
+	RepeatForever* seqRepPrgHang;
+	Sequence* seqPrgHang;
+
+	Repeat* repPrgFail;
+
 	Repeat* repFstHang;
 	Repeat* repFstSuccess;
 	Repeat* repFstFail;
@@ -114,6 +131,7 @@ public:
 	Sprite* snowDrop;
 	LayerColor* invenLayer;
 	LayerColor* manualLayer;
+	LayerColor* progressLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
 	MenuItemImage* btn_modeswitch;
@@ -185,6 +203,7 @@ public:
 	int flowRand;
 	int flowCount = 0;
 	int fstCount = 0;
+	bool resultCount;
 	bool btnCount;
 	bool invOpenCount = false;
 	bool touchCount;

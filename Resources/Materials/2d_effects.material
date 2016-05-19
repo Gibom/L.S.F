@@ -24,8 +24,8 @@ material sample
 			{
 				vertexShader = Shaders/example_Simple.vsh
 				fragmentShader = Shaders/example_Outline.fsh
-				u_outlineColor = 0.1, 0.2, 0.3
-				u_radius = 0.01
+				u_outlineColor = 0.1, 0.2, 1.0
+				u_radius = 0.02
 				u_threshold = 1.75
 			}
 		}

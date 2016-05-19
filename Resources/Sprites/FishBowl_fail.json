@@ -1,0 +1,106 @@
+{ "frames": [
+   {
+    "filename": "FishBowl_fail 0.png",
+    "frame": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 1.png",
+    "frame": { "x": 720, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 2.png",
+    "frame": { "x": 1440, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 3.png",
+    "frame": { "x": 2160, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 4.png",
+    "frame": { "x": 2880, "y": 0, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 5.png",
+    "frame": { "x": 0, "y": 1280, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 6.png",
+    "frame": { "x": 720, "y": 1280, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 7.png",
+    "frame": { "x": 1440, "y": 1280, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 8.png",
+    "frame": { "x": 2160, "y": 1280, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   },
+   {
+    "filename": "FishBowl_fail 9.png",
+    "frame": { "x": 2880, "y": 1280, "w": 720, "h": 1280 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 720, "h": 1280 },
+    "sourceSize": { "w": 720, "h": 1280 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.4.1",
+  "image": "C:\\cocos2d-x-work\\Project\\LSF_Project_git\\Resources\\Sprites\\FishBowl_fail.png",
+  "format": "I8",
+  "size": { "w": 4096, "h": 4096 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}
