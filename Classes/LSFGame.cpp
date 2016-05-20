@@ -165,7 +165,7 @@ bool LSFGame::init()
 		invTable.at(invRow)->setVisible(false);
 	}
 
-	fishes(1);
+	//fishes(1);
 
 	//가방----------------------------------------------------------------------------------------------------
 
@@ -775,14 +775,30 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 //인벤토리 정렬 함수 정의 필요
 void LSFGame::fishes(int tag)
 {
-	//invSize = invTable.at(0)->cellAtIndex(0)->getContentSize();
-	invPosition = invTable.at(0)->cellAtIndex(1)->getPosition();
-	invTable.at(0)->cellAtIndex(1)->removeAllChildren();
-	invTable.at(0)->cellAtIndex(1)->addChild(Sprite::create("Sprites/Fishes/Fish011.png"));
-	invTable.at(0)->cellAtIndex(1)->setTag(11);
-	invTable.at(0)->cellAtIndex(1)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
-	invTable.at(0)->cellAtIndex(1)->setAnchorPoint(Vec2(0.5, 0.5));
-	log("invTable Tag : %d", invTable.at(0)->cellAtIndex(1)->getTag());
+	log("fishes");
+	for (int table = 0; table < 9;) 
+	{
+		log("Fishes for table : %d", table);
+		for (int cell = 0; cell < 10;)
+		{
+			log("Fishes for cell : %d", cell);
+			if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1) {
+				invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+				invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+				invTable.at(table)->cellAtIndex(cell)->addChild(Sprite::create("Sprites/Fishes/Fish011.png"));
+				invTable.at(table)->cellAtIndex(cell)->setTag(11);
+				invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+				invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+				log("invTable/Cell Tag : %d, %d",invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+				return;
+			}
+			else {
+				cell++;
+			}
+		}
+		table++;
+	}
+	
 }
 b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, int flowtype, int type)
 {
@@ -1271,7 +1287,7 @@ void LSFGame::ropeRemove(int type)
 		log("Fishing Success");
 		joystick->fishingGauge = 0;
 		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
-
+		fishes(1);
 	}
 
 	ropeHealth = 500;
@@ -1338,6 +1354,7 @@ void LSFGame::fishBowlProgress(int type)
 	//if (prgInit == false) {
 	log("prgInit");
 	fishBowl = Sprite::create("Sprites/FishBowl.png");
+	fishBowl->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
 	fishBowl_fail = Sprite::create("Sprites/FishBowl_fail.png");
 
 	fishingPrg_S = ProgressTimer::create(fishBowl);
@@ -1361,8 +1378,9 @@ void LSFGame::fishBowlProgress(int type)
 	if (type == 1) {
 		prgCounter = 1;
 		log("prg type 1 ");
-		fishingPrg_S->runAction(to1);
-
+		//fishingPrg_S->runAction(to1);
+		progressLayer->addChild(fishBowl);
+		
 		//랜덤 아이템 변수필요
 		item = Sprite::create("Sprites/Fishes/Fish011.png");
 		item->setScale(3.f);
@@ -1405,6 +1423,7 @@ void LSFGame::fishRemove(float dt)
 	{
 		log("fishRemove 1");
 		progressLayer->removeChild(item);
+		progressLayer->removeChild(fishBowl);
 	}
 }
 
