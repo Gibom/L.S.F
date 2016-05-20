@@ -22,7 +22,7 @@ Tick = @
 	-> ropeRemove(1)
 	
 	tick
-	@> ropeHealth == 0 -> ropeRemove(2)
+	@> ropeHealth == 0 -> endFishing(2)
 	
 	BeginContact
 	@> (ropeHealth > 0 && fishingStat == true) -> ropeHealth--

@@ -10,6 +10,7 @@
 #include "AnimateCreate.h"
 #include "WaterNode.h"
 #include "Inventory.h"
+#include "LSFSingleton.h"
 
 using namespace cocos2d;
 
@@ -80,6 +81,7 @@ public:
 	Sequence* to1;
 	Sequence* to2;
 	void fishRemove(float dt);
+	int prgCounter;
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;

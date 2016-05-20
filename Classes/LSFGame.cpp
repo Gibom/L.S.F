@@ -31,7 +31,7 @@ bool LSFGame::init()
 	listener->onTouchMoved = CC_CALLBACK_2(LSFGame::onTouchMoved, this);
 	listener->onTouchEnded = CC_CALLBACK_2(LSFGame::onTouchEnded, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-	
+
 	srand(time(nullptr));
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
@@ -44,10 +44,10 @@ bool LSFGame::init()
 	fishingStat = false;
 	ropeTickCount = false;
 	craftSwitch = false;
-	
+
 	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
 	//수동모드 레이어 추가
-	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0),	winSize.width, winSize.height);
+	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0), winSize.width, winSize.height);
 	manualLayer->setAnchorPoint(Vec2::ZERO);
 	manualLayer->setPosition(Vec2(0, 0));
 	manualLayer->setVisible(true);
@@ -57,20 +57,20 @@ bool LSFGame::init()
 	progressLayer->setAnchorPoint(Vec2::ZERO);
 	progressLayer->setVisible(true);
 	this->addChild(progressLayer, 4);
-	
+
 	prgHangBack = Sprite::create("Sprites/prgHangLayer.png");
 	prgHangBack->setPosition(Vec2(winSize.width / 2, winSize.height / 2 + 155));
 	progressLayer->addChild(prgHangBack);
 
 	prgFailBack = Sprite::create("Sprites/prgFailLayer.png");
-	prgFailBack->setPosition(Vec2(winSize.width / 2, winSize.height / 2 + 155));
+	prgFailBack->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
 	progressLayer->addChild(prgFailBack);
 
 	//조이스틱
 	joystick = Joystick::create();
 	joystick->setVisible(false);
 	this->addChild(joystick, 4);
-	
+
 	//스프라이트 추가
 	Sprite* backDefault = Sprite::create("Sprites/Game_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
@@ -83,7 +83,7 @@ bool LSFGame::init()
 
 	back = Sprite::createWithSpriteFrame(GameFrameCache->getSpriteFrameByName("Game_cloudcut 0.png"));
 	back->setAnchorPoint(Vec2(0, 1));
-	back->setPosition(Vec2(0,winSize.height));
+	back->setPosition(Vec2(0, winSize.height));
 	this->addChild(back);
 	//!Debug on/off
 
@@ -210,12 +210,12 @@ bool LSFGame::init()
 	//환경 구조물배치----------------------------------------------------------------------------------------
 
 	//메뉴
-	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png","Sprites/Button_bagopen.png",
+	btn_inventory = MenuItemImage::create("Sprites/Button_bagclose.png", "Sprites/Button_bagopen.png",
 		CC_CALLBACK_1(LSFGame::doPushInventory, this));
 	btn_inventory->setScale(1.5f);
 	inventoryMenu = Menu::create(btn_inventory, nullptr);
 	inventoryMenu->setAnchorPoint(Vec2(0.5, 0.5));
-	inventoryMenu->setPosition(Vec2(winSize.width-140, winSize.height/5-100));
+	inventoryMenu->setPosition(Vec2(winSize.width - 140, winSize.height / 5 - 100));
 	inventoryMenu->alignItemsHorizontally();
 	this->addChild(inventoryMenu, 4);
 
@@ -225,7 +225,7 @@ bool LSFGame::init()
 	modeswitchMenu->setAnchorPoint(Vec2(0.5, 0.5));
 	modeswitchMenu->setPosition(Vec2(winSize.width - 140, winSize.height - 100));
 	modeswitchMenu->alignItemsHorizontally();
-	this->addChild(modeswitchMenu, 3); 
+	this->addChild(modeswitchMenu, 3);
 
 	////애니메이션
 	//Background
@@ -237,7 +237,7 @@ bool LSFGame::init()
 	//Ship	(Normal(1), Windy(2), Snowy(3), Rainny(4), ThunderStorm(5))
 	ShipStat = 2;
 
-	if(ShipStat == 1){
+	if (ShipStat == 1) {
 		if (ship->getNumberOfRunningActions() != 0) {
 			ship->cleanup();
 		}
@@ -246,7 +246,7 @@ bool LSFGame::init()
 		auto repShip = RepeatForever::create(shipAnimate);
 		ship->runAction(repShip);
 	}
-	else if(ShipStat == 2){
+	else if (ShipStat == 2) {
 		if (ship->getNumberOfRunningActions() != 0) {
 			ship->cleanup();
 		}
@@ -278,7 +278,7 @@ bool LSFGame::init()
 	//월드 생성
 	if (this->createBox2dWorld(true))
 	{
-		
+
 		this->schedule(schedule_selector(LSFGame::tick));
 		water = WaterNode::create();
 		this->addChild(water, 3);
@@ -295,7 +295,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	bool bTouch_craft = craft->getBoundingBox().containsPoint(touchPoint);
 	touchRope = touchPoint; // WaterSplash 발생 위치 지정을 위한 변수
 	float splashDelay = touchPoint.y;
-
+	prgFailBack->setVisible(false);
 	// 게임 화면
 	//반자동 모드
 	if (modeSwitch != true) {
@@ -380,7 +380,7 @@ void LSFGame::onTouchMoved(Touch* touch, Event* event)
 }
 void LSFGame::onTouchEnded(Touch* touch, Event* event)
 {
-	
+
 }
 
 void LSFGame::doPushInventory(Ref * pSender)
@@ -394,7 +394,7 @@ void LSFGame::doPushInventory(Ref * pSender)
 		invenAnimate = Animate::create(invenAnim);
 		repInven = Repeat::create(invenAnimate, 1);
 		invOpen->runAction(repInven);
-		
+
 		//craft->setVisible(true);
 		btn_inventory->selected();
 		btnCount = true;
@@ -488,9 +488,9 @@ bool LSFGame::createBox2dWorld(bool debug)
 	//물 범위 가장자리에 틀 생성
 	b2BodyDef bottomBodyDef;
 	bottomBodyDef.type = b2_staticBody;
-	bottomBodyDef.position.Set(winSize.width/2/PTM_RATIO, 1.2f);
+	bottomBodyDef.position.Set(winSize.width / 2 / PTM_RATIO, 1.2f);
 	bottomBodyDef.linearDamping = 0.3f;
-	
+
 	b2Body* bottomBody;
 	bottomBody = _world->CreateBody(&bottomBodyDef);
 	b2FixtureDef botfixtureDef;
@@ -553,7 +553,7 @@ bool LSFGame::createBox2dWorld(bool debug)
 
 	b2BodyDef rightBodyDef;
 	rightBodyDef.type = b2_staticBody;
-	rightBodyDef.position.Set((winSize.width)/ PTM_RATIO, 0);
+	rightBodyDef.position.Set((winSize.width) / PTM_RATIO, 0);
 	rightBodyDef.linearDamping = 0.3f;
 	b2Body* rightBody;
 	rightBody = _world->CreateBody(&rightBodyDef);
@@ -567,20 +567,20 @@ bool LSFGame::createBox2dWorld(bool debug)
 	rightfixtureDef.filter.groupIndex = -2;
 	rightBody->CreateFixture(&rightfixtureDef);
 	//물 범위 가장자리에 틀 생성 끝
-	
+
 	//월드 생성 끝 ---------------------------------------------------
 
 	//Random
-	
+
 
 	//Flow(Water Flow - Fish Start)-----------------------------------
 	b2Vec2 axis(0.0f, 1.0f);
-	
+
 	//top
 	flowRand = rand() % 4 + 1;
-	flowBody0 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height /3-100), Size(100, 5), b2_dynamicBody, flowRand, 0);
-	flowBody1 = this->addNewSpriteFlow(Vec2((winSize.width / 2)-40, winSize.height / 3 -120), Size(10, 10), b2_dynamicBody, 0, 0);
-	flowBody2 = this->addNewSpriteFlow(Vec2((winSize.width / 2)+40, winSize.height / 3 -120), Size(10, 10), b2_dynamicBody, 0, 0);
+	flowBody0 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height / 3 - 100), Size(100, 5), b2_dynamicBody, flowRand, 0);
+	flowBody1 = this->addNewSpriteFlow(Vec2((winSize.width / 2) - 40, winSize.height / 3 - 120), Size(10, 10), b2_dynamicBody, 0, 0);
+	flowBody2 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 40, winSize.height / 3 - 120), Size(10, 10), b2_dynamicBody, 0, 0);
 
 	flowJd1.Initialize(flowBody0, flowBody1, flowBody1->GetPosition(), axis);
 	flowJd1.motorSpeed = 15.0f;
@@ -598,9 +598,9 @@ bool LSFGame::createBox2dWorld(bool debug)
 
 	//center
 	flowRand = rand() % 4 + 1;
-	flowBody3 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height/3 -160), Size(100, 10), b2_dynamicBody, flowRand, 0);
-	flowBody4 = this->addNewSpriteFlow(Vec2((winSize.width / 2)-40, winSize.height/3 -180), Size(20, 20), b2_dynamicBody, 0, 0);
-	flowBody5 = this->addNewSpriteFlow(Vec2((winSize.width / 2)+40, winSize.height/3 -180), Size(20, 20), b2_dynamicBody, 0, 0);
+	flowBody3 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height / 3 - 160), Size(100, 10), b2_dynamicBody, flowRand, 0);
+	flowBody4 = this->addNewSpriteFlow(Vec2((winSize.width / 2) - 40, winSize.height / 3 - 180), Size(20, 20), b2_dynamicBody, 0, 0);
+	flowBody5 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 40, winSize.height / 3 - 180), Size(20, 20), b2_dynamicBody, 0, 0);
 
 	flowJd3.Initialize(flowBody3, flowBody4, flowBody4->GetPosition(), axis);
 	flowJd3.motorSpeed = 25.0f;
@@ -618,9 +618,9 @@ bool LSFGame::createBox2dWorld(bool debug)
 
 	//bottom 1
 	flowRand = rand() % 4 + 1;
-	flowBody6 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height/3-220), Size(100, 15), b2_dynamicBody, flowRand, 0);
-	flowBody7 = this->addNewSpriteFlow(Vec2((winSize.width / 2)-40, winSize.height/3 - 240), Size(20, 20), b2_dynamicBody, 0, 0);
-	flowBody8 = this->addNewSpriteFlow(Vec2((winSize.width / 2)+40, winSize.height/3 - 240), Size(20, 20), b2_dynamicBody, 0, 0);
+	flowBody6 = this->addNewSpriteFlow(Vec2((winSize.width / 2), winSize.height / 3 - 220), Size(100, 15), b2_dynamicBody, flowRand, 0);
+	flowBody7 = this->addNewSpriteFlow(Vec2((winSize.width / 2) - 40, winSize.height / 3 - 240), Size(20, 20), b2_dynamicBody, 0, 0);
+	flowBody8 = this->addNewSpriteFlow(Vec2((winSize.width / 2) + 40, winSize.height / 3 - 240), Size(20, 20), b2_dynamicBody, 0, 0);
 
 	flowJd5.Initialize(flowBody6, flowBody7, flowBody7->GetPosition(), axis);
 	flowJd5.motorSpeed = 30.0f;
@@ -677,7 +677,7 @@ bool LSFGame::createBox2dWorld(bool debug)
 
 	//배
 	b2BodyDef shipBodyDef;
-	shipBodyDef.type = b2_dynamicBody; 
+	shipBodyDef.type = b2_dynamicBody;
 	shipBodyDef.position.Set((winSize.width + 470) / 2 / PTM_RATIO, ((winSize.height / 3)) / PTM_RATIO);
 	shipBodyDef.userData = ship;
 
@@ -691,37 +691,37 @@ bool LSFGame::createBox2dWorld(bool debug)
 	shipFixtureDef.restitution = 0.5f;	//반발력 - 물체가 다른 물체에 닿았을 때 튕기는 값
 	shipFixtureDef.filter.categoryBits = 0x01;
 	shipFixtureDef.filter.groupIndex = -1;
-	
+
 	shipBody->CreateFixture(&shipFixtureDef);
 
 	//수표면
 	b2BodyDef waterBodyDef;
 	waterBodyDef.type = b2_kinematicBody;
-	waterBodyDef.position.Set((winSize.width) / 2 / PTM_RATIO, ((winSize.height / 3)-80) / PTM_RATIO);
+	waterBodyDef.position.Set((winSize.width) / 2 / PTM_RATIO, ((winSize.height / 3) - 80) / PTM_RATIO);
 	waterBodyDef.linearVelocity = b2Vec2(-1.0f, 0);
-	
+
 	b2Body* waterBody = _world->CreateBody(&waterBodyDef);
 	b2CircleShape kinematicCircle;
 	kinematicCircle.m_radius = 0.05;
-	
+
 	b2FixtureDef waterfixtureDef;
 	waterfixtureDef.shape = &kinematicCircle;
 	waterfixtureDef.density = 1.0f;
 	waterfixtureDef.filter.groupIndex = -1;
 	waterBody->CreateFixture(&waterfixtureDef);
-	
+
 	b2BodyDef waterBodyDef2;
 	waterBodyDef2.type = b2_kinematicBody;
 	waterBodyDef2.position.Set((winSize.width) / 2 / PTM_RATIO, ((winSize.height / 3) - 80) / PTM_RATIO);
 	waterBodyDef2.linearVelocity = b2Vec2(1.0f, 0);
-	
+
 	b2Body* waterBody2 = _world->CreateBody(&waterBodyDef2);
 	b2FixtureDef waterfixtureDef2;
 	waterfixtureDef2.shape = &kinematicCircle;
 	waterfixtureDef2.density = 1.0f;
 	waterfixtureDef2.filter.groupIndex = -1;
 	waterBody2->CreateFixture(&waterfixtureDef2);
-	
+
 	return true;
 }
 b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int tag)
@@ -730,7 +730,7 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 	//Get the sprite frome the sprite sheet
 	addFish = Sprite::create(imagepath);
 	addFish->setAnchorPoint(Vec2(0.5, 0.8));
-	
+
 	if (tag == 0) {
 
 		addFish->setTag(99);
@@ -741,7 +741,7 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 		needlebodyDef.position = b2Vec2(point.x / PTM_RATIO, point.y / PTM_RATIO);
 		needlebodyDef.userData = addFish;
 		needlebodyDef.linearDamping = 0.3f;
-		
+
 		needleBody = _world->CreateBody(&needlebodyDef);
 
 		spriteShape.m_radius = 0.1;
@@ -752,15 +752,15 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 		needlefixtureDef.filter.categoryBits = 0x01;
 		needlefixtureDef.filter.maskBits = 0x03;
 		needlefixtureDef.filter.groupIndex = -1;
-		
+
 
 		needleBody->CreateFixture(&needlefixtureDef);
 		needleBody->SetFixedRotation(true);
 		return needleBody;
-	} 
+	}
 	else if (resultCount == true)
-	{	
-		
+	{
+
 		addFish->setTag(tag);
 		this->addChild(addFish);
 		if (addFish->getTag() == tag)
@@ -781,7 +781,7 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 }
 void LSFGame::fishes(int tag)
 {
-	
+
 }
 b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, int flowtype, int type)
 {
@@ -982,16 +982,16 @@ void LSFGame::tick(float dt)
 		this->schedule(schedule_selector(LSFGame::ropeTick));
 		ropeTickCount = true;
 	}
-	
+
 	//WF(Water flow Start)---------------------------------------
 
 	//log("flowbody %f", flowBody0->GetPosition().x);
-	if (flowBody0->GetPosition().x <=0.6)
+	if (flowBody0->GetPosition().x <= 0.6)
 	{
 		m_spring1->SetMotorSpeed(-30.0f);
 		m_spring2->SetMotorSpeed(-30.0f);
 		flow.at(0)->setFlippedX(true);
-		
+
 	}
 	else if (flowBody0->GetPosition().x >= 6.6) {
 		m_spring1->SetMotorSpeed(30.0f);
@@ -1041,9 +1041,9 @@ void LSFGame::tick(float dt)
 		endFishing(2);
 	}
 	//RHC(Rope Health Counter End)-------------------------------
-	
+
 	if (joystick->fishingGauge >= 200) { endFishing(3); }
-	
+
 	//invOpen Animation
 	if (btnCount == true && invOpenCount == false) {
 		if (invOpen->numberOfRunningActions() == 0) {
@@ -1058,7 +1058,7 @@ void LSFGame::tick(float dt)
 }
 void LSFGame::touchCounter(float dt)
 {
-	if(touchCount == false){
+	if (touchCount == false) {
 		touchCount = true;
 		joystick->setVisible(false);
 
@@ -1070,7 +1070,7 @@ void LSFGame::touchCounter(float dt)
 void LSFGame::startFishing(float dt)
 {
 	modeswitchMenu->setEnabled(false);
-	
+
 	log("---------------------------Fishing 4");
 	fishingStat = true;
 	log("ropeLength: %f", ropeLength);
@@ -1108,7 +1108,7 @@ void LSFGame::startFishing(float dt)
 	{
 		log("4444-1");
 		randomTime = random(5, 10);
-		log("4444-2 random : %d",randomTime);
+		log("4444-2 random : %d", randomTime);
 		catchTime = random(2, randomTime - 3);
 		log("4444-3");
 		ropeHealth = ropeHealth * 5;
@@ -1118,13 +1118,13 @@ void LSFGame::startFishing(float dt)
 	timer = randomTime;
 	this->schedule(schedule_selector(LSFGame::timerFishing), 1.f);
 	log("---------------------------Fishing 4-END");
-	//Success
 }
 void LSFGame::timerFishing(float dt)
 {
 	log("timerFishing: %d", timer);
 	log("catchTime: %d", catchTime);
 	if (--timer == 0) {
+		log("timer = 0");
 		endFishing(1);
 	}
 	if (timer != 0) {
@@ -1143,13 +1143,13 @@ void LSFGame::timerFishing(float dt)
 			endFishing(1);
 			hangFish = false;
 		}
-		
+
 	}
 	log("---------------------------Fishing 5");
 }
-void LSFGame::endFishing(float dt) 
+void LSFGame::endFishing(float dt)
 {
-	
+
 	log("EndFishing");
 	if (modeSwitch == true) {
 		listener->setSwallowTouches(true);
@@ -1165,72 +1165,59 @@ void LSFGame::fstChange(int type)
 	if (fstUpdate->getNumberOfRunningActions() != 0) {
 		fstUpdate->stopAllActions();
 	}
-	
-		if (type == 1) {
-			auto fstNormalAnim = animCreate->CreateAnim("Sprites/FishingStat_normal.json", "FishingStat", 4, 0.1f);
-			auto fstNormalAnimate = Animate::create(fstNormalAnim);
-			repFstNormal = RepeatForever::create(fstNormalAnimate);
-			fstUpdate->runAction(repFstNormal);
-			touchCount = false;
-			log("fstUpdate Type 1 Activate !!");
-		}
-		if (type == 2) {
-			auto fstHangAnim = animCreate->CreateAnim("Sprites/FishingStat_hang.json", "FishingStat", 4, 0.1f);
-			auto fstHangAnimate = Animate::create(fstHangAnim);
-			repFstHang = Repeat::create(fstHangAnimate, 1);
-			fstUpdate->runAction(repFstHang);
 
-			log("prg type 3 ");
-			auto prgHangAnim = animCreate->CreateAnim("Sprites/FishBowl_hang.json", "fishbowl", 9, 0.1f);
-			auto prgHangAnimate = Animate::create(prgHangAnim);
-			repPrgHang = Repeat::create(prgHangAnimate,1);
-			seqPrgHang = Sequence::createWithTwoActions(repPrgHang, repPrgHang->reverse());
-			seqRepPrgHang = RepeatForever::create(seqPrgHang);
-			prgHangBack->setVisible(true);
-			prgHangBack->runAction(seqRepPrgHang);
+	if (type == 1) {
+		auto fstNormalAnim = animCreate->CreateAnim("Sprites/FishingStat_normal.json", "FishingStat", 4, 0.1f);
+		auto fstNormalAnimate = Animate::create(fstNormalAnim);
+		repFstNormal = RepeatForever::create(fstNormalAnimate);
+		fstUpdate->runAction(repFstNormal);
+		touchCount = false;
+		log("fstUpdate Type 1 Activate !!");
+	}
+	if (type == 2) {
+		auto fstHangAnim = animCreate->CreateAnim("Sprites/FishingStat_hang.json", "FishingStat", 4, 0.1f);
+		auto fstHangAnimate = Animate::create(fstHangAnim);
+		repFstHang = Repeat::create(fstHangAnimate, 1);
+		fstUpdate->runAction(repFstHang);
 
-			touchCount = true;
-			log("fstUpdate Type 2 Activate !!");
-		}
-		if (type == 3) {
-			//물고기 낚이는 부분 (ropeRemove 수정 필요)
-			resultCount = true;
-			addNewSpriteAt(Vec2(winSize.width / 2, winSize.height / 2), "Sprites/Fishes/Fish011.png", 2);
-			fishBowlProgress(1);
-			auto fstSuccessAnim = animCreate->CreateAnim("Sprites/FishingStat_success.json", "FishingStat", 4, 0.1f);
-			auto fstSuccessAnimate = Animate::create(fstSuccessAnim);
-			repFstSuccess = Repeat::create(fstSuccessAnimate, 1);
-			fstUpdate->runAction(repFstSuccess);
-			touchCount = false;
-			this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 3.f);
-			log("fstUpdate Type 3 Activate !!");
-		}
-		if (type == 4) {
-			//물고기 낚이는 부분 (ropeRemove 수정 필요)
-			resultCount = false;
-			addNewSpriteAt(Vec2::ZERO, "Sprites/Fishes/Fish011.png", 1);
-			fishBowlProgress(2);
-			touchCount = false;
-			auto fstFailAnim = animCreate->CreateAnim("Sprites/FishingStat_fail.json", "FishingStat", 4, 0.1f);
-			auto fstFailAnimate = Animate::create(fstFailAnim);
-			repFstFail = Repeat::create(fstFailAnimate, 1);
-			fstUpdate->runAction(repFstFail);
-			this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 3.f);
-			log("fstUpdate Type 4 Activate !!");
-		}
-	
-	//else {
-	//	if (fstCount == 1)
-	//	{
-	//		fstCount = 0;
-	//		return;
-	//	}
-	//	log("fstUpdate stopAllAction!!");
-	//	fstUpdate->stopAllActions();
-	//	fstCount++;
-	//	fstChange(type);
+		log("prg type 3 ");
+		auto prgHangAnim = animCreate->CreateAnim("Sprites/FishBowl_hang.json", "fishbowl", 9, 0.1f);
+		auto prgHangAnimate = Animate::create(prgHangAnim);
+		repPrgHang = Repeat::create(prgHangAnimate, 1);
+		seqPrgHang = Sequence::createWithTwoActions(repPrgHang, repPrgHang->reverse());
+		seqRepPrgHang = RepeatForever::create(seqPrgHang);
+		prgHangBack->setVisible(true);
+		prgHangBack->runAction(seqRepPrgHang);
 
-	//}
+		touchCount = true;
+		log("fstUpdate Type 2 Activate !!");
+	}
+	if (type == 3) {
+		//물고기 낚이는 부분 (ropeRemove 수정 필요)
+		resultCount = true;
+		addNewSpriteAt(Vec2(winSize.width / 2, winSize.height / 2), "Sprites/Fishes/Fish011.png", 2);
+		fishBowlProgress(1);
+		auto fstSuccessAnim = animCreate->CreateAnim("Sprites/FishingStat_success.json", "FishingStat", 4, 0.1f);
+		auto fstSuccessAnimate = Animate::create(fstSuccessAnim);
+		repFstSuccess = Repeat::create(fstSuccessAnimate, 1);
+		fstUpdate->runAction(repFstSuccess);
+		touchCount = false;
+		this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 3.f);
+		log("fstUpdate Type 3 Activate !!");
+	}
+	if (type == 4) {
+		//물고기 낚이는 부분 (ropeRemove 수정 필요)
+		resultCount = false;
+		addNewSpriteAt(Vec2::ZERO, "Sprites/Fishes/Fish011.png", 1);
+		fishBowlProgress(2);
+		touchCount = false;
+		auto fstFailAnim = animCreate->CreateAnim("Sprites/FishingStat_fail.json", "FishingStat", 4, 0.1f);
+		auto fstFailAnimate = Animate::create(fstFailAnim);
+		repFstFail = Repeat::create(fstFailAnimate, 1);
+		fstUpdate->runAction(repFstFail);
+		this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 3.f);
+		log("fstUpdate Type 4 Activate !!");
+	}
 }
 void LSFGame::doChangeMode(Ref* pSender)
 {
@@ -1238,7 +1225,7 @@ void LSFGame::doChangeMode(Ref* pSender)
 		modeSwitch = true;
 		btn_modeswitch->selected();
 		//manualLayer->setVisible(true);
-		
+
 	}
 	else {
 		modeSwitch = false;
@@ -1248,18 +1235,18 @@ void LSFGame::doChangeMode(Ref* pSender)
 	}
 
 }
-void LSFGame::ropeRemove(int type) 
+void LSFGame::ropeRemove(int type)
 {
-	
-	
-	log("rope Remove - >prgLayerBack ");
-	prgHangBack->stopAction(seqRepPrgHang);
-	prgHangBack->setVisible(false);
-	
+	if (prgHangBack->numberOfRunningActions() != 0)
+	{
+		log("rope Remove - > prgLayerBack ");
+		prgHangBack->stopAction(seqRepPrgHang);
+		prgHangBack->setVisible(false);
+	}
 	log("---------------------------Fishing 7");
 	modeswitchMenu->setEnabled(true);
 	if (type == 1) {
-		
+
 		log("---------------------------Fishing 7-1");
 		fstChange(4);
 		log("Fishing fail!");
@@ -1285,12 +1272,12 @@ void LSFGame::ropeRemove(int type)
 		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
 
 	}
-	
+
 	ropeHealth = 500;
 	ropes->clear();
-	
+
 	_world->DestroyJoint(ropeJoint);
-	
+
 	this->unschedule(schedule_selector(LSFGame::ropeTick));
 	newRope->removeSprites();
 	needle->DestroyFixture(needle->GetFixtureList());
@@ -1323,7 +1310,7 @@ void ContactListener::BeginContact(b2Contact* contact)
 
 	b2Body *bodyA = fixA->GetBody();
 	b2Body *bodyB = fixB->GetBody();
-	
+
 	//b2Log
 
 	if (bodyA->GetType() == b2_dynamicBody || bodyB->GetType() == b2_dynamicBody) {
@@ -1346,38 +1333,34 @@ int LSFGame::statusCheck(const std::string & kindof)
 //수동모드 낚시 progress 수정필요
 void LSFGame::fishBowlProgress(int type)
 {
+	prgCounter = 0;
 	//if (prgInit == false) {
-		log("prgInit");
-		fishBowl = Sprite::create("Sprites/FishBowl.png");
-		fishBowl_fail = Sprite::create("Sprites/FishBowl_fail.png");
+	log("prgInit");
+	fishBowl = Sprite::create("Sprites/FishBowl.png");
+	fishBowl_fail = Sprite::create("Sprites/FishBowl_fail.png");
 
-		fishingPrg_S = ProgressTimer::create(fishBowl);
-		fishingPrg_S->setType(ProgressTimer::Type::BAR);
-		fishingPrg_S->setMidpoint(Vec2(0, 0));
-		fishingPrg_S->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
-		fishingPrg_S->setBarChangeRate(Vec2(0, 1));
-		progressLayer->addChild(fishingPrg_S);
-		to1 = Sequence::createWithTwoActions(ProgressTo::create(4, 100), ProgressTo::create(0, 40));
+	fishingPrg_S = ProgressTimer::create(fishBowl);
+	fishingPrg_S->setType(ProgressTimer::Type::BAR);
+	fishingPrg_S->setMidpoint(Vec2(0, 0));
+	fishingPrg_S->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	fishingPrg_S->setBarChangeRate(Vec2(0, 1));
+	progressLayer->addChild(fishingPrg_S);
+	to1 = Sequence::createWithTwoActions(ProgressTo::create(4, 100), ProgressTo::create(0, 40));
 
-		fishingPrg_F = ProgressTimer::create(fishBowl_fail);
-		fishingPrg_F->setType(ProgressTimer::Type::BAR);
-		fishingPrg_F->setMidpoint(Vec2(0, 0));
-		fishingPrg_F->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
-		fishingPrg_F->setBarChangeRate(Vec2(0, 1));
-		progressLayer->addChild(fishingPrg_F);
-		to2 = Sequence::createWithTwoActions(ProgressTo::create(4, 100), ProgressTo::create(0, 40));
-
-
-		
-	
+	fishingPrg_F = ProgressTimer::create(fishBowl_fail);
+	fishingPrg_F->setType(ProgressTimer::Type::BAR);
+	fishingPrg_F->setMidpoint(Vec2(0, 0));
+	fishingPrg_F->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	fishingPrg_F->setBarChangeRate(Vec2(0, 1));
+	progressLayer->addChild(fishingPrg_F);
+	to2 = Sequence::createWithTwoActions(ProgressTo::create(4, 100), ProgressTo::create(0, 40));
 
 	//	prgInit = true;
 	//}
-	if (type == 1) { 
+	if (type == 1) {
+		prgCounter = 1;
 		log("prg type 1 ");
-		fishingPrg_S->runAction(to1); 
-		
-	
+		fishingPrg_S->runAction(to1);
 
 		//랜덤 아이템 변수필요
 		item = Sprite::create("Sprites/Fishes/Fish011.png");
@@ -1399,24 +1382,27 @@ void LSFGame::fishBowlProgress(int type)
 
 		this->scheduleOnce(schedule_selector(LSFGame::fishRemove), 4.f);
 	}
-	else if (type == 2) 
-	{ 
-		log("prg type 2 "); 
+	else if (type == 2)
+	{
+		prgCounter = 2;
+		log("prg type 2 ");
 
-		auto prgFailAnim = animCreate->CreateAnim("Sprites/FishBowl_fail.json", "fishbowl", 9, 0.1f);
+		auto prgFailAnim = animCreate->CreateAnim("Sprites/FishBowl_fail.json", "FishBowl_fail", 10, 0.2f);
 		auto prgFailAnimate = Animate::create(prgFailAnim);
 		repPrgFail = Repeat::create(prgFailAnimate, 1);
-		
-		
+
 		prgFailBack->setVisible(true);
 		prgFailBack->runAction(repPrgFail);
+
 	}
 }
 
 void LSFGame::fishRemove(float dt)
 {
-	if (item->numberOfRunningActions() == 0)
+	log("fishRemoveInit");
+	if (item->numberOfRunningActions() == 0 && prgCounter == 1)
 	{
+		log("fishRemove 1");
 		progressLayer->removeChild(item);
 	}
 }
@@ -1428,7 +1414,7 @@ static void printProperties(Properties* properties, int indent)
 	const char* id = properties->getId();
 	char chindent[64];
 	int i = 0;
-	for (i = 0; i<indent * 2; i++)
+	for (i = 0; i < indent * 2; i++)
 		chindent[i] = ' ';
 	chindent[i] = '\0';
 
