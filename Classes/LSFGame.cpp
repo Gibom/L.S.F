@@ -165,14 +165,7 @@ bool LSFGame::init()
 		invTable.at(invRow)->setVisible(false);
 	}
 
-	//invSize = invTable.at(0)->cellAtIndex(0)->getContentSize();
-	invPosition = invTable.at(0)->cellAtIndex(1)->getPosition();
-	invTable.at(0)->cellAtIndex(1)->removeAllChildren();
-	invTable.at(0)->cellAtIndex(1)->addChild(Sprite::create("Sprites/Fishes/Fish011.png"));
-	invTable.at(0)->cellAtIndex(1)->setTag(11);
-	invTable.at(0)->cellAtIndex(1)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
-	invTable.at(0)->cellAtIndex(1)->setAnchorPoint(Vec2(0.5, 0.5));
-	log("invTable Tag : %d", invTable.at(0)->cellAtIndex(1)->getTag());
+	fishes(1);
 
 	//가방----------------------------------------------------------------------------------------------------
 
@@ -779,9 +772,17 @@ b2Body* LSFGame::addNewSpriteAt(Vec2 point, const std::string & imagepath, int t
 		resultCount = true;
 	}
 }
+//인벤토리 정렬 함수 정의 필요
 void LSFGame::fishes(int tag)
 {
-
+	//invSize = invTable.at(0)->cellAtIndex(0)->getContentSize();
+	invPosition = invTable.at(0)->cellAtIndex(1)->getPosition();
+	invTable.at(0)->cellAtIndex(1)->removeAllChildren();
+	invTable.at(0)->cellAtIndex(1)->addChild(Sprite::create("Sprites/Fishes/Fish011.png"));
+	invTable.at(0)->cellAtIndex(1)->setTag(11);
+	invTable.at(0)->cellAtIndex(1)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+	invTable.at(0)->cellAtIndex(1)->setAnchorPoint(Vec2(0.5, 0.5));
+	log("invTable Tag : %d", invTable.at(0)->cellAtIndex(1)->getTag());
 }
 b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, int flowtype, int type)
 {
