@@ -24,7 +24,7 @@ public:
 
 	CREATE_FUNC(LSFGame);
 
-	//Box2D----------------------------------------------------------------------------
+	//Box2D-Start---------------------------------------------------------------------------
 	bool createBox2dWorld(bool debug);
 	SpriteBatchNode* ropeSpriteSheet;
 	~LSFGame();
@@ -100,9 +100,23 @@ public:
 	b2World* _world;
 	GLESDebugDraw* m_debugDraw;
 
-	//Box2D----------------------------------------------------------------------------
+	//Box2D-End---------------------------------------------------------------------------
 
 	//환경구성
+
+	//WorldTimer
+	void WorldTimer(float dt);
+	void dayChangerF(int type);
+	int wTime = 0;	// 1wTime = 1gmin = 2.5sec
+	int wtInit = rand() % 360 + 1 ;
+	int dayChanger = 0;
+	//WorldChange
+	//day
+	Sprite* backDefault;
+	Animation* mainAnim;
+	Animate* mainAnimate;
+	RepeatForever* repMain;
+
 	//Animation
 	AnimateCreate* animCreate;
 	RepeatForever* repFstNormal;

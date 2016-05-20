@@ -36,6 +36,8 @@ bool LSFGame::init()
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
 
+	this->schedule(schedule_selector(LSFGame::WorldTimer), 0.5f);	//기본값 duration 2.5, 밸런스 조정 필요
+
 	cbtnCount = 0;
 	waterCount = 0;
 	btnCount = false;
@@ -44,6 +46,8 @@ bool LSFGame::init()
 	fishingStat = false;
 	ropeTickCount = false;
 	craftSwitch = false;
+	dayChanger = 0;	// 초기값(0), 아침(1), 점심(2), 저녁(3)
+	wTime += wtInit; // 시간값 초기화
 
 	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
 	//수동모드 레이어 추가
@@ -72,7 +76,7 @@ bool LSFGame::init()
 	this->addChild(joystick, 4);
 
 	//스프라이트 추가
-	Sprite* backDefault = Sprite::create("Sprites/Game_bg.png");
+	backDefault = Sprite::create("Sprites/Game_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
 	backDefault->setPosition(Vec2::ZERO);
 	this->addChild(backDefault);
@@ -127,14 +131,6 @@ bool LSFGame::init()
 	craftSel->setVisible(false);
 	invenLayer->addChild(craftSel);
 
-	//inventory = Sprite::create("Sprites/inventory_bg.png");
-	//inventory->setAnchorPoint(Vec2::ZERO);
-	//inventory->setPosition(Vec2(0,200));
-	//inventory->setCascadeOpacityEnabled(true);
-	//inventory->setOpacity(255);
-	//inventory->setVisible(false);
-	//invenLayer->addChild(inventory);
-
 	GameFrameCache = SpriteFrameCache::getInstance();
 	GameFrameCache->addSpriteFramesWithJson("Sprites/inventory_open.json");
 
@@ -165,10 +161,7 @@ bool LSFGame::init()
 		invTable.at(invRow)->setVisible(false);
 	}
 
-	//fishes(1);
-
 	//가방----------------------------------------------------------------------------------------------------
-
 
 	//환경 구조물배치-----------------------------------------------------------------------------------------
 	weatherCount = 2;
@@ -199,7 +192,6 @@ bool LSFGame::init()
 	fstUpdate->setPosition(Vec2(14, 24));
 	fisherman->addChild(fstUpdate);
 
-
 	//환경 구조물배치----------------------------------------------------------------------------------------
 
 	//메뉴
@@ -222,10 +214,10 @@ bool LSFGame::init()
 
 	////애니메이션
 	//Background
-	auto mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut.json", "Game_cloudcut", 15, 0.1f);
-	auto mainAnimate = Animate::create(mainAnim);
-	auto repMain = RepeatForever::create(mainAnimate);
-	back->runAction(repMain);
+	//auto mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut.json", "Game_cloudcut", 15, 0.1f);
+	//auto mainAnimate = Animate::create(mainAnim);
+	//auto repMain = RepeatForever::create(mainAnimate);
+	//back->runAction(repMain);
 
 	//Ship	(Normal(1), Windy(2), Snowy(3), Rainny(4), ThunderStorm(5))
 	ShipStat = 2;
@@ -271,7 +263,6 @@ bool LSFGame::init()
 	//월드 생성
 	if (this->createBox2dWorld(true))
 	{
-
 		this->schedule(schedule_selector(LSFGame::tick));
 		water = WaterNode::create();
 		this->addChild(water, 3);
@@ -280,6 +271,131 @@ bool LSFGame::init()
 	return true;
 
 }
+void LSFGame::WorldTimer(float dt)
+{
+	//time concept
+	/* 
+	1 gmin = 2.5sec  
+	1 ghour = 15sec
+	1 gday = 6 min
+	*/
+	wTime++; 
+	log("WORLD TIME : %d", wTime);
+	if (wTime == 120)
+	{
+		dayChanger = 1;
+	}
+	else if (wTime == 240)
+	{
+		dayChanger = 2;
+	}
+	else if (wTime == 360)
+	{
+		dayChanger = 3;
+		wTime = 0;
+	}
+
+	//테스트 로그 출력 
+	//log("--------------------------------------------------------------WorldTimer: %d", wTime);
+	//if (wTime <= 120)
+	//{
+	//	log("--------------------------------------------------------------Day Change : %d morning", day);
+	//	
+	//	log("--------------------------------------------------------------wTime Init!!");
+	//	if (wTime == 120) { dayChanger = 1; }
+	//}
+	//else if (wTime > 120 && wTime <= 240)
+	//{
+	//	
+	//	if (wTime == 130)
+	//	log("--------------------------------------------------------------Day Change : %d noon", day);
+	//	day = 2; //오후
+	//	if (wTime == 120) { dayChanger = 2; }
+	//}
+	//else if (wTime > 240 && wTime <= 360)
+	//{
+	//	log("--------------------------------------------------------------Day Change : %d night", day);
+	//	day = 3; //저녁
+	//	if (wTime == 360) { wTime = 0; }
+	//	
+	//}
+
+}
+
+void LSFGame::dayChangerF(int type)
+{
+
+	//Init 
+	if (wtInit < 120) {
+		backDefault = Sprite::create("Sprites/Game_bg.png");
+		log("dayChange! Morning");
+		if (back->getNumberOfRunningActions() != 0) { back->stopAction(repMain); }
+		mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut.json", "Game_cloudcut", 15, 0.1f);
+		mainAnimate = Animate::create(mainAnim);
+		repMain = RepeatForever::create(mainAnimate);
+		back->runAction(repMain);
+		wtInit = 999;
+	}
+	else if (wtInit > 120 && wtInit < 240) {
+		backDefault = Sprite::create("Sprites/Game_bg_sn.png");
+		log("dayChange! Noon");
+		if (back->getNumberOfRunningActions() != 0) { back->stopAction(repMain); }
+		mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut_sn.json", "Game_cloudcut", 15, 0.1f);
+		mainAnimate = Animate::create(mainAnim);
+		repMain = RepeatForever::create(mainAnimate);
+		back->runAction(repMain);
+		wtInit = 999;
+	}
+	else if (wtInit > 240 && wtInit < 360) {
+		backDefault = Sprite::create("Sprites/Game_bg_nt.png");
+		log("dayChange! Night");
+		if (back->getNumberOfRunningActions() != 0) { back->stopAction(repMain); }
+		mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut_nt.json", "Game_cloudcut", 15, 0.1f);
+		mainAnimate = Animate::create(mainAnim);
+		repMain = RepeatForever::create(mainAnimate);
+		back->runAction(repMain);
+		wtInit = 999;
+	}
+
+	//Tick Func
+	if (type == 1)
+	{
+		backDefault = Sprite::create("Sprites/Game_bg.png");
+		this->addChild(backDefault);
+		log("dayChange! Morning");
+		if (back->getNumberOfRunningActions() != 0) { back->stopAction(repMain); }
+		mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut.json", "Game_cloudcut", 15, 0.1f);
+		mainAnimate = Animate::create(mainAnim);
+		repMain = RepeatForever::create(mainAnimate);
+		back->runAction(repMain);
+		dayChanger = 0;
+	}
+	else if (type == 2)
+	{
+		backDefault = Sprite::create("Sprites/Game_bg_sn.png");
+		this->addChild(backDefault);
+		log("dayChange! Noon");
+		if (back->getNumberOfRunningActions() != 0) { back->stopAction(repMain); }
+		mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut_sn.json", "Game_cloudcut", 15, 0.1f);
+		mainAnimate = Animate::create(mainAnim);
+		repMain = RepeatForever::create(mainAnimate);
+		back->runAction(repMain);
+		dayChanger = 0;
+	}
+	else if (type == 3)
+	{
+		backDefault = Sprite::create("Sprites/Game_bg_nt.png");
+		this->addChild(backDefault);
+		log("dayChange! Night");
+		if (back->getNumberOfRunningActions() != 0) { back->stopAction(repMain); }
+		mainAnim = animCreate->CreateAnim("Sprites/Game_cloudcut_nt.json", "Game_cloudcut", 15, 0.1f);
+		mainAnimate = Animate::create(mainAnim);
+		repMain = RepeatForever::create(mainAnimate);
+		back->runAction(repMain);
+		dayChanger = 0;
+	}
+}
+
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
 	log("Touched! %d", touchCount);
@@ -289,7 +405,9 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	touchRope = touchPoint; // WaterSplash 발생 위치 지정을 위한 변수
 	float splashDelay = touchPoint.y;
 	prgFailBack->setVisible(false);
+	
 	// 게임 화면
+
 	//반자동 모드
 	if (modeSwitch != true) {
 		if (touchCount == true) {
@@ -396,7 +514,7 @@ void LSFGame::doPushInventory(Ref * pSender)
 	}
 	else {
 		invenLayer->setVisible(false);
-		if (invOpen->numberOfRunningActions() != 0) {
+		if (invOpen->getNumberOfRunningActions() != 0) {
 			invOpen->stopAllActions();
 		}
 		//inventory->setVisible(false);
@@ -1000,8 +1118,10 @@ void LSFGame::tick(float dt)
 		ropeTickCount = true;
 	}
 
-	//WF(Water flow Start)---------------------------------------
+	//DayChange
+	dayChangerF(dayChanger);
 
+	//(Fish flow Start)---------------------------------------
 	//log("flowbody %f", flowBody0->GetPosition().x);
 	if (flowBody0->GetPosition().x <= 0.6)
 	{
@@ -1051,7 +1171,7 @@ void LSFGame::tick(float dt)
 		m_spring8->SetMotorSpeed(20.0f);
 		flow.at(3)->setFlippedX(false);
 	}
-	//WF(Water flow End)-----------------------------------------
+	//(Fish flow End)-----------------------------------------
 
 	//RHC(Rope Health Counter Start)-----------------------------
 	if (ropeHealth == 0) {
@@ -1063,7 +1183,7 @@ void LSFGame::tick(float dt)
 
 	//invOpen Animation
 	if (btnCount == true && invOpenCount == false) {
-		if (invOpen->numberOfRunningActions() == 0) {
+		if (invOpen->getNumberOfRunningActions() == 0) {
 			craftUsel->setVisible(true);
 			invOpenCount = true;
 			for (int invRow = 0; invRow < 8; invRow++)
@@ -1254,7 +1374,7 @@ void LSFGame::doChangeMode(Ref* pSender)
 }
 void LSFGame::ropeRemove(int type)
 {
-	if (prgHangBack->numberOfRunningActions() != 0)
+	if (prgHangBack->getNumberOfRunningActions() != 0)
 	{
 		log("rope Remove - > prgLayerBack ");
 		prgHangBack->stopAction(seqRepPrgHang);
@@ -1415,11 +1535,10 @@ void LSFGame::fishBowlProgress(int type)
 
 	}
 }
-
 void LSFGame::fishRemove(float dt)
 {
 	log("fishRemoveInit");
-	if (item->numberOfRunningActions() == 0 && prgCounter == 1)
+	if (item->getNumberOfRunningActions() == 0 && prgCounter == 1)
 	{
 		log("fishRemove 1");
 		progressLayer->removeChild(item);
