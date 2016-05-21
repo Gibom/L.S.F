@@ -712,6 +712,7 @@ bool ScrollView::onTouchBegan(Touch* touch, Event* event)
 
 void ScrollView::onTouchMoved(Touch* touch, Event* event)
 {
+	return;
     if (!this->isVisible())
     {
         return;

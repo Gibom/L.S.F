@@ -7,7 +7,11 @@
 //
 
 #include "Joystick.h"
-#include "ui\CocosGUI.h"
+#include "ui/CocosGUI.h"
+
+using namespace cocos2d;
+
+static void printProperties(Properties* properties, int indent);
 
 #define JOYSTICK_OFFSET_X 5.0f
 #define JOYSTICK_OFFSET_Y 5.0f
@@ -21,7 +25,7 @@ static bool isPointInCircle(Vec2 point, Vec2 center, float radius)
     float dy = (point.y - center.y);
     return (radius >= sqrt((dx*dx)+(dy*dy)));
 }
-static void printProperties(Properties* properties, int indent);
+
 bool Joystick::init()
 {
     if ( !Layer::init() )
@@ -31,8 +35,8 @@ bool Joystick::init()
 
     //////////////////////////////////////////////////////////////////////////
 	winSize = Director::getInstance()->getWinSize();
-    /*kCenter = Vec2(JOYSTICK_RADIUS + JOYSTICK_OFFSET_X,
-                   JOYSTICK_RADIUS + JOYSTICK_OFFSET_Y);*/
+    /*kCenter = Vec2(JOYSTICK_RADIUS + JOYSTICK_OFFSET_X, JOYSTICK_RADIUS + JOYSTICK_OFFSET_Y);*/
+
 	//kCenter = Vec2(338, 240);
 	kCenter = Vec2(winSize.width/2, winSize.height/3);
     auto listener = EventListenerTouchAllAtOnce::create();
@@ -43,10 +47,6 @@ bool Joystick::init()
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
     velocity = Vec2::ZERO;
-	
-	auto JoystickFrameCache = SpriteFrameCache::getInstance();
-	JoystickFrameCache->addSpriteFramesWithJson("Sprites/Joystick.json");
-
 
 	auto properties = Properties::createNonRefCounted("Materials/auto_binding_test.material#sample");
 	// Print the properties of every namespace within this one.
@@ -54,11 +54,25 @@ bool Joystick::init()
 
 	Material *mat1 = Material::createWithProperties(properties);
 
+	auto spriteOutline = Sprite::create("Sprites/joystick_background.png");
+	spriteOutline->setPosition(kCenter);
+	spriteOutline->setScale(1.4f);
+	this->addChild(spriteOutline);
+	spriteOutline->setGLProgramState(mat1->getTechniqueByName("outline")->getPassByIndex(0)->getGLProgramState());
+	spriteOutline->stopAllActions();
+	// properties is not a "Ref" object
+	CC_SAFE_DELETE(properties);
+
+	auto JoystickFrameCache = SpriteFrameCache::getInstance();
+	JoystickFrameCache->addSpriteFramesWithJson("Sprites/Joystick.json");
+
 	bg = Sprite::createWithSpriteFrame(JoystickFrameCache->getSpriteFrameByName("Joystick 0.png"));
 	bg->setPosition(kCenter);
 	bg->setScale(1.4f);
 	this->addChild(bg);
-	bg->setGLProgramState(mat1->getTechniqueByName("outline")->getPassByIndex(0)->getGLProgramState());
+
+
+
   /*  bg = Sprite::create("Sprites/joystick_background.png");
     bg->setPosition(kCenter);
     this->addChild(bg, 0);*/
@@ -67,7 +81,7 @@ bool Joystick::init()
     thumb->setPosition(kCenter);
     this->addChild(thumb, 1);
 
-	
+	Joystick::onEnter();
 	
 
     return true;
@@ -177,6 +191,55 @@ void Joystick::doJoyAnimate(int type)
 	}
 	
 }
+
+class EffectAutoBindingResolver : public GLProgramState::AutoBindingResolver
+{
+	bool resolveAutoBinding(GLProgramState* glProgramState, Node* node, const std::string& uniform, const std::string& autoBinding);
+
+	void callbackRadius(GLProgram* glProgram, Uniform* uniform);
+	void callbackColor(GLProgram* glProgram, Uniform* uniform);
+};
+
+bool EffectAutoBindingResolver::resolveAutoBinding(GLProgramState* glProgramState, Node* node, const std::string& uniform, const std::string& autoBinding)
+{
+	if (autoBinding.compare("DYNAMIC_RADIUS") == 0)
+	{
+		glProgramState->setUniformCallback(uniform, CC_CALLBACK_2(EffectAutoBindingResolver::callbackRadius, this));
+		return true;
+	}
+	else if (autoBinding.compare("OUTLINE_COLOR") == 0)
+	{
+		glProgramState->setUniformCallback(uniform, CC_CALLBACK_2(EffectAutoBindingResolver::callbackColor, this));
+		return true;
+	}
+	return false;
+}
+
+void EffectAutoBindingResolver::callbackRadius(GLProgram* glProgram, Uniform* uniform)
+{
+	float f = CCRANDOM_0_1() * 10;
+	glProgram->setUniformLocationWith1f(uniform->location, f);
+}
+
+void EffectAutoBindingResolver::callbackColor(GLProgram* glProgram, Uniform* uniform)
+{
+	float r = CCRANDOM_0_1();
+	float g = CCRANDOM_0_1();
+	float b = CCRANDOM_0_1();
+
+	glProgram->setUniformLocationWith3f(uniform->location, r, g, b);
+}
+
+Joystick::Joystick()
+{
+	_resolver = new EffectAutoBindingResolver;
+}
+
+Joystick::~Joystick()
+{
+	delete _resolver;
+}
+
 
 static void printProperties(Properties* properties, int indent)
 {

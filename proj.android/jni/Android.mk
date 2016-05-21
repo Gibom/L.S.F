@@ -21,6 +21,8 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 				   ../../Classes/vpoint.cpp \
 				   ../../Classes/GLES-Render.cpp\
 				   ../../Classes/ContactListener.cpp\
+				   ../../Classes/Inventory.cpp\
+				   ../../Classes/CustomTableViewCell.cpp\
 				   ../../Classes/LSFSingleton.cpp\
 				   ../../Classes/LSFGame.cpp \
 				   ../../Classes/LSFMain.cpp 

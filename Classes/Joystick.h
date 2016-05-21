@@ -13,40 +13,47 @@
 #include "AnimateCreate.h"
 
 using namespace cocos2d;
-
+class EffectAutoBindingResolver;
 class Joystick : public Layer
 {
-    
+
 public:
-    virtual bool init();
-    CREATE_FUNC(Joystick);
-	
-    Vec2 getVelocity(){ return velocity; }
+	Joystick();
+	virtual ~Joystick();
+
+	virtual bool init();
+	CREATE_FUNC(Joystick);
+
+	Vec2 getVelocity() { return velocity; }
 	void doJoyAnimate(int type);
 	int fishingGauge = 0;
+
+
 private:
 	Size winSize;
-    Vec2 kCenter;
+	Vec2 kCenter;
 	Sprite* bg;
 	Sprite* thumb;
-    bool isPressed;
-    
-    Vec2 velocity;
-	
+	bool isPressed;
+
+	Vec2 velocity;
+
 	AnimateCreate* animCreate;
 	Animation* joystickAnim;
 	Animate* joystickAnimate;
 	RepeatForever* repJoystick;
-	
 
-    void updateVelocity(Vec2 point);
-    void resetJoystick();
-    bool handleLastTouch();
-	
-    virtual void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
-    virtual void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
-    virtual void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
-    virtual void onTouchesCancelled(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+
+	void updateVelocity(Vec2 point);
+	void resetJoystick();
+	bool handleLastTouch();
+
+	virtual void onTouchesBegan(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+	virtual void onTouchesMoved(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+	virtual void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+	virtual void onTouchesCancelled(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
+
+	EffectAutoBindingResolver *_resolver;
 };
 
 #endif

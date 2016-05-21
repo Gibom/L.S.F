@@ -9,6 +9,9 @@
 #include "ContactListener.h"
 #include "AnimateCreate.h"
 #include "WaterNode.h"
+#include "Inventory.h"
+#include "LSFSingleton.h"
+
 using namespace cocos2d;
 
 class LSFGame : public cocos2d::LayerColor , public AnimateCreate 
@@ -21,7 +24,7 @@ public:
 
 	CREATE_FUNC(LSFGame);
 
-	//Box2D----------------------------------------------------------------------------
+	//Box2D-Start---------------------------------------------------------------------------
 	bool createBox2dWorld(bool debug);
 	SpriteBatchNode* ropeSpriteSheet;
 	~LSFGame();
@@ -33,16 +36,24 @@ public:
 
 	//낚시
 	b2Body* needle;
+	b2Body* fish;
+	b2BodyDef needlebodyDef; 
 	b2FixtureDef needlefixtureDef;
 	b2Body* addNewSpriteAt(Vec2 point, const std::string & imagepath, int tag);
-	b2Body* needlebody;
+	b2Body* addNewSpriteAt(b2Vec2 point, const std::string & imagepath, int tag);
+	b2Body* needleBody;
+	b2Body* fishBody;
+	Sprite* addFish;
+	Sprite* item;
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
+	void fishes(int tag);
 	void ropeTick(float dt);
 	void waterSplash(float dt);
 	void ropeRemove(int type);
 	Vec2 touchRope;
 	float32 ropeLength;
+	
 	//낚시 - Timer
 	void startFishing(float dt);
 	void timerFishing(float dt);
@@ -58,9 +69,19 @@ public:
 	bool hangFish;
 	void doChangeMode(Ref* pSender);
 	Joystick* joystick;
+	//프로그레스
+	bool prgInit = false;
+	Sprite* prgHangBack;
+	Sprite* prgFailBack;
 	Sprite* fishBowl;
+	Sprite* fishBowl_fail;
 	void fishBowlProgress(int type);
-	ProgressTimer* fishingPrg;
+	ProgressTimer* fishingPrg_S;
+	ProgressTimer* fishingPrg_F;
+	Sequence* to1;
+	Sequence* to2;
+	void fishRemove(float dt);
+	int prgCounter;
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
@@ -79,12 +100,32 @@ public:
 	b2World* _world;
 	GLESDebugDraw* m_debugDraw;
 
-	//Box2D----------------------------------------------------------------------------
+	//Box2D-End---------------------------------------------------------------------------
 
 	//환경구성
+
+	//WorldTimer
+	void WorldTimer(float dt);
+	void dayChangerF(int type);
+	int wTime = 0;	// 1wTime = 1gmin = 2.5sec
+	int wtInit = rand() % 360 + 1 ;
+	int dayChanger = 0;
+	//WorldChange
+	//day
+	Sprite* backDefault;
+	Animation* mainAnim;
+	Animate* mainAnimate;
+	RepeatForever* repMain;
+
 	//Animation
 	AnimateCreate* animCreate;
 	RepeatForever* repFstNormal;
+	Repeat* repPrgHang;
+	RepeatForever* seqRepPrgHang;
+	Sequence* seqPrgHang;
+
+	Repeat* repPrgFail;
+
 	Repeat* repFstHang;
 	Repeat* repFstSuccess;
 	Repeat* repFstFail;
@@ -106,6 +147,7 @@ public:
 	Sprite* snowDrop;
 	LayerColor* invenLayer;
 	LayerColor* manualLayer;
+	LayerColor* progressLayer;
 	MenuItemImage* btn_inventory;
 	Menu* inventoryMenu;
 	MenuItemImage* btn_modeswitch;
@@ -162,14 +204,24 @@ public:
 	SpriteFrameCache* ShipFrameCache;
 	RepeatForever* shipRep;
 	
-
-
+	//가방
+	Inventory* inv;
+	Size invSize;
+	Vec2 invPosition;
+	Sprite* invOpen;
+	std::vector <TableView*> invTable;
+	Animation* invenAnim;
+	Animate* invenAnimate;
+	Repeat* repInven;
 	//카운트
 	int cbtnCount;
 	int waterCount;
 	int flowRand;
+	int flowCount = 0;
 	int fstCount = 0;
+	bool resultCount;
 	bool btnCount;
+	bool invOpenCount = false;
 	bool touchCount;
 	bool ropeTickCount;
 	bool ropeTouchCount;
