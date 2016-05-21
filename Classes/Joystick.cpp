@@ -7,6 +7,7 @@
 //
 
 #include "Joystick.h"
+#include "ui\CocosGUI.h"
 
 #define JOYSTICK_OFFSET_X 5.0f
 #define JOYSTICK_OFFSET_Y 5.0f
@@ -20,7 +21,7 @@ static bool isPointInCircle(Vec2 point, Vec2 center, float radius)
     float dy = (point.y - center.y);
     return (radius >= sqrt((dx*dx)+(dy*dy)));
 }
-
+static void printProperties(Properties* properties, int indent);
 bool Joystick::init()
 {
     if ( !Layer::init() )
@@ -46,11 +47,18 @@ bool Joystick::init()
 	auto JoystickFrameCache = SpriteFrameCache::getInstance();
 	JoystickFrameCache->addSpriteFramesWithJson("Sprites/Joystick.json");
 
+
+	auto properties = Properties::createNonRefCounted("Materials/auto_binding_test.material#sample");
+	// Print the properties of every namespace within this one.
+	printProperties(properties, 0);
+
+	Material *mat1 = Material::createWithProperties(properties);
+
 	bg = Sprite::createWithSpriteFrame(JoystickFrameCache->getSpriteFrameByName("Joystick 0.png"));
 	bg->setPosition(kCenter);
 	bg->setScale(1.4f);
 	this->addChild(bg);
-
+	bg->setGLProgramState(mat1->getTechniqueByName("outline")->getPassByIndex(0)->getGLProgramState());
   /*  bg = Sprite::create("Sprites/joystick_background.png");
     bg->setPosition(kCenter);
     this->addChild(bg, 0);*/
@@ -168,4 +176,37 @@ void Joystick::doJoyAnimate(int type)
 		bg->stopAllActions();
 	}
 	
+}
+
+static void printProperties(Properties* properties, int indent)
+{
+	// Print the name and ID of the current namespace.
+	const char* spacename = properties->getNamespace();
+	const char* id = properties->getId();
+	char chindent[64];
+	int i = 0;
+	for (i = 0; i<indent * 2; i++)
+		chindent[i] = ' ';
+	chindent[i] = '\0';
+
+	log("%sNamespace: %s  ID: %s\n%s{", chindent, spacename, id, chindent);
+
+	// Print all properties in this namespace.
+	const char* name = properties->getNextProperty();
+	const char* value = NULL;
+	while (name != NULL)
+	{
+		value = properties->getString(name);
+		log("%s%s = %s", chindent, name, value);
+		name = properties->getNextProperty();
+	}
+
+	Properties* space = properties->getNextNamespace();
+	while (space != NULL)
+	{
+		printProperties(space, indent + 1);
+		space = properties->getNextNamespace();
+	}
+
+	log("%s}\n", chindent);
 }
