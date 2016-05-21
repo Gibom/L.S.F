@@ -1903,7 +1903,6 @@ cocos2d/extensions/GUI/CCControlExtension/CCControlUtils.cpp
 cocos2d/extensions/GUI/CCControlExtension/CCControlUtils.h
 cocos2d/extensions/GUI/CCControlExtension/CCInvocation.cpp
 cocos2d/extensions/GUI/CCControlExtension/CCInvocation.h
-cocos2d/extensions/GUI/CCScrollView/CCScrollView.cpp
 cocos2d/extensions/GUI/CCScrollView/CCScrollView.h
 cocos2d/extensions/GUI/CCScrollView/CCTableView.cpp
 cocos2d/extensions/GUI/CCScrollView/CCTableView.h
