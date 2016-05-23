@@ -17,6 +17,7 @@ public:
     CREATE_FUNC(LSFMain);
 
 	MenuItemImage* btn_Start;
+	MenuItemImage* btn_Option;
 	AnimateCreate* animCreate;
 	void doPushSceneTran(Ref * pSender);
 	cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);

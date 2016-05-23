@@ -39,6 +39,9 @@ public:
 	//////////////////////////////////////////////////
 	// ½Ì±ÛÅæ º¯¼ö Get
 	int value;
+	int tableTag;
+	int cellIdx;
+	int cellTag;
 	Size winSize = Director::getInstance()->getWinSize();
 	
 	//---------------------------- MainScene Begin

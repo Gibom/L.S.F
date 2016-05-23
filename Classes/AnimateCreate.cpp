@@ -31,7 +31,7 @@ Animation* AnimateCreate::CreateAnim(const std::string & json, const std::string
 	{
 		sprintf(frName, "%s %d.png", framename.c_str(), frCount);
 		CreateAnimation->addSpriteFrame(AnimateFrameCache->getSpriteFrameByName(frName));
-		log("%s", frName);
+		//log("%s", frName);
 	}
 	CreateAnimation->retain();
 

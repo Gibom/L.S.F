@@ -34,6 +34,20 @@ public:
 	
 	virtual void draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
 
+	//상태바 (날씨, 시간등 환경정보 표시)
+	Sprite* WStatBack;
+
+	//아이템 생성
+	std::string itemName;
+	std::string itemCreate(int day, int weather);
+	float bonus;		//추가확률
+	int chance;		//확률
+	int rarity;			//희귀도
+	
+
+	bool bTouch_craft;
+
+
 	//낚시
 	b2Body* needle;
 	b2Body* fish;
@@ -44,10 +58,10 @@ public:
 	b2Body* needleBody;
 	b2Body* fishBody;
 	Sprite* addFish;
-	Sprite* item;
+	Sprite* hangItem;
 	void createRope(b2Body* bodyA, b2Vec2 anchorA, b2Body* bodyB, b2Vec2 anchorB, float32 sag);
 	std::vector<VRope*>* ropes;
-	void fishes(int tag);
+	void items(int tag);
 	void ropeTick(float dt);
 	void waterSplash(float dt);
 	void ropeRemove(int type);
@@ -63,12 +77,14 @@ public:
 	int catchTime;
 	int randomTime;
 	int timer;
+
 	//낚시 - 조작
 	float fishingGauge;
 	bool bTouch_mode; //모드 스위치 구현 시 사용
 	bool hangFish;
 	void doChangeMode(Ref* pSender);
 	Joystick* joystick;
+
 	//프로그레스
 	bool prgInit = false;
 	Sprite* prgHangBack;
@@ -82,6 +98,7 @@ public:
 	Sequence* to2;
 	void fishRemove(float dt);
 	int prgCounter;
+
 	//충돌처리
 	b2Body* createRopeTipBody();
 	ContactListener* myContactListener;
@@ -91,9 +108,6 @@ public:
 	WaterNode* water;
 	int weatherCount;
 	
-
-
-
 	Vector<Sprite*> flow;
 
 	Texture2D* texture;
@@ -108,7 +122,7 @@ public:
 	void WorldTimer(float dt);
 	void dayChangerF(int type);
 	int wTime = 0;	// 1wTime = 1gmin = 2.5sec
-	int wtInit = rand() % 360 + 1 ;
+	int wtInit;
 	int dayChanger = 0;
 	//WorldChange
 	//day
@@ -145,6 +159,7 @@ public:
 	Sprite* craft;
 	Sprite* rainDrop;
 	Sprite* snowDrop;
+	LayerColor* StatLayer;
 	LayerColor* invenLayer;
 	LayerColor* manualLayer;
 	LayerColor* progressLayer;

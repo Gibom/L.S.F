@@ -27,8 +27,17 @@ TableView* Inventory::CreateTable(int row)
 
 void Inventory::tableCellTouched(TableView* table, TableViewCell* cell)
 {
+	LSFSingleton::getInstance()->tableTag = table->getTag();
+	LSFSingleton::getInstance()->cellIdx = cell->getIdx();
+	LSFSingleton::getInstance()->cellTag = cell->getTag();
+
 	log("Table Tag : %d\nCell touched at index : %ld\nSprite Tag :%d",
 		table->getTag(), cell->getIdx(), cell->getTag());
+
+
+	log("LSFSingleton::getInstance()->tableTag %d", LSFSingleton::getInstance()->tableTag);
+	log("LSFSingleton::getInstance()->cellTag = cell->getTag() %d", LSFSingleton::getInstance()->cellIdx);
+	log("LSFSingleton::getInstance()->tableTag %d", LSFSingleton::getInstance()->cellTag);
 }
 
 Size Inventory::tableCellSizeForIndex(TableView* table, ssize_t idx)
@@ -53,12 +62,6 @@ TableViewCell* Inventory::tableCellAtIndex(TableView* table, ssize_t idx)
 		sprite->setPosition(Vec2(0, 0));
 		sprite->setTag(0);
 		cell->addChild(sprite);
-		
-		/*auto label = LabelTTF::create(string->getCString(), "Helvetica", 20.0);
-		label->setPosition(Vec2::ZERO);
-		label->setAnchorPoint(Vec2::ZERO);
-		label->setTag(123);
-		cell->addChild(label);*/
 	}
 	else
 	{

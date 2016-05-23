@@ -47,12 +47,16 @@ bool LSFMain::init()
 		"Sprites/Button_start_down.png",
 		CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
 
-	auto startMenu = Menu::create(btn_Start, nullptr);
-	startMenu->setAnchorPoint(Vec2(0.5, 0.5));
-	startMenu->setPosition(Vec2(winSize.width / 2, winSize.height / 4));
-	startMenu->alignItemsHorizontally();
+	btn_Option = MenuItemImage::create("Sprites/Button_option_up.png",
+		"Sprites/Button_option_down.png",
+		CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
 
-	this->addChild(startMenu);
+	auto mainMenu = Menu::create(btn_Start, btn_Option, nullptr);
+	mainMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	mainMenu->setPosition(Vec2(winSize.width / 2, winSize.height / 4));
+	mainMenu->alignItemsVertically();
+
+	this->addChild(mainMenu);
 
 	return true;
 }

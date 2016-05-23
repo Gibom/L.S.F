@@ -34,8 +34,8 @@ static int kWaterHeight = 150;
 static const float kTension = 0.025;
 static const float kDampening = 0.025;
 static const float kSpread = 0.25;
-static cocos2d::Color4B topColor = cocos2d::Color4B(0, 50, 125, 100);
-static cocos2d::Color4B bottomColor = cocos2d::Color4B(0, 50, 255, 255);
+static cocos2d::Color4B topColor = cocos2d::Color4B(0, 155, 255, 255);
+static cocos2d::Color4B bottomColor = cocos2d::Color4B(63, 63, 116, 125);
 
 // define a struct for Vertex we are going to use to draw primitives
 struct Vertex
