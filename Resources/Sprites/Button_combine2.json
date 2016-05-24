@@ -1,0 +1,52 @@
+{ "frames": [
+   {
+    "filename": "Button_combine2 0.png",
+    "frame": { "x": 0, "y": 0, "w": 308, "h": 140 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 308, "h": 140 },
+    "sourceSize": { "w": 308, "h": 140 },
+    "duration": 100
+   },
+   {
+    "filename": "Button_combine2 1.png",
+    "frame": { "x": 308, "y": 0, "w": 308, "h": 140 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 308, "h": 140 },
+    "sourceSize": { "w": 308, "h": 140 },
+    "duration": 100
+   },
+   {
+    "filename": "Button_combine2 2.png",
+    "frame": { "x": 616, "y": 0, "w": 308, "h": 140 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 308, "h": 140 },
+    "sourceSize": { "w": 308, "h": 140 },
+    "duration": 100
+   },
+   {
+    "filename": "Button_combine2 3.png",
+    "frame": { "x": 924, "y": 0, "w": 308, "h": 140 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 308, "h": 140 },
+    "sourceSize": { "w": 308, "h": 140 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.4.1",
+  "image": "C:\\cocos2d-x-work\\Project\\LSF_Project_git\\Resources\\Sprites\\Button_combine2.png",
+  "format": "I8",
+  "size": { "w": 1232, "h": 140 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}

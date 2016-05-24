@@ -41,11 +41,21 @@ public:
 	std::string itemName;
 	std::string itemCreate(int day, int weather);
 	float bonus;		//Ãß°¡È®·ü
-	int chance;		//È®·ü
+	int chance;			//È®·ü
 	int rarity;			//Èñ±Íµµ
 	
+	
 
-	bool bTouch_craft;
+	//Á¶ÇÕ
+	bool tableComplete;
+	bool bTouch_table;
+	int tmpCount = 0;
+	int craftInit = 0;
+	TableViewCell* temp1;
+	TableViewCell* temp2;
+	Sprite* craftTmp1;
+	Sprite* craftTmp2;
+	void combine(int itemA, int itemB);
 
 
 	//³¬½Ã
@@ -157,6 +167,8 @@ public:
 	Sprite* craftUsel;
 	Sprite* craftSel;
 	Sprite* craft;
+	Sprite* btnCraft;
+	
 	Sprite* rainDrop;
 	Sprite* snowDrop;
 	LayerColor* StatLayer;

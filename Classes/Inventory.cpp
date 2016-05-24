@@ -30,14 +30,14 @@ void Inventory::tableCellTouched(TableView* table, TableViewCell* cell)
 	LSFSingleton::getInstance()->tableTag = table->getTag();
 	LSFSingleton::getInstance()->cellIdx = cell->getIdx();
 	LSFSingleton::getInstance()->cellTag = cell->getTag();
-
+	
 	log("Table Tag : %d\nCell touched at index : %ld\nSprite Tag :%d",
 		table->getTag(), cell->getIdx(), cell->getTag());
-
-
-	log("LSFSingleton::getInstance()->tableTag %d", LSFSingleton::getInstance()->tableTag);
-	log("LSFSingleton::getInstance()->cellTag = cell->getTag() %d", LSFSingleton::getInstance()->cellIdx);
-	log("LSFSingleton::getInstance()->tableTag %d", LSFSingleton::getInstance()->cellTag);
+	
+	
+	log("LSFSingleton::getInstance()->tableTag = table->getTag() %d", LSFSingleton::getInstance()->tableTag);
+	log("LSFSingleton::getInstance()->cellIdx = cell->getIdx() %d", LSFSingleton::getInstance()->cellIdx);
+	log("LSFSingleton::getInstance()->cellTag = cell->getTag() %d", LSFSingleton::getInstance()->cellTag);
 }
 
 Size Inventory::tableCellSizeForIndex(TableView* table, ssize_t idx)
