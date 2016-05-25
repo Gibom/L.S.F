@@ -1,6 +1,6 @@
 #include "LSFGame.h"
 #include <ctime>
-#include <Windows.h>
+
 using namespace cocos2d;
 
 int ropeHealth = 500;
