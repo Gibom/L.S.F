@@ -18,6 +18,7 @@ public:
 
 	MenuItemImage* btn_Start;
 	MenuItemImage* btn_Option;
+	Menu* mainMenu;
 	AnimateCreate* animCreate;
 	void doPushSceneTran(Ref * pSender);
 	cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);

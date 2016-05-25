@@ -37,7 +37,7 @@ bool LSFGame::init()
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
 
-	this->schedule(schedule_selector(LSFGame::WorldTimer), 0.1f);	//기본값 duration 2.5, 밸런스 조정 필요
+	this->schedule(schedule_selector(LSFGame::WorldTimer), 2.5f);	//기본값 duration 2.5, 밸런스 조정 필요
 
 	cbtnCount = 0;
 	waterCount = 0;
@@ -50,6 +50,10 @@ bool LSFGame::init()
 	dayChanger = 0;	// 초기값(0), 아침(1), 점심(2), 저녁(3)
 	wtInit = random(1, 340);
 	wTime += wtInit; // 시간값 초기화
+
+	invNull = Sprite::create("Sprites/Icon.png");
+	invNull->setTag(0);
+	this->addChild(invNull);
 
 	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
 
@@ -180,12 +184,14 @@ bool LSFGame::init()
 
 	craftTmp1 = Sprite::create("Sprites/Craft_selected.png");
 	craftTmp1->setAnchorPoint(Vec2::ZERO);
-	craftTmp1->setPosition(Vec2(50, 30));
+	craftTmp1->setPosition(Vec2(20, 15));
+	craftTmp1->setScale(1.5f);
 	btnCraft->addChild(craftTmp1);
 
 	craftTmp2 = Sprite::create("Sprites/Craft_selected.png");
 	craftTmp2->setAnchorPoint(Vec2::ZERO);
-	craftTmp2->setPosition(Vec2(197, 30));
+	craftTmp2->setPosition(Vec2(193, 15));
+	craftTmp2->setScale(1.5f);
 	btnCraft->addChild(craftTmp2);
 
 	inv = new Inventory;
@@ -490,10 +496,10 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
 	log("Touched! %d", touchCount);
 	weatherCount = 1;
-	Vec2 touchPoint = touch->getLocation();
+	touchPoint = touch->getLocation();
 	log("X : %f Y : %f", touchPoint.x, touchPoint.y);
 	bool bTouch_craft = craft->getBoundingBox().containsPoint(touchPoint);
-	
+
 	touchRope = touchPoint; // WaterSplash 발생 위치 지정을 위한 변수
 	float splashDelay = touchPoint.y;
 	prgFailBack->setVisible(false);
@@ -561,15 +567,22 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	{
 		//craftSwitch == true/false On/Off
 		if (craftSwitch == true)
-		{	
+		{
 			craftUsel->setVisible(true);
 			craftSel->setVisible(false);
 			btnCraft->setVisible(false);
 			craftSwitch = false;
-			if (craftInit == 1) { temp1->setScale(1.f); }
-			else if (craftInit == 2) { temp1->setScale(1.f); temp2->setScale(1.f); }
+			/*if (craftInit == 1) { temp1->setScale(1.f); }
+			else if (craftInit == 2) { temp1->setScale(1.f); temp2->setScale(1.f); }*/
 			craftInit = 0;
-			//btnCraft->removeAllChildren();
+			if (btnCraft->getChildByName("clone1") != nullptr)
+			{
+				btnCraft->removeChildByName("clone1");
+
+				if (btnCraft->getChildByName("clone2") != nullptr)
+					btnCraft->removeChildByName("clone2");
+			}
+
 			//log("craftSwitch Status: Off", craftSwitch);
 		}
 		else
@@ -579,12 +592,10 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			btnCraft->setVisible(true);
 			craftSwitch = true;
 			tmpCount = 1;
-			 
+
 			//log("craftSwitch Status: On", craftSwitch);
 		}
 	}
-	
-
 	return true;
 }
 void LSFGame::onTouchMoved(Touch* touch, Event* event)
@@ -593,16 +604,15 @@ void LSFGame::onTouchMoved(Touch* touch, Event* event)
 }
 void LSFGame::onTouchEnded(Touch* touch, Event* event)
 {
-	Vec2 touchPoint = touch->getLocation();
 	bool bTouch_combine = btnCraft->getBoundingBox().containsPoint(touchPoint);
+
+
 	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true)
 	{
-		int tableTag = 0;
-		int cellIdx = 0;
-		int cellTag = 0;
+		
 		std::string cellName;
 		log("tmpCount: %d", tmpCount);
-		
+
 		for (int i = 0; i < 8; i++)
 		{
 			//log("!!!! i: %d", i);
@@ -613,56 +623,117 @@ void LSFGame::onTouchEnded(Touch* touch, Event* event)
 				tableTag = LSFSingleton::getInstance()->tableTag;
 				cellIdx = LSFSingleton::getInstance()->cellIdx;
 				cellTag = LSFSingleton::getInstance()->cellTag;
-				if (cellTag == -1) { continue; }
-				if (bTouch_combine == true && tmpCount <= 0)
-				{
-					log("bTouch_conbine");
-					combine((int)temp1->getChildByTag(cellTag), (int)temp2->getChildByTag(cellTag));
-				}
+
+				if (cellTag == -1 || cellTag == -2) { continue; }
+
 				log("[TouchEnded] table :%d\ncellIdx :%d\ncellTag :%d", tableTag, cellIdx, cellTag);
 				log("bTouch_table True");
 				if (tmpCount == 1) {
 					log("tmpCount == 1 Activate");
 					temp1 = invTable.at(tableTag)->cellAtIndex(cellIdx);
+					temp1Tag = cellTag;
 					craftTmp1 = ((Sprite*)temp1->getChildByTag(cellTag));
 					auto clone1 = Sprite::createWithTexture(craftTmp1->getTexture());
-					clone1->setAnchorPoint(Vec2::ZERO);
-					clone1->setPosition(Vec2(50, 30));
-					btnCraft->addChild(clone1,4);
+					clone1->setAnchorPoint(Vec2(0.5, 0.5));
+					clone1->setPosition(Vec2(60, 60));
+					clone1->setName("clone1");
+					btnCraft->addChild(clone1, 4);
 
 					craftInit++;
 				}
-				else if (tmpCount == 0)
+				else if (temp1 == invTable.at(tableTag)->cellAtIndex(cellIdx)) { continue; }
+				else if (tmpCount == 0 && temp1 != invTable.at(tableTag)->cellAtIndex(cellIdx))
 				{
 					log("tmpCount == 0 Activate");
 					temp2 = invTable.at(tableTag)->cellAtIndex(cellIdx);
+					temp2Tag = cellTag;
 					craftTmp2 = ((Sprite*)temp2->getChildByTag(cellTag));
 					auto clone2 = Sprite::createWithTexture(craftTmp2->getTexture());
-					clone2->setAnchorPoint(Vec2::ZERO);
-					clone2->setPosition(Vec2(197, 30));
+					clone2->setAnchorPoint(Vec2(0.5, 0.5));
+					clone2->setPosition(Vec2(240, 60));
+					clone2->setName("clone2");
 					btnCraft->addChild(clone2, 4);
 
 					craftInit++;
 				}
-				
+
 				tmpCount--;
 				break;
 			}
 		}
 	}
+
+	if (btnCount == true && craftSwitch == true && bTouch_combine == true && tableComplete == true)
+	{
+		if (tmpCount < 0) {
+			log("bTouch_combine\ntemp1Tag :%d\ttemp2Tag :%d", temp1Tag, temp2Tag);
+			if ((temp1Tag != -1 && temp2Tag != -1) || (temp1Tag != -2 && temp2Tag != -2))
+			{
+				combine(temp1Tag, temp2Tag, temp1, temp2);
+			}
+		}
+		else if (tmpCount >= 0) 
+		{
+			tableTag = 0;
+			cellIdx = 0;
+			cellTag = 0;
+			
+			if (btnCraft->getChildByName("clone1") != nullptr)
+			{
+				btnCraft->removeChildByName("clone1");
+
+				if (btnCraft->getChildByName("clone2") != nullptr)
+					btnCraft->removeChildByName("clone2");
+			}
+			tmpCount = 1;
+		}
+
+	}
+
 }
 
-void LSFGame::combine(int itemA, int itemB)
+void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell* cellB)
 {
-	log("combine in");
-	auto combineAnim = animCreate->CreateAnim("Sprites/Button_combine2.json", "Button_combine2", 3, 0.1f);
+
+	log("combine in itemA : %d itemB : %d", itemA, itemB);
+	log("combine in cellA : %d cellB : %d", cellA, cellB);
+
+	//애니메이션
+	auto combineAnim = animCreate->CreateAnim("Sprites/Button_combine2.json", "Button_combine2", 8, 0.1f);
 	auto combineAnimate = Animate::create(combineAnim);
 	auto repCombine = Repeat::create(combineAnimate, 1);
 	btnCraft->setAnchorPoint(Vec2::ZERO);
 	btnCraft->setPosition(Vec2(198, 340));
 	btnCraft->runAction(repCombine);
-	
-	
+
+	//조합 기능
+	//인벤토리 공백
+	Vec2 cAvec = cellA->getPosition();
+	Vec2 cBvec = cellB->getPosition();
+	Vec2 cellAncher = Vec2(0.5, 0.5);
+	log("cAvec x : %f\tcAvec y : %f", cAvec.x, cAvec.y);
+	log("cBvec x : %f\tcBvec y : %f", cBvec.x, cBvec.y);
+
+	cellA->removeAllChildren();
+	cellB->removeAllChildren();
+	cellA->addChild(Sprite::createWithTexture(invNull->getTexture()));
+	cellA->setTag(-2);
+	//cellA->setPosition(cAvec);
+	//cellA->setAnchorPoint(cellAncher);
+	cellB->addChild(Sprite::createWithTexture(invNull->getTexture()));
+	cellB->setTag(-2);
+	//cellB->setPosition(cBvec);
+	//cellB->setAnchorPoint(cellAncher);
+	items(2);
+
+	if (btnCraft->getChildByName("clone1") != nullptr)
+	{
+		btnCraft->removeChildByName("clone1");
+
+		if (btnCraft->getChildByName("clone2") != nullptr)
+			btnCraft->removeChildByName("clone2");
+	}
+	tmpCount = 1;
 }
 
 void LSFGame::doPushInventory(Ref * pSender)
@@ -680,6 +751,7 @@ void LSFGame::doPushInventory(Ref * pSender)
 		//craft->setVisible(true);
 		btn_inventory->selected();
 		btnCount = true;
+		craftSwitch == false;
 
 		modeswitchMenu->setEnabled(false);
 	}
@@ -692,6 +764,7 @@ void LSFGame::doPushInventory(Ref * pSender)
 		//craft->setVisible(false);
 		btn_inventory->unselected();
 		btnCount = false;
+		craftSwitch == false;
 		cbtnCount = 0;
 		craftUsel->setVisible(true);
 		craftSel->setVisible(false);
@@ -1148,29 +1221,81 @@ b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, in
 void LSFGame::items(int tag)
 {
 	log("items");
-	for (int table = 0; table < 9;)
-	{
-		log("items for table : %d", table);
-		for (int cell = 0; cell < 10;)
+
+	if (tag == 1) {
+		log("Fishing Success & get Item");
+		for (int table = 0; table < 9;)
 		{
-			log("items for cell : %d", cell);
-			if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1) {
-				auto invSprite = Sprite::create(itemName.c_str());
-				invSprite->setTag((rarity * 1000 + chance));
-				invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
-				invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
-				invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
-				invTable.at(table)->cellAtIndex(cell)->setTag((rarity * 1000 + chance));
-				invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
-				invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
-				log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
-				return;
+			log("items for table : %d", table);
+			for (int cell = 0; cell < 10;)
+			{
+				log("items for cell : %d", cell);
+				if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+					auto invSprite = Sprite::create(itemName.c_str());
+					invSprite->setTag((rarity * 1000 + chance));
+					int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+					invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+					invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+					invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+					invTable.at(table)->cellAtIndex(cell)->setTag((rarity * 1000 + chance));
+					
+					if (tmpTag == -1)
+					{
+						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+					}
+					else
+					{
+						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+					}
+					log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+					invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+					log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+					return;
+				}
+				else {
+					cell++;
+				}
 			}
-			else {
-				cell++;
-			}
+			table++;
 		}
-		table++;
+	}
+	else if (tag == 2)
+	{
+		log("Item Combine & Sort");
+		for (int table = 0; table < 9;)
+		{
+			log("items for table : %d", table);
+			for (int cell = 0; cell < 10;)
+			{
+				log("items for cell : %d", cell);
+				if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+					auto invSprite = Sprite::create("Sprites/Items/Consume/Consume007.png");
+					invSprite->setTag(9999);
+					int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+					invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+					invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+					invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+					invTable.at(table)->cellAtIndex(cell)->setTag(9999);
+
+					if (tmpTag == -1)
+					{
+						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+					}
+					else
+					{
+						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+					}
+					log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+					invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+					log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+					return;
+				}
+				else {
+					cell++;
+				}
+			}
+			table++;
+		}
 	}
 
 }
@@ -1413,8 +1538,7 @@ void LSFGame::onDraw(const Mat4 &transform, uint32_t flags)
 	director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 }
 
-void LSFGame::tick(float dt)
-{
+void LSFGame::tick(float dt) {
 	int velocityIterations = 8;
 	int positionIterations = 3;
 

@@ -51,7 +51,7 @@ bool LSFMain::init()
 		"Sprites/Button_option_down.png",
 		CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
 
-	auto mainMenu = Menu::create(btn_Start, btn_Option, nullptr);
+	mainMenu = Menu::create(btn_Start, btn_Option, nullptr);
 	mainMenu->setAnchorPoint(Vec2(0.5, 0.5));
 	mainMenu->setPosition(Vec2(winSize.width / 2, winSize.height / 4));
 	mainMenu->alignItemsVertically();
@@ -63,9 +63,11 @@ bool LSFMain::init()
 
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
+	mainMenu->pause();
 	auto pScene = LSFGame::createScene();
-
+	
 	Director::getInstance()->replaceScene(createTransition(7, 0.5, pScene));
+
 }
 
 TransitionScene* LSFMain::createTransition(int nIndex, float t, Scene* s)

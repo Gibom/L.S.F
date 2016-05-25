@@ -45,6 +45,7 @@ public:
 	int rarity;			//Èñ±Íµµ
 	
 	
+	Vec2 touchPoint; // onTouchBegan touchpoint
 
 	//Á¶ÇÕ
 	bool tableComplete;
@@ -55,8 +56,14 @@ public:
 	TableViewCell* temp2;
 	Sprite* craftTmp1;
 	Sprite* craftTmp2;
-	void combine(int itemA, int itemB);
-
+	void combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell* cellB);
+	Sprite* btnCraft;
+	int temp1Tag = -1;
+	int temp2Tag = -1;
+	Sprite* invNull;
+	int tableTag = 0;
+	int cellIdx = 0;
+	int cellTag = 0;
 
 	//³¬½Ã
 	b2Body* needle;
@@ -167,7 +174,7 @@ public:
 	Sprite* craftUsel;
 	Sprite* craftSel;
 	Sprite* craft;
-	Sprite* btnCraft;
+	
 	
 	Sprite* rainDrop;
 	Sprite* snowDrop;
