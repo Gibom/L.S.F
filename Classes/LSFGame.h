@@ -50,6 +50,7 @@ public:
 	//а╤гу
 	bool tableComplete;
 	bool bTouch_table;
+	bool moveCheck;
 	int tmpCount = 0;
 	int craftInit = 0;
 	TableViewCell* temp1;

@@ -110,7 +110,7 @@ bool LSFGame::init()
 	back->setAnchorPoint(Vec2(0, 1));
 	back->setScaleY(0.8f);
 	back->setPosition(Vec2(0, winSize.height - 20));
-	this->addChild(back, 3);
+	this->addChild(back, 2);
 	//!Debug on/off
 
 	auto weatherFrameCache = SpriteFrameCache::getInstance();
@@ -596,18 +596,25 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			//log("craftSwitch Status: On", craftSwitch);
 		}
 	}
+	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true)
+	{
+		moveCheck == false;
+	}
 	return true;
 }
 void LSFGame::onTouchMoved(Touch* touch, Event* event)
 {
-
+	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true)
+	{
+		moveCheck == true;
+	}
 }
 void LSFGame::onTouchEnded(Touch* touch, Event* event)
 {
 	bool bTouch_combine = btnCraft->getBoundingBox().containsPoint(touchPoint);
 
 
-	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true)
+	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true && moveCheck == false)
 	{
 		
 		std::string cellName;
@@ -1451,8 +1458,7 @@ b2Body* LSFGame::createRopeTipBody()
 	body->CreateFixture(&circleDef);
 	return body;
 }
-void LSFGame::ropeRemove(int type)
-{
+void LSFGame::ropeRemove(int type) {
 	if (prgHangBack->getNumberOfRunningActions() != 0)
 	{
 		log("rope Remove - > prgLayerBack ");
