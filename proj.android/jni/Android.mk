@@ -24,6 +24,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
 				   ../../Classes/Inventory.cpp\
 				   ../../Classes/CustomTableViewCell.cpp\
 				   ../../Classes/LSFSingleton.cpp\
+				   ../../Classes/SoundEffect.cpp\
 				   ../../Classes/LSFGame.cpp \
 				   ../../Classes/LSFMain.cpp 
 				 
