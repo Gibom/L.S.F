@@ -112,6 +112,8 @@ public:
 	Joystick* joystick;
 
 	//프로그레스
+	Sprite* gaugeBack;
+	Sprite* gauge;
 	bool prgInit = false;
 	Sprite* prgHangBack;
 	Sprite* prgFailBack;
@@ -268,6 +270,8 @@ public:
 	int flowRand;
 	int flowCount = 0;
 	int fstCount = 0;
+	int hBonus = 0;
+	int per = 434;
 	bool resultCount;
 	bool btnCount;
 	bool invOpenCount = false;

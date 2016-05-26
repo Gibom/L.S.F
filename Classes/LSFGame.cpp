@@ -70,6 +70,15 @@ bool LSFGame::init()
 	WStatBack->setPosition(Vec2(0, winSize.height));
 	StatLayer->addChild(WStatBack);
 
+	gaugeBack = Sprite::create("Sprites/Gauge_bg.png");
+	gaugeBack->setAnchorPoint(Vec2(0.5, 0.5));
+	gaugeBack->setPosition(Vec2(30, winSize.height / 2));
+	StatLayer->addChild(gaugeBack);
+
+	gauge = Sprite::create("Sprites/Gauge.png");
+	gauge->setAnchorPoint(Vec2(0.5, 0));
+	gauge->setPosition(Vec2(30, 424));
+	StatLayer->addChild(gauge);
 
 	//수동모드 레이어
 	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0), winSize.width, winSize.height);
@@ -804,6 +813,9 @@ void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell*
 
 void LSFGame::doPushInventory(Ref * pSender) {
 	if (btnCount == false) {
+		gauge->setVisible(false);
+		gaugeBack->setVisible(false);
+		
 		soundEffect->doSoundAction("game", 5);
 		invenLayer->setVisible(true);
 
@@ -822,6 +834,9 @@ void LSFGame::doPushInventory(Ref * pSender) {
 		modeswitchMenu->setEnabled(false);
 	}
 	else {
+		gauge->setVisible(true);
+		gaugeBack->setVisible(true);
+
 		soundEffect->doSoundAction("game", 6);
 		invenLayer->setVisible(false);
 		invTab->setVisible(false);
@@ -1756,6 +1771,8 @@ b2Body* LSFGame::createRopeTipBody()
 	return body;
 }
 void LSFGame::ropeRemove(int type) {
+	per = 434;
+	gauge->setTextureRect(Rect(0, 0, 46, per));
 	if (prgHangBack->getNumberOfRunningActions() != 0)
 	{
 		log("rope Remove - > prgLayerBack ");
@@ -1988,42 +2005,48 @@ void LSFGame::startFishing(float dt)
 	log("ropeLength: %f", ropeLength);
 	if (ropeLength >= 6)
 	{
+		hBonus = 12;
 		log("1111-1");
 		randomTime = random(10, 20);
 		log("1111-2 random : %d", randomTime);
 		catchTime = random(7, randomTime - 3);
 		log("1111-3");
-		ropeHealth = ropeHealth * 12;
+		ropeHealth = ropeHealth * hBonus;
 		log("1111-4");
+		
 	}
 	else if (ropeLength > 4 && ropeLength < 6)
 	{
+		hBonus = 10;
 		log("2222-1");
 		randomTime = random(8, 15);
 		log("2222-2 random : %d", randomTime);
 		catchTime = random(4, randomTime - 3);
 		log("2222-3");
-		ropeHealth = ropeHealth * 10;
+		ropeHealth = ropeHealth * hBonus;
 		log("2222-4");
 	}
 	else if (ropeLength >= 3 && ropeLength <= 4)
 	{
+		hBonus = 5;
 		log("3333-1");
 		randomTime = random(5, 10);
 		log("3333-2 random : %d", randomTime);
 		catchTime = random(2, randomTime - 3);
 		log("3333-3");
-		ropeHealth = ropeHealth * 5;
+		ropeHealth = ropeHealth * hBonus;
 		log("3333-4");
+		
 	}
 	else if (ropeLength >= 0 && ropeLength < 3)
 	{
+		hBonus = 5;
 		log("4444-1");
 		randomTime = random(5, 10);
 		log("4444-2 random : %d", randomTime);
 		catchTime = random(2, randomTime - 3);
 		log("4444-3");
-		ropeHealth = ropeHealth * 5;
+		ropeHealth = ropeHealth * hBonus;
 		log("4444-4");
 	}
 	fstChange(1);
@@ -2034,6 +2057,7 @@ void LSFGame::startFishing(float dt)
 void LSFGame::timerFishing(float dt) {
 	log("timerFishing: %d", timer);
 	log("catchTime: %d", catchTime);
+	gauge->setTextureRect(Rect(0, 0, 46, per-=(434 / randomTime)));
 	if (--timer == 0) {
 		log("timer = 0");
 		endFishing(1);
