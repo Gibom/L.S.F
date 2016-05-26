@@ -11,10 +11,16 @@ bool AnimateCreate::init()
 	return true;
 }
 
+void AnimateCreate::test(Ref * pSender)
+{
+	auto texture = static_cast<Texture2D*>(pSender);
+	log("TEST ACTIVATE");
+}
+
 Animation* AnimateCreate::CreateAnim(const std::string & json, const std::string & framename, int frames, float dt)
 {
 	char frName[30];
-
+	
 	auto AnimateFrameCache = SpriteFrameCache::getInstance();
 	AnimateFrameCache->addSpriteFramesWithJson(json);
 	
@@ -23,9 +29,9 @@ Animation* AnimateCreate::CreateAnim(const std::string & json, const std::string
 
 	for (int frCount = 0; frCount <= frames; frCount++)
 	{
-	sprintf(frName, "%s %d.png", framename.c_str(), frCount);
-	CreateAnimation->addSpriteFrame(AnimateFrameCache->getSpriteFrameByName(frName));
-	log("%s", frName);
+		sprintf(frName, "%s %d.png", framename.c_str(), frCount);
+		CreateAnimation->addSpriteFrame(AnimateFrameCache->getSpriteFrameByName(frName));
+		//log("%s", frName);
 	}
 	CreateAnimation->retain();
 
@@ -56,6 +62,7 @@ void SpriteFrameCache::addSpriteFramesWithJson(const std::string & json)
 	texturePath = texturePath.append(".png");
 	Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(texturePath.c_str());
 	texture->setAliasTexParameters();
+	
 	if (texture)
 	{
 		Document document;

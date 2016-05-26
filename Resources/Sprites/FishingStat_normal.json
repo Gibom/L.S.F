@@ -47,8 +47,8 @@
  ],
  "meta": {
   "app": "http://www.aseprite.org/",
-  "version": "1.1.4.1",
-  "image": "C:\\cocos2d-x-work\\Project\\LSF_Project_git\\Resources\\Sprites\\FishingStat_normal.png",
+  "version": "1.1.5.4",
+  "image": "D:\\LSF_Project\\Resources\\Sprites\\FishingStat_normal.png",
   "format": "I8",
   "size": { "w": 170, "h": 68 },
   "scale": "1",

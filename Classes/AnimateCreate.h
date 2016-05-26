@@ -17,7 +17,7 @@ class AnimateCreate
 public:
 
 	virtual bool init();
-	
+	void test(Ref* pSender);
 	Animation* CreateAnim(const std::string & json, const std::string & framename, int frames, float dt);
 };
 

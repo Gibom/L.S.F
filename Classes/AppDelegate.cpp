@@ -1,4 +1,5 @@
 ﻿#include "AppDelegate.h"
+//#include "LSFLoad.h"
 #include "LSFMain.h"
 
 USING_NS_CC;
