@@ -28,8 +28,6 @@ bool LSFGame::init()
 
 	//////////////////////////////
 
-	soundEffect->doSoundAction("game", 0);
-
 	listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
@@ -40,7 +38,7 @@ bool LSFGame::init()
 	ropes = new std::vector<VRope*>;
 	winSize = Director::getInstance()->getWinSize();
 
-	this->schedule(schedule_selector(LSFGame::WorldTimer), 2.5f);	//기본값 duration 2.5, 밸런스 조정 필요
+	this->schedule(schedule_selector(LSFGame::WorldTimer), 0.2f);	//기본값 duration 2.5, 밸런스 조정 필요
 
 	cbtnCount = 0;
 	waterCount = 0;
@@ -404,6 +402,8 @@ void LSFGame::dayChangerF(int type)
 
 	//Init 
 	if (wtInit < 120) {
+		soundCheck = 0;
+		soundEffect->doSoundAction("game", 0);
 		backDefault = Sprite::create("Sprites/Game_bg.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -421,6 +421,8 @@ void LSFGame::dayChangerF(int type)
 		wtInit = 999;
 	}
 	else if (wtInit > 120 && wtInit < 240) {
+		soundCheck = 1;
+		soundEffect->doSoundAction("game", 8);
 		backDefault = Sprite::create("Sprites/Game_bg_sn.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -438,6 +440,8 @@ void LSFGame::dayChangerF(int type)
 		wtInit = 999;
 	}
 	else if (wtInit > 240 && wtInit < 360) {
+		soundCheck = 2;
+		soundEffect->doSoundAction("game", 9);
 		backDefault = Sprite::create("Sprites/Game_bg_nt.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -458,6 +462,11 @@ void LSFGame::dayChangerF(int type)
 	//Tick Func
 	if (type == 1)
 	{
+		if (soundCheck != 0) { 
+			soundEffect->doSoundStop(2);
+			soundEffect->doSoundAction("game", 0);
+			soundCheck = 0;
+		}
 		backDefault = Sprite::create("Sprites/Game_bg.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -478,6 +487,11 @@ void LSFGame::dayChangerF(int type)
 	}
 	else if (type == 2)
 	{
+		if (soundCheck != 1) { 
+			soundEffect->doSoundStop(2);
+			soundEffect->doSoundAction("game", 8);
+			soundCheck = 1;
+		}
 		backDefault = Sprite::create("Sprites/Game_bg_sn.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -498,6 +512,11 @@ void LSFGame::dayChangerF(int type)
 	}
 	else if (type == 3)
 	{
+		if (soundCheck != 2) { 
+			soundEffect->doSoundStop(2);
+			soundEffect->doSoundAction("game", 9);
+			soundCheck = 2;
+		}
 		backDefault = Sprite::create("Sprites/Game_bg_nt.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -744,7 +763,7 @@ void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell*
 
 	log("combine in itemA : %d itemB : %d", itemA, itemB);
 	log("combine in cellA : %d cellB : %d", cellA, cellB);
-
+	soundEffect->doSoundAction("game", 18);
 	//애니메이션
 	auto combineAnim = animCreate->CreateAnim("Sprites/Button_combine2.json", "Button_combine2", 8, 0.1f);
 	auto combineAnimate = Animate::create(combineAnim);
@@ -834,7 +853,7 @@ void LSFGame::doPushInvTab(Ref * pSender) {
 	
 	if (tag == 10)
 	{
-		/* Tab switch Sound Effect 추가예정*/
+		soundEffect->doSoundAction("game", 10);
 		inv1->selected();
 		inv2->unselected();
 		inv3->unselected();
@@ -854,7 +873,7 @@ void LSFGame::doPushInvTab(Ref * pSender) {
 	}
 	else if (tag == 20)
 	{
-		/* Tab switch Sound Effect 추가예정*/
+		soundEffect->doSoundAction("game", 10);
 		inv1->unselected();
 		inv2->selected();
 		inv3->unselected();
@@ -876,7 +895,7 @@ void LSFGame::doPushInvTab(Ref * pSender) {
 	}
 	else if (tag == 30)
 	{
-		/* Tab switch Sound Effect 추가예정*/
+		soundEffect->doSoundAction("game", 10);
 		inv1->unselected();
 		inv2->unselected();
 		inv3->selected();
@@ -1920,7 +1939,7 @@ void LSFGame::tick(float dt) {
 	//RHC(Rope Health Counter End)-------------------------------
 
 	if (joystick->fishingGauge >= 200) { endFishing(3); }
-
+	
 	//invOpen Animation
 	if (btnCount == true && invOpenCount == false) {
 		if (invOpen->getNumberOfRunningActions() == 0) {
@@ -1955,7 +1974,6 @@ void LSFGame::touchCounter(float dt)
 	if (touchCount == false) {
 		touchCount = true;
 		joystick->setVisible(false);
-
 	}
 	else if (touchCount == true) {
 		touchCount = false;
@@ -2053,10 +2071,15 @@ void LSFGame::endFishing(float dt)
 	joystick->doJoyAnimate(2);
 }
 
-//fst Normal Sound Effect
+//fst Sound Effect Delay
 void LSFGame::SoundDelay(float dt)
 {
-	soundEffect->doSoundAction("game", 3);
+	if (sDelayCheck == 1) {
+		soundEffect->doSoundAction("game", 3);
+	}
+	else if (sDelayCheck == 2) {
+		soundEffect->doSoundAction("game", 12);
+	}
 }
 
 void LSFGame::fstChange(int type)
@@ -2067,6 +2090,7 @@ void LSFGame::fstChange(int type)
 	}
 
 	if (type == 1) {
+		sDelayCheck = 1;
 		this->schedule(schedule_selector(LSFGame::SoundDelay),1.f);
 		auto fstNormalAnim = animCreate->CreateAnim("Sprites/FishingStat_normal.json", "FishingStat", 4, 0.1f);
 		auto fstNormalAnimate = Animate::create(fstNormalAnim);
@@ -2076,8 +2100,9 @@ void LSFGame::fstChange(int type)
 		log("fstUpdate Type 1 Activate !!");
 	}
 	if (type == 2) {
-		this->unschedule(schedule_selector(LSFGame::SoundDelay));
-		/* Hang Sound Effect 추가예정*/
+		sDelayCheck = 2;
+		//this->unschedule(schedule_selector(LSFGame::SoundDelay));
+		this->schedule(schedule_selector(LSFGame::SoundDelay), 1.f);
 		itemName = itemCreate(dayChanger, weatherCount);
 		auto fstHangAnim = animCreate->CreateAnim("Sprites/FishingStat_hang.json", "FishingStat", 4, 0.1f);
 		auto fstHangAnimate = Animate::create(fstHangAnim);
@@ -2098,7 +2123,8 @@ void LSFGame::fstChange(int type)
 	}
 	if (type == 3) {
 		
-		/* Success Sound Effect 추가예정*/
+		this->unschedule(schedule_selector(LSFGame::SoundDelay));
+		soundEffect->doSoundAction("game", 14);
 		resultCount = true;
 		addNewSpriteAt(Vec2(winSize.width / 2, winSize.height / 2), itemName.c_str(), 2);
 		fishBowlProgress(1);
@@ -2112,7 +2138,8 @@ void LSFGame::fstChange(int type)
 	}
 	if (type == 4) {
 		
-		/* Fail Sound Effect 추가예정*/
+		this->unschedule(schedule_selector(LSFGame::SoundDelay));
+		soundEffect->doSoundAction("game", 13);
 		resultCount = false;
 		addNewSpriteAt(Vec2::ZERO, itemName.c_str(), 1);
 		fishBowlProgress(2);
@@ -2128,14 +2155,14 @@ void LSFGame::fstChange(int type)
 void LSFGame::doChangeMode(Ref* pSender)
 {
 	if (modeSwitch == false) {
-		/* ModeSwitch Sound Effect 추가예정*/
+		soundEffect->doSoundAction("game", 11);
 		modeSwitch = true;
 		btn_modeswitch->selected();
 		//manualLayer->setVisible(true);
 
 	}
 	else {
-		/* ModeSwitch Sound Effect 추가예정*/
+		soundEffect->doSoundAction("game", 11);
 		modeSwitch = false;
 		btn_modeswitch->unselected();
 		//manualLayer->setVisible(false);
@@ -2242,6 +2269,7 @@ void LSFGame::fishRemove(float dt)
 	log("fishRemoveInit");
 	if (hangItem->getNumberOfRunningActions() == 0 && prgCounter == 1)
 	{
+		soundEffect->doSoundAction("game", 15);
 		log("fishRemove 1");
 		progressLayer->removeChild(hangItem);
 		progressLayer->removeChild(fishBowl);

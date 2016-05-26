@@ -9,6 +9,7 @@
 #include "Joystick.h"
 #include "ui/CocosGUI.h"
 
+
 using namespace cocos2d;
 
 static void printProperties(Properties* properties, int indent);
@@ -145,7 +146,7 @@ void Joystick::onTouchesBegan(const std::vector<Touch*>& touches, Event  *event)
         isPressed = true;
         this->updateVelocity(touchPoint);
 		doJoyAnimate(1);
-		
+		soundEffect->doSoundAction("game", 17);
     }
 }
 
@@ -162,6 +163,7 @@ void Joystick::onTouchesMoved(const std::vector<Touch*>& touches, Event  *event)
 		
 		log("fishingGauge: %d", fishingGauge);
 		fishingGauge+= 2;
+		
     }
 }
 

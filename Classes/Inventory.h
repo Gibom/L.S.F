@@ -5,7 +5,7 @@
 #include "extensions\cocos-ext.h"
 #include "CustomTableViewCell.h"
 #include "LSFSingleton.h"
-
+#include "SoundEffect.h"
 using namespace cocos2d;
 using namespace cocos2d::extension;
 
@@ -27,6 +27,8 @@ public:
 	virtual Size tableCellSizeForIndex(TableView*table, ssize_t idx);
 	virtual TableViewCell* tableCellAtIndex(TableView* table, ssize_t idx);
 	virtual ssize_t numberOfCellsInTableView(TableView* table);
+private:
+	SoundEffect* soundEffect;
 };
 
 #endif // __INVENTORY__

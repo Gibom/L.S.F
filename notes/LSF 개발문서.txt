@@ -182,17 +182,28 @@ aseprite에서 by row나 by coulmn으로 Export하면 문제 해결될 것 같�
 날씨
 	- 날씨, 시간에 따른 조명효과
 사운드 추가
-	/* Tab switch Sound Effect 추가예정*/
-	/* Hang Sound Effect 추가예정*/
-	/* Fail Sound Effect 추가예정*/
-	/* Success Sound Effect 추가예정*/
-	/* ModeSwitch Sound Effect 추가예정*/
+	/* Tab switch Sound Effect 추가예정*/ -> Tab
+	테이블 선택시 클릭음 -> Tab
+	/* Hang Sound Effect 추가예정*/ -> Hang
+	/* Fail Sound Effect 추가예정*/ -> Fail
+	/* Success Sound Effect 추가예정*/ -> Success
+	/* ModeSwitch Sound Effect 추가예정*/ -> Mode
+	아이템 습득 사운드 Grab.wav
+	아이템 사용 사운드 Consume.ogg
+	조이스틱 휠 동작 Reel
+	조합 버튼 동작 Combine
 	
+EFFECT_TAB 10
+EFFECT_MODE	11	
+EFFECT_HANG	12	
+EFFECT_FAIL	13	
+EFFECT_SUCCESS	14
+EFFECT_GRAB		15
+EFFECT_CONSUME	16
+EFFECT_REEL		17
+EFFECT_COMBINE	18
 	
-	
-	
-	
-	
+	soundEffect->doSoundAction("game", );
 	
 	
 	

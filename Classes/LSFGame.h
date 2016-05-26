@@ -39,7 +39,8 @@ public:
 
 	//사운드
 	void SoundDelay(float dt);
-
+	int sDelayCheck = 0;
+	int soundCheck = 0;
 	//상태바 (날씨, 시간등 환경정보 표시)
 	Sprite* WStatBack;
 

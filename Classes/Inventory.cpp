@@ -55,6 +55,7 @@ TableView* Inventory::CreateTable(int row)
 
 void Inventory::tableCellTouched(TableView* table, TableViewCell* cell)
 {
+	soundEffect->doSoundAction("game", 10);
 	LSFSingleton::getInstance()->tableTag = table->getTag();
 	LSFSingleton::getInstance()->cellIdx = cell->getIdx();
 	LSFSingleton::getInstance()->cellTag = cell->getTag();

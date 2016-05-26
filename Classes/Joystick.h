@@ -11,6 +11,7 @@
 
 #include "cocos2d.h"
 #include "AnimateCreate.h"
+#include "SoundEffect.h"
 
 using namespace cocos2d;
 class EffectAutoBindingResolver;
@@ -27,7 +28,7 @@ public:
 	Vec2 getVelocity() { return velocity; }
 	void doJoyAnimate(int type);
 	int fishingGauge = 0;
-
+	
 
 private:
 	Size winSize;
@@ -42,7 +43,7 @@ private:
 	Animation* joystickAnim;
 	Animate* joystickAnimate;
 	RepeatForever* repJoystick;
-
+	SoundEffect* soundEffect;
 
 	void updateVelocity(Vec2 point);
 	void resetJoystick();
