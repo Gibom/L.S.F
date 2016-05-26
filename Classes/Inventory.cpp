@@ -13,16 +13,44 @@ bool Inventory::init()
 TableView* Inventory::CreateTable(int row)
 {
 	winSize = Director::getInstance()->getWinSize();
+	if (row <= 7)
+	{
+		inventory = TableView::create(this, Size(640, 60));
+		inventory->setDirection(ScrollView::Direction::HORIZONTAL);
+		inventory->setPosition(Vec2(43, (winSize.height - 318) - (64 * row)));
+		inventory->setDelegate(this);
+		inventory->setTag(row);
 
-	inventory = TableView::create(this, Size(640, 60));
-	inventory->setDirection(ScrollView::Direction::HORIZONTAL);
-	inventory->setPosition(Vec2(43, (winSize.height - 318) - (64 * row)));
-	inventory->setDelegate(this);
-	inventory->setTag(row);
+		inventory->reloadData();
 
-	inventory->reloadData();
+		return inventory;
+	}
+	else if (row > 7 && row <= 15)
+	{
+		
+		inventory = TableView::create(this, Size(640, 60));
+		inventory->setDirection(ScrollView::Direction::HORIZONTAL);
+		inventory->setPosition(Vec2(43, (winSize.height - 318) - (64 * (row-=8))));
+		inventory->setDelegate(this);
+		inventory->setTag(row +=8);
 
-	return inventory;
+		inventory->reloadData();
+
+		return inventory;
+	}
+	else if (row > 15 && row <= 24)
+	{
+
+		inventory = TableView::create(this, Size(640, 60));
+		inventory->setDirection(ScrollView::Direction::HORIZONTAL);
+		inventory->setPosition(Vec2(43, (winSize.height - 318) - (64 * (row -= 16))));
+		inventory->setDelegate(this);
+		inventory->setTag(row += 16);
+
+		inventory->reloadData();
+
+		return inventory;
+	}
 }
 
 void Inventory::tableCellTouched(TableView* table, TableViewCell* cell)

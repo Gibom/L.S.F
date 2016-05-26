@@ -43,6 +43,7 @@ public:
 	float bonus;		//추가확률
 	int chance;			//확률
 	int rarity;			//희귀도
+	int kindof;			//종류 장비(1), 소모품(2), 물고기(3)
 	
 	
 	Vec2 touchPoint; // onTouchBegan touchpoint
@@ -245,9 +246,15 @@ public:
 	Vec2 invPosition;
 	Sprite* invOpen;
 	std::vector <TableView*> invTable;
+	MenuItemImage* inv1;
+	MenuItemImage* inv2;
+	MenuItemImage* inv3;
+	Menu* invTab;
 	Animation* invenAnim;
 	Animate* invenAnimate;
 	Repeat* repInven;
+	int lastSel = 0;
+
 	//카운트
 	int cbtnCount;
 	int waterCount;
@@ -274,6 +281,7 @@ public:
 
 	//Inventory 
 	void doPushInventory(Ref * pSender);
+	void doPushInvTab(Ref * pSender);
 	
 	//cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
 

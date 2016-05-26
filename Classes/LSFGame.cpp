@@ -153,6 +153,23 @@ bool LSFGame::init()
 	craftSel->setVisible(false);
 	invenLayer->addChild(craftSel);
 
+	
+	inv1 = MenuItemImage::create("Sprites/inventory_tool_sel.png", "Sprites/inventory_tool_usel.png",
+		CC_CALLBACK_1(LSFGame::doPushInvTab, this));
+	inv1->setTag(10);
+	inv2 = MenuItemImage::create("Sprites/inventory_Expand_sel.png", "Sprites/inventory_Expand_usel.png",
+		CC_CALLBACK_1(LSFGame::doPushInvTab, this));
+	inv2->setTag(20);
+	inv3 = MenuItemImage::create("Sprites/inventory_Fish_sel.png", "Sprites/inventory_Fish_usel.png",
+		CC_CALLBACK_1(LSFGame::doPushInvTab, this));
+	inv3->setTag(30);
+
+	invTab = Menu::create(inv1, inv2, inv3, nullptr);
+	invTab->setAnchorPoint(Vec2::ZERO);
+	invTab->setPosition(Vec2(invTab->getPosition().x - 215, invTab->getPosition().y + 422));
+	invTab->alignItemsHorizontally();
+	invTab->setVisible(false);
+	invenLayer->addChild(invTab, 4);
 
 
 	GameFrameCache = SpriteFrameCache::getInstance();
@@ -196,7 +213,8 @@ bool LSFGame::init()
 
 	inv = new Inventory;
 
-	//장비/소모품 탭
+	//가방 테이블 생성 
+	//장비 탭
 	for (int invRow = 0; invRow < 8; invRow++)
 	{
 		invTable.push_back(inv->CreateTable(invRow));
@@ -207,15 +225,21 @@ bool LSFGame::init()
 			tableComplete = true;
 		}
 	}
-	//물고기탭(미구현)
-	/*
-	for (int invRow = 9; invRow < 16; invRow++)
+	//소모품탭
+	for (int invRow = 8; invRow < 16; invRow++)
 	{
 		invTable.push_back(inv->CreateTable(invRow));
 		invenLayer->addChild(invTable.at(invRow));
 		invTable.at(invRow)->setVisible(false);
 	}
-	*/
+	//물고기탭
+	for (int invRow = 16; invRow < 25; invRow++)
+	{
+		invTable.push_back(inv->CreateTable(invRow));
+		invenLayer->addChild(invTable.at(invRow));
+		invTable.at(invRow)->setVisible(false);
+	}
+	
 	//가방----------------------------------------------------------------------------------------------------
 
 	//환경 구조물배치-----------------------------------------------------------------------------------------
@@ -566,6 +590,8 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	if (bTouch_craft && btnCount == true && invOpen->getNumberOfRunningActions() == 0)
 	{
 		//craftSwitch == true/false On/Off
+
+		//여기에 인벤토리 탭 활성/비활성화 추가 
 		if (craftSwitch == true)
 		{
 			craftUsel->setVisible(true);
@@ -596,24 +622,29 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			//log("craftSwitch Status: On", craftSwitch);
 		}
 	}
+
+	//Combine 예외 처리
 	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true)
 	{
 		moveCheck == false;
 	}
+
 	return true;
 }
 void LSFGame::onTouchMoved(Touch* touch, Event* event)
 {
+	//Combine 예외 처리
 	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true)
 	{
 		moveCheck == true;
 	}
+
 }
 void LSFGame::onTouchEnded(Touch* touch, Event* event)
 {
 	bool bTouch_combine = btnCraft->getBoundingBox().containsPoint(touchPoint);
 
-
+	//Combine 함수에 필요한 매개변수 초기화
 	if (craftSwitch == true && tmpCount >= 0 && tableComplete == true && moveCheck == false)
 	{
 		
@@ -669,7 +700,7 @@ void LSFGame::onTouchEnded(Touch* touch, Event* event)
 			}
 		}
 	}
-
+	// Combine 함수 실행 및 Sprite 초기화 
 	if (btnCount == true && craftSwitch == true && bTouch_combine == true && tableComplete == true)
 	{
 		if (tmpCount < 0) {
@@ -743,8 +774,7 @@ void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell*
 	tmpCount = 1;
 }
 
-void LSFGame::doPushInventory(Ref * pSender)
-{
+void LSFGame::doPushInventory(Ref * pSender) {
 	if (btnCount == false) {
 		invenLayer->setVisible(true);
 
@@ -764,6 +794,7 @@ void LSFGame::doPushInventory(Ref * pSender)
 	}
 	else {
 		invenLayer->setVisible(false);
+		invTab->setVisible(false);
 		if (invOpen->getNumberOfRunningActions() != 0) {
 			invOpen->stopAllActions();
 		}
@@ -778,12 +809,82 @@ void LSFGame::doPushInventory(Ref * pSender)
 		btnCraft->setVisible(false);
 		modeswitchMenu->setEnabled(true);
 		invOpenCount = false;
-		for (int invRow = 0; invRow < 8; invRow++)
+		//인벤토리 비활성화
+		for (int invRow = 0; invRow < 24; invRow++)
 		{
 			invTable.at(invRow)->setVisible(false);
 		}
 	}
 }
+
+void LSFGame::doPushInvTab(Ref * pSender) {
+	MenuItemImage* pMenuItem = (MenuItemImage *)(pSender);
+	int tag = (int)pMenuItem->getTag();
+	log("MenuItem tag :%d", tag);
+	
+	if (tag == 10)
+	{
+		inv1->selected();
+		inv2->unselected();
+		inv3->unselected();
+		for (int invRow = 0; invRow < 8; invRow++)
+		{
+			invTable.at(invRow)->setVisible(true);
+		}
+		for (int invRow = 8; invRow < 16; invRow++)
+		{
+			invTable.at(invRow)->setVisible(false);
+		}
+		for (int invRow = 16; invRow < 25; invRow++)
+		{
+			invTable.at(invRow)->setVisible(false);
+		}
+		lastSel = 1;
+	}
+	else if (tag == 20)
+	{
+		inv1->unselected();
+		inv2->selected();
+		inv3->unselected();
+
+		for (int invRow = 0; invRow < 8; invRow++)
+		{
+			invTable.at(invRow)->setVisible(false);
+		}
+
+		for (int invRow = 8; invRow < 16; invRow++)
+		{
+			invTable.at(invRow)->setVisible(true);
+		}
+		for (int invRow = 16; invRow < 25; invRow++)
+		{
+			invTable.at(invRow)->setVisible(false);
+		}
+		lastSel = 2;
+	}
+	else if (tag == 30)
+	{
+		inv1->unselected();
+		inv2->unselected();
+		inv3->selected();
+
+		for (int invRow = 0; invRow < 8; invRow++)
+		{
+			invTable.at(invRow)->setVisible(false);
+		}
+
+		for (int invRow = 8; invRow < 16; invRow++)
+		{
+			invTable.at(invRow)->setVisible(false);
+		}
+		for (int invRow = 16; invRow < 25; invRow++)
+		{
+			invTable.at(invRow)->setVisible(true);
+		}
+		lastSel = 3;
+	}
+}
+
 bool LSFGame::createBox2dWorld(bool debug)
 {
 	//월드 생성 시작-----------------------------------------------------
@@ -1225,87 +1326,242 @@ b2Body* LSFGame::addNewSpriteFlow(Vec2 point, Size size, b2BodyType bodytype, in
 }
 
 //인벤토리 정렬 함수 정의 필요
-void LSFGame::items(int tag)
-{
+void LSFGame::items(int tag) {
 	log("items");
-
-	if (tag == 1) {
-		log("Fishing Success & get Item");
-		for (int table = 0; table < 9;)
-		{
-			log("items for table : %d", table);
-			for (int cell = 0; cell < 10;)
+	if (kindof == 1) {
+		if (tag == 1) {
+			log("Fishing Success & get Item");
+			for (int table = 0; table < 8;)
 			{
-				log("items for cell : %d", cell);
-				if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
-					auto invSprite = Sprite::create(itemName.c_str());
-					invSprite->setTag((rarity * 1000 + chance));
-					int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
-					invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
-					invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
-					invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
-					invTable.at(table)->cellAtIndex(cell)->setTag((rarity * 1000 + chance));
-					
-					if (tmpTag == -1)
-					{
-						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+				log("items for table : %d", table);
+				for (int cell = 0; cell < 10;)
+				{
+					log("items for cell : %d", cell);
+					if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+						auto invSprite = Sprite::create(itemName.c_str());
+						invSprite->setTag((rarity * 1000 + chance));
+						int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+						invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+						invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+						invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+						invTable.at(table)->cellAtIndex(cell)->setTag((rarity * 1000 + chance));
+
+						if (tmpTag == -1)
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+						}
+						else
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+						}
+						log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+						invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+						log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+						return;
 					}
-					else
-					{
-						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+					else {
+						cell++;
 					}
-					log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
-					invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
-					log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
-					return;
 				}
-				else {
-					cell++;
-				}
+				table++;
 			}
-			table++;
+		}
+		else if (tag == 2)
+		{
+			log("Item Combine & Sort");
+			for (int table = 8; table < 16;)
+			{
+				log("items for table : %d", table);
+				for (int cell = 0; cell < 10;)
+				{
+					log("items for cell : %d", cell);
+					if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+						auto invSprite = Sprite::create("Sprites/Items/Consume/Consume007.png");
+						invSprite->setTag(9999);
+						int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+						invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+						invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+						invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+						invTable.at(table)->cellAtIndex(cell)->setTag(9999);
+
+						if (tmpTag == -1)
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+						}
+						else
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+						}
+						log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+						invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+						log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+						return;
+					}
+					else {
+						cell++;
+					}
+				}
+				table++;
+			}
 		}
 	}
-	else if (tag == 2)
-	{
-		log("Item Combine & Sort");
-		for (int table = 0; table < 9;)
-		{
-			log("items for table : %d", table);
-			for (int cell = 0; cell < 10;)
+	else if (kindof == 2) {
+		if (tag == 1) {
+			log("Fishing Success & get Item");
+			for (int table = 8; table < 16;)
 			{
-				log("items for cell : %d", cell);
-				if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
-					auto invSprite = Sprite::create("Sprites/Items/Consume/Consume007.png");
-					invSprite->setTag(9999);
-					int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
-					invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
-					invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
-					invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
-					invTable.at(table)->cellAtIndex(cell)->setTag(9999);
+				log("items for table : %d", table);
+				for (int cell = 0; cell < 10;)
+				{
+					log("items for cell : %d", cell);
+					if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+						auto invSprite = Sprite::create(itemName.c_str());
+						invSprite->setTag((rarity * 1000 + chance));
+						int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+						invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+						invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+						invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+						invTable.at(table)->cellAtIndex(cell)->setTag((rarity * 1000 + chance));
 
-					if (tmpTag == -1)
-					{
-						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+						if (tmpTag == -1)
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+						}
+						else
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+						}
+						log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+						invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+						log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+						return;
 					}
-					else
-					{
-						invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+					else {
+						cell++;
 					}
-					log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
-					invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
-					log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
-					return;
 				}
-				else {
-					cell++;
-				}
+				table++;
 			}
-			table++;
+		}
+		else if (tag == 2)
+		{
+			log("Item Combine & Sort");
+			for (int table = 8; table < 16;)
+			{
+				log("items for table : %d", table);
+				for (int cell = 0; cell < 10;)
+				{
+					log("items for cell : %d", cell);
+					if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+						auto invSprite = Sprite::create("Sprites/Items/Consume/Consume007.png");
+						invSprite->setTag(9999);
+						int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+						invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+						invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+						invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+						invTable.at(table)->cellAtIndex(cell)->setTag(9999);
+
+						if (tmpTag == -1)
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+						}
+						else
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+						}
+						log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+						invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+						log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+						return;
+					}
+					else {
+						cell++;
+					}
+				}
+				table++;
+			}
 		}
 	}
+	else if (kindof == 3) {
+		if (tag == 1) {
+			log("Fishing Success & get Item");
+			for (int table = 16; table < 25;)
+			{
+				log("items for table : %d", table);
+				for (int cell = 0; cell < 10;)
+				{
+					log("items for cell : %d", cell);
+					if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+						auto invSprite = Sprite::create(itemName.c_str());
+						invSprite->setTag((rarity * 1000 + chance));
+						int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+						invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+						invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+						invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+						invTable.at(table)->cellAtIndex(cell)->setTag((rarity * 1000 + chance));
 
+						if (tmpTag == -1)
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+						}
+						else
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+						}
+						log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+						invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+						log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+						return;
+					}
+					else {
+						cell++;
+					}
+				}
+				table++;
+			}
+		}
+		else if (tag == 2)
+		{
+			log("Item Combine & Sort");
+			for (int table = 8; table < 16;)
+			{
+				log("items for table : %d", table);
+				for (int cell = 0; cell < 10;)
+				{
+					log("items for cell : %d", cell);
+					if (invTable.at(table)->cellAtIndex(cell)->getTag() == -1 || invTable.at(table)->cellAtIndex(cell)->getTag() == -2) {
+						auto invSprite = Sprite::create("Sprites/Items/Consume/Consume007.png");
+						invSprite->setTag(9999);
+						int tmpTag = invTable.at(table)->cellAtIndex(cell)->getTag();
+						invPosition = invTable.at(table)->cellAtIndex(cell)->getPosition();
+						invTable.at(table)->cellAtIndex(cell)->removeAllChildren();
+						invTable.at(table)->cellAtIndex(cell)->addChild(invSprite, 4);
+						invTable.at(table)->cellAtIndex(cell)->setTag(9999);
+
+						if (tmpTag == -1)
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x + 20, invPosition.y + 20));
+						}
+						else
+						{
+							invTable.at(table)->cellAtIndex(cell)->setPosition(Vec2(invPosition.x, invPosition.y));
+						}
+						log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x : %f\ty : %f", invPosition.x + 20, invPosition.y + 20);
+						invTable.at(table)->cellAtIndex(cell)->setAnchorPoint(Vec2(0.5, 0.5));
+						log("invTable/Cell Tag : %d, %d", invTable.at(table)->getTag(), invTable.at(table)->cellAtIndex(cell)->getTag());
+						return;
+					}
+					else {
+						cell++;
+					}
+				}
+				table++;
+			}
+		}
+	}
 }
+
+
 std::string LSFGame::itemCreate(int day, int weather)
 {
 	//Day - init(0), morning(1), noon(2), night(3)
@@ -1323,78 +1579,91 @@ std::string LSFGame::itemCreate(int day, int weather)
 		const std::string imagePath = "Sprites/Items/Fishes/Fish";
 		sprintf(itemFullpath, "%s00%d.png", imagePath.c_str(), chance);
 		rarity = 1;
+		kindof = 3;
 	}
 	else if (chance >= 10 && chance <= 29)
 	{
 		const std::string imagePath = "Sprites/Items/Fishes/Fish";
 		sprintf(itemFullpath, "%s0%d.png", imagePath.c_str(), chance);
 		rarity = 1;
+		kindof = 3;
 	}
 	else if (chance >29 && chance <= 38)
 	{
 		const std::string imagePath = "Sprites/Items/Consume/Consume";
 		sprintf(itemFullpath, "%s00%d.png", imagePath.c_str(), chance - 29);
 		rarity = 1;
+		kindof = 2;
 	}
 	else if (chance == 39)
 	{
 		const std::string imagePath = "Sprites/Items/Equip/Pole";
 		sprintf(itemFullpath, "%s00%d.png", imagePath.c_str(), 1);
 		rarity = 3;
+		kindof = 1;
 	}
 	else if (chance >= 40 && chance <= 52)
 	{
 		const std::string imagePath = "Sprites/Items/Fishes/Fish";
 		sprintf(itemFullpath, "%s0%d.png", imagePath.c_str(), chance);
 		rarity = 2;
+		kindof = 3;
 	}
 	else if (chance > 52 && chance <= 61)
 	{
 		const std::string imagePath = "Sprites/Items/Consume/Consume";
 		sprintf(itemFullpath, "%s0%d.png", imagePath.c_str(), chance - 43);
 		rarity = 2;
+		kindof = 2;
 	}
 	else if (chance > 61 && chance <= 79)
 	{
 		const std::string imagePath = "Sprites/Items/Fishes/Fish";
 		sprintf(itemFullpath, "%s0%d.png", imagePath.c_str(), chance);
 		rarity = 3;
+		kindof = 3;
 	}
 	else if (chance > 79 && chance <= 87)
 	{
 		const std::string imagePath = "Sprites/Items/Consume/Consume";
 		sprintf(itemFullpath, "%s0%d.png", imagePath.c_str(), chance - 61);
 		rarity = 3;
+		kindof = 2;
 	}
 	else if (chance > 87 && chance <= 90)
 	{
 		const std::string imagePath = "Sprites/Items/Equip/Pole";
 		sprintf(itemFullpath, "%s00%d.png", imagePath.c_str(), chance - 86);
 		rarity = 4;
+		kindof = 1;
 	}
 	else if (chance > 90 && chance <= 99)
 	{
 		const std::string imagePath = "Sprites/Items/Fishes/Fish";
 		sprintf(itemFullpath, "%s0%d.png", imagePath.c_str(), chance);
 		rarity = 3;
+		kindof = 3;
 	}
 	else if (chance > 99 && chance <= 108)
 	{
 		const std::string imagePath = "Sprites/Items/Fishes/Fish";
 		sprintf(itemFullpath, "%s%d.png", imagePath.c_str(), chance);
 		rarity = 4;
+		kindof = 3;
 	}
 	else if (chance > 108 && chance <= 112)
 	{
 		const std::string imagePath = "Sprites/Items/Equip/Pole";
 		sprintf(itemFullpath, "%s00%d.png", imagePath.c_str(), chance - 103);
 		rarity = 5;
+		kindof = 1;
 	}
 	else if (chance > 112 && chance <= 117)
 	{
 		const std::string imagePath = "Sprites/Items/Etc/Etc";
 		sprintf(itemFullpath, "%s00%d.png", imagePath.c_str(), chance - 112);
 		rarity = 0;
+		kindof = 3;
 	}
 
 	return itemFullpath;
@@ -1646,12 +1915,29 @@ void LSFGame::tick(float dt) {
 	//invOpen Animation
 	if (btnCount == true && invOpenCount == false) {
 		if (invOpen->getNumberOfRunningActions() == 0) {
+			invTab->setVisible(true);
 			craftUsel->setVisible(true);
 			invOpenCount = true;
-			for (int invRow = 0; invRow < 8; invRow++)
-			{
-				invTable.at(invRow)->setVisible(true);
+			//인벤토리 활성화
+			if (lastSel == 0 || lastSel == 1) {
+				for (int invRow = 0; invRow < 8; invRow++)
+				{
+					invTable.at(invRow)->setVisible(true);
+				}
 			}
+			else if (lastSel == 2) {
+				for (int invRow = 8; invRow < 16; invRow++)
+				{
+					invTable.at(invRow)->setVisible(true);
+				}
+			}
+			else if (lastSel == 3) {
+				for (int invRow = 16; invRow < 25; invRow++)
+				{
+					invTable.at(invRow)->setVisible(true);
+				}
+			}
+			
 		}
 	}
 }
