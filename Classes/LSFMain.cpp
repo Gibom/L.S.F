@@ -1,5 +1,6 @@
 ﻿#include "LSFMain.h"
 #include "LSFGame.h"
+#include "SoundEffect.h"
 
 using namespace cocos2d;
 using namespace rapidjson;
@@ -22,6 +23,10 @@ bool LSFMain::init()
 	}
 
 	/////////////////////////////
+
+	soundEffect->doSoundAction("main", 0);
+	
+
 	winSize = Director::getInstance()->getWinSize();
 	//스프라이트 캐시
 	
@@ -64,6 +69,7 @@ bool LSFMain::init()
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
 	mainMenu->pause();
+	soundEffect->doSoundAction("main", 1);
 	auto pScene = LSFGame::createScene();
 	
 	Director::getInstance()->replaceScene(createTransition(7, 0.5, pScene));

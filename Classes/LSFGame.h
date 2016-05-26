@@ -11,6 +11,7 @@
 #include "WaterNode.h"
 #include "Inventory.h"
 #include "LSFSingleton.h"
+#include "SoundEffect.h"
 
 using namespace cocos2d;
 
@@ -24,6 +25,8 @@ public:
 
 	CREATE_FUNC(LSFGame);
 
+	SoundEffect* soundEffect;
+
 	//Box2D-Start---------------------------------------------------------------------------
 	bool createBox2dWorld(bool debug);
 	SpriteBatchNode* ropeSpriteSheet;
@@ -33,6 +36,9 @@ public:
 	void tick(float dt);
 	
 	virtual void draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
+
+	//사운드
+	void SoundDelay(float dt);
 
 	//상태바 (날씨, 시간등 환경정보 표시)
 	Sprite* WStatBack;

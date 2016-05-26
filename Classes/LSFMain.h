@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "AnimateCreate.h"
 #include "LSFSingleton.h"
+#include "SoundEffect.h"
 
 using namespace cocos2d;
 
@@ -15,6 +16,8 @@ public:
     virtual bool init();
 
     CREATE_FUNC(LSFMain);
+	
+	SoundEffect* soundEffect;
 
 	MenuItemImage* btn_Start;
 	MenuItemImage* btn_Option;
