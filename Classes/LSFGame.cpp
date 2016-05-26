@@ -70,15 +70,27 @@ bool LSFGame::init()
 	WStatBack->setPosition(Vec2(0, winSize.height));
 	StatLayer->addChild(WStatBack);
 
-	gaugeBack = Sprite::create("Sprites/Gauge_bg.png");
-	gaugeBack->setAnchorPoint(Vec2(0.5, 0.5));
-	gaugeBack->setPosition(Vec2(30, winSize.height / 2));
-	StatLayer->addChild(gaugeBack);
+	TimerBack = Sprite::create("Sprites/Timer_bg.png");
+	TimerBack->setAnchorPoint(Vec2(0.5, 0.5));
+	TimerBack->setPosition(Vec2(30, winSize.height / 2));
+	StatLayer->addChild(TimerBack);
 
-	gauge = Sprite::create("Sprites/Gauge.png");
-	gauge->setAnchorPoint(Vec2(0.5, 0));
-	gauge->setPosition(Vec2(30, 424));
-	StatLayer->addChild(gauge);
+	Timer = Sprite::create("Sprites/Timer.png");
+	Timer->setAnchorPoint(Vec2(0.5, 0));
+	Timer->setPosition(Vec2(30, 424));
+	StatLayer->addChild(Timer);
+
+	GaugeBack = Sprite::create("Sprites/Gauge_bg.png");
+	GaugeBack->setAnchorPoint(Vec2(0.5, 0.5));
+	GaugeBack->setPosition(Vec2(80, winSize.height / 2));
+	GaugeBack->setVisible(false);
+	StatLayer->addChild(GaugeBack);
+
+	Gauge = Sprite::create("Sprites/Gauge.png");
+	Gauge->setAnchorPoint(Vec2(0.5, 0));
+	Gauge->setPosition(Vec2(80, 424));
+	Gauge->setVisible(false);
+	StatLayer->addChild(Gauge);
 
 	//수동모드 레이어
 	manualLayer = LayerColor::create(Color4B(255, 255, 255, 0), winSize.width, winSize.height);
@@ -813,8 +825,11 @@ void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell*
 
 void LSFGame::doPushInventory(Ref * pSender) {
 	if (btnCount == false) {
-		gauge->setVisible(false);
-		gaugeBack->setVisible(false);
+		Timer->setVisible(false);
+		TimerBack->setVisible(false);
+		Gauge->setVisible(false);
+		GaugeBack->setVisible(false);
+
 		
 		soundEffect->doSoundAction("game", 5);
 		invenLayer->setVisible(true);
@@ -834,8 +849,13 @@ void LSFGame::doPushInventory(Ref * pSender) {
 		modeswitchMenu->setEnabled(false);
 	}
 	else {
-		gauge->setVisible(true);
-		gaugeBack->setVisible(true);
+		Timer->setVisible(true);
+		TimerBack->setVisible(true);
+		if (modeSwitch == true)
+		{
+			Gauge->setVisible(true);
+			GaugeBack->setVisible(true);
+		}
 
 		soundEffect->doSoundAction("game", 6);
 		invenLayer->setVisible(false);
@@ -1771,8 +1791,10 @@ b2Body* LSFGame::createRopeTipBody()
 	return body;
 }
 void LSFGame::ropeRemove(int type) {
-	per = 434;
-	gauge->setTextureRect(Rect(0, 0, 46, per));
+	TimerPer = 434;
+	Timer->setTextureRect(Rect(0, 0, 46, TimerPer));
+	//게이지는 touchCounter에서 처리한다. (수동모드 초기화를 touchCounter에서 한다.)
+	
 	if (prgHangBack->getNumberOfRunningActions() != 0)
 	{
 		log("rope Remove - > prgLayerBack ");
@@ -1788,7 +1810,7 @@ void LSFGame::ropeRemove(int type) {
 		log("Fishing fail!");
 		log("TIME OVER");
 		joystick->fishingGauge = 0;
-		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
+		log("EndFishing Timer Check: %d", joystick->fishingGauge);
 	}
 	else if (type == 2) {
 		log("---------------------------Fishing 7-2");
@@ -1797,7 +1819,7 @@ void LSFGame::ropeRemove(int type) {
 		log("ropeHealth ZERO");
 		this->unschedule(schedule_selector(LSFGame::timerFishing));
 		joystick->fishingGauge = 0;
-		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
+		log("EndFishing Timer Check: %d", joystick->fishingGauge);
 	}
 	else if (type == 3) {
 		log("---------------------------Fishing 7-3");
@@ -1805,7 +1827,7 @@ void LSFGame::ropeRemove(int type) {
 		fstChange(3);
 		log("Fishing Success");
 		joystick->fishingGauge = 0;
-		log("EndFishing Gauge Check: %d", joystick->fishingGauge);
+		log("EndFishing Timer Check: %d", joystick->fishingGauge);
 		items(1);
 	}
 
@@ -1955,8 +1977,12 @@ void LSFGame::tick(float dt) {
 	}
 	//RHC(Rope Health Counter End)-------------------------------
 
-	if (joystick->fishingGauge >= 200) { endFishing(3); }
-	
+	if (joystick->fishingGauge >= 434) { endFishing(3); }
+	if (modeSwitch == true && fishingStat == true && hangFish == true)
+	{
+		GaugePer = joystick->fishingGauge;
+		Gauge->setTextureRect(Rect(0, 0, 46, GaugePer));
+	}
 	//invOpen Animation
 	if (btnCount == true && invOpenCount == false) {
 		if (invOpen->getNumberOfRunningActions() == 0) {
@@ -1991,6 +2017,8 @@ void LSFGame::touchCounter(float dt)
 	if (touchCount == false) {
 		touchCount = true;
 		joystick->setVisible(false);
+		GaugePer = 0;
+		Gauge->setTextureRect(Rect(0, 0, 46, GaugePer));
 	}
 	else if (touchCount == true) {
 		touchCount = false;
@@ -2057,7 +2085,7 @@ void LSFGame::startFishing(float dt)
 void LSFGame::timerFishing(float dt) {
 	log("timerFishing: %d", timer);
 	log("catchTime: %d", catchTime);
-	gauge->setTextureRect(Rect(0, 0, 46, per-=(434 / randomTime)));
+	Timer->setTextureRect(Rect(0, 0, 46, TimerPer -=(434 / randomTime)));
 	if (--timer == 0) {
 		log("timer = 0");
 		endFishing(1);
@@ -2182,6 +2210,8 @@ void LSFGame::doChangeMode(Ref* pSender)
 		soundEffect->doSoundAction("game", 11);
 		modeSwitch = true;
 		btn_modeswitch->selected();
+		Gauge->setVisible(true);
+		GaugeBack->setVisible(true);
 		//manualLayer->setVisible(true);
 
 	}
@@ -2189,6 +2219,8 @@ void LSFGame::doChangeMode(Ref* pSender)
 		soundEffect->doSoundAction("game", 11);
 		modeSwitch = false;
 		btn_modeswitch->unselected();
+		Gauge->setVisible(false);
+		GaugeBack->setVisible(false);
 		//manualLayer->setVisible(false);
 		joystick->setVisible(false);
 	}
