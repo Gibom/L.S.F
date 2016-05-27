@@ -5,30 +5,30 @@ using namespace cocos2d;
 using namespace CocosDenshion;
 
 //android effect only support ogg
-//#if(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-//#define EFFECT_START	"Sounds/Start.ogg"
-//#define EFFECT_SPLASH	"Sounds/Splash.ogg"
-//#define EFFECT_WAIT		"Sounds/Wait.ogg"
-//#define EFFECT_CAST		"Sounds/Cast.ogg"
-//#define EFFECT_OPEN		"Sounds/Menu_Open.ogg"
-//#define EFFECT_CLOSE	"Sounds/Menu_Close.ogg"
-//#define EFFECT_CRAFT	"Sounds/Craft.ogg"
-//#define EFFECT_TAB		"Sounds/Tab.ogg"
-//#define EFFECT_MODE			"Sounds/Mode.ogg"
-//#define EFFECT_HANG			"Sounds/Hang.ogg"
-//#define EFFECT_FAIL			"Sounds/Fail.ogg"
-//#define EFFECT_SUCCESS		"Sounds/Success.ogg"
-//#define EFFECT_GRAB			"Sounds/Grab.ogg"
-//#define EFFECT_CONSUME		"Sounds/Consume.ogg"
-//#define EFFECT_REEL			"Sounds/Reel.ogg"
-//#define EFFECT_COMBINE		"Sounds/Combine.ogg"
-//#define MUSIC_MAIN		"Sounds/bg_Main.ogg"
-//#define MUSIC_GAME		"Sounds/bg_Rain.ogg"
-//#define MUSIC_GAME1		"Sounds/bg_Day.ogg"
-//#define MUSIC_GAME2		"Sounds/bg_Night.ogg"
-//#endif // CC_PLATFORM_ANDROID
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#define EFFECT_START	"Sounds/Start.ogg"
+#define EFFECT_SPLASH	"Sounds/Splash.ogg"
+#define EFFECT_WAIT		"Sounds/Wait.ogg"
+#define EFFECT_CAST		"Sounds/Cast.ogg"
+#define EFFECT_OPEN		"Sounds/Menu_Open.ogg"
+#define EFFECT_CLOSE	"Sounds/Menu_Close.ogg"
+#define EFFECT_CRAFT	"Sounds/Craft.ogg"
+#define EFFECT_TAB		"Sounds/Tab.ogg"
+#define EFFECT_MODE			"Sounds/Mode.ogg"
+#define EFFECT_HANG			"Sounds/Hang.ogg"
+#define EFFECT_FAIL			"Sounds/Fail.ogg"
+#define EFFECT_SUCCESS		"Sounds/Success.ogg"
+#define EFFECT_GRAB			"Sounds/Grab.ogg"
+#define EFFECT_CONSUME		"Sounds/Consume.ogg"
+#define EFFECT_REEL			"Sounds/Reel.ogg"
+#define EFFECT_COMBINE		"Sounds/Combine.ogg"
+#define MUSIC_MAIN		"Sounds/bg_Main.ogg"
+#define MUSIC_GAME		"Sounds/bg_Rain.ogg"
+#define MUSIC_GAME1		"Sounds/bg_Day.ogg"
+#define MUSIC_GAME2		"Sounds/bg_Night.ogg"
+#endif // CC_PLATFORM_ANDROID
 
-//#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #define EFFECT_START		"Sounds/Start.wav"
 #define EFFECT_SPLASH		"Sounds/Splash.wav"
 #define EFFECT_WAIT			"Sounds/Wait.wav"
@@ -49,7 +49,7 @@ using namespace CocosDenshion;
 #define MUSIC_GAME			"Sounds/bg_Rain.wav"
 #define MUSIC_GAME1			"Sounds/bg_Day.wav"
 #define MUSIC_GAME2			"Sounds/bg_Night.wav"
-//#endif // CC_PLATFORM_WIN32
+#endif // CC_PLATFORM_WIN32
 
 bool SoundEffect::init()
 {
