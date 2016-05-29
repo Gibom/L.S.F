@@ -205,3 +205,17 @@ void SoundEffect::doSoundStop(int effecttype)
 		SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 	}
 }
+void SoundEffect::test()
+{
+	log("BGM Volume :%f", SimpleAudioEngine::getInstance()->getBackgroundMusicVolume());
+	log("Effect Volume :%f", SimpleAudioEngine::getInstance()->getEffectsVolume());
+}
+void SoundEffect::doVolumeUpdate(float per, int type)
+{
+	if (type == 1) {
+		SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(per);
+	}
+	else if (type == 2) {
+		SimpleAudioEngine::getInstance()->setEffectsVolume(per);
+	}
+}

@@ -1,8 +1,9 @@
 ﻿#include "LSFMain.h"
 #include "LSFGame.h"
-#include "SoundEffect.h"
+
 
 using namespace cocos2d;
+using namespace cocos2d::ui;
 using namespace rapidjson;
 
 
@@ -24,11 +25,23 @@ bool LSFMain::init()
 
 	/////////////////////////////
 
-	soundEffect->doSoundAction("main", 0);
+	LSFSingleton::getInstance()->soundEffect->doSoundAction("main", 0);
+
+	OptionLayer = LayerColor::create(Color4B(255, 255, 255, 0), winSize.width, winSize.height);
+	OptionLayer->setAnchorPoint(Vec2::ZERO);
+	OptionLayer->setPosition(Vec2(0, 0));
+	OptionLayer->setVisible(false);
+	this->addChild(OptionLayer,2);
+
+	optionBoard = Sprite::create("Sprites/OptionBoard.png");
+	optionBoard->setAnchorPoint(Vec2::ZERO);
+	optionBoard->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	OptionLayer->addChild(optionBoard);
+
 	
 
 	winSize = Director::getInstance()->getWinSize();
-	//스프라이트 캐시
+	
 	
 	Sprite* backDefault = Sprite::create("Sprites/Main_bg.png");
 	backDefault->setAnchorPoint(Vec2::ZERO);
@@ -51,10 +64,11 @@ bool LSFMain::init()
 	btn_Start = MenuItemImage::create("Sprites/Button_start_up.png",
 		"Sprites/Button_start_down.png",
 		CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
-
+	btn_Start->setTag(10);
 	btn_Option = MenuItemImage::create("Sprites/Button_option_up.png",
 		"Sprites/Button_option_down.png",
 		CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
+	btn_Option->setTag(20);
 
 	mainMenu = Menu::create(btn_Start, btn_Option, nullptr);
 	mainMenu->setAnchorPoint(Vec2(0.5, 0.5));
@@ -63,17 +77,100 @@ bool LSFMain::init()
 
 	this->addChild(mainMenu);
 
+	btn_Close = MenuItemImage::create("Sprites/Button_close_up.png",
+		"Sprites/Button_close_down.png",
+		CC_CALLBACK_1(LSFMain::doPushSceneTran, this));
+	btn_Close->setTag(30);
+
+	optionMenu = Menu::create(btn_Close, nullptr);
+	optionMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	optionMenu->setPosition(Vec2(winSize.width / 2, winSize.height / 4));
+	optionMenu->alignItemsVertically();
+
+	OptionLayer->addChild(optionMenu);
+
+	_displayValueLabel = Text::create("BGM Volume", "fonts/nanumgoco-Bold.ttf", 32);
+	_displayValueLabel->setAnchorPoint(Vec2(0, -1));
+	_displayValueLabel->setPosition(Vec2(60, winSize.height - 400));
+	OptionLayer->addChild(_displayValueLabel);
+
+	Slider* slider = Slider::create();
+	slider->loadBarTexture("Sprites/sliderTrack2.png");
+	slider->loadSlidBallTextures("Sprites/sliderThumb.png", "Sprites/sliderThumb.png", "");
+	slider->loadProgressBarTexture("Sprites/slider_bar_active_9patch.png");
+	slider->setScale9Enabled(true);
+	slider->setCapInsets(Rect(0, 0, 0, 0));
+	slider->setContentSize(Size(250.0f, 19));
+	slider->setPosition(Vec2(190, winSize.height - 400));
+	slider->addEventListener(CC_CALLBACK_2(LSFMain::sliderEvent, this));
+	slider->setTag(10);
+	OptionLayer->addChild(slider);
+
+
+	_displayValueLabel2 = Text::create("Effect Volume", "fonts/nanumgoco-Bold.ttf", 32);
+	_displayValueLabel2->setAnchorPoint(Vec2(0, -1));
+	_displayValueLabel2->setPosition(Vec2(60, winSize.height - 550));
+	OptionLayer->addChild(_displayValueLabel2);
+
+	Slider* slider2 = Slider::create();
+	slider2->loadBarTexture("Sprites/sliderTrack2.png");
+	slider2->loadSlidBallTextures("Sprites/sliderThumb.png", "Sprites/sliderThumb.png", "");
+	slider2->loadProgressBarTexture("Sprites/slider_bar_active_9patch.png");
+	slider2->setScale9Enabled(true);
+	slider2->setCapInsets(Rect(0, 0, 0, 0));
+	slider2->setContentSize(Size(250.0f, 19));
+	slider2->setPosition(Vec2(190, winSize.height - 550));
+	slider2->addEventListener(CC_CALLBACK_2(LSFMain::sliderEvent, this));
+	slider2->setTag(20);
+	OptionLayer->addChild(slider2);
+	
+
 	return true;
 }
-
+void LSFMain::sliderEvent(Ref *pSender, Slider::EventType type)
+{
+	if (type == Slider::EventType::ON_PERCENTAGE_CHANGED)
+	{
+		Slider* slider = dynamic_cast<Slider*>(pSender);
+		int percent = slider->getPercent();
+		int tag = (int)slider->getTag();
+		if (tag == 10) {
+			_displayValueLabel->setString(StringUtils::format("BGM Volume %d", percent / 10));
+			LSFSingleton::getInstance()->soundEffect->doVolumeUpdate(percent / 100, 1);
+		}
+		else if (tag == 20)
+		{
+			_displayValueLabel2->setString(StringUtils::format("Effect Volume %d", percent / 10));
+			LSFSingleton::getInstance()->soundEffect->doVolumeUpdate(percent / 100, 2);
+		}
+		LSFSingleton::getInstance()->soundEffect->test();
+	}
+}
 void LSFMain::doPushSceneTran(Ref * pSender)
 {
-	mainMenu->pause();
-	soundEffect->doSoundAction("main", 1);
-	auto pScene = LSFGame::createScene();
-	
-	Director::getInstance()->replaceScene(createTransition(7, 0.5, pScene));
+	MenuItemImage* pMenuItem = (MenuItemImage *)(pSender);
+	int tag = (int)pMenuItem->getTag();
+	if (tag == 10)
+	{
+		mainMenu->pause();
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("main", 1);
+		auto pScene = LSFGame::createScene();
 
+		Director::getInstance()->replaceScene(createTransition(7, 0.5, pScene));
+	}
+	else if (tag == 20)
+	{
+		mainMenu->pause();
+		mainMenu->setVisible(false);
+		OptionLayer->setVisible(true);
+	}
+	else if (tag == 30)
+	{
+		
+		mainMenu->resume();
+		mainMenu->setVisible(true);
+		OptionLayer->setVisible(false);
+	}
 }
 
 TransitionScene* LSFMain::createTransition(int nIndex, float t, Scene* s)

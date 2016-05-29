@@ -27,6 +27,9 @@ bool LSFGame::init()
 	}
 
 	//////////////////////////////
+	
+	LSFSingleton::getInstance()->soundEffect->test();
+
 
 	listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
@@ -424,7 +427,7 @@ void LSFGame::dayChangerF(int type)
 	//Init 
 	if (wtInit < 120) {
 		soundCheck = 0;
-		soundEffect->doSoundAction("game", 0);
+		LSFSingleton::getInstance()->LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 0);
 		backDefault = Sprite::create("Sprites/Game_bg.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -443,7 +446,7 @@ void LSFGame::dayChangerF(int type)
 	}
 	else if (wtInit > 120 && wtInit < 240) {
 		soundCheck = 1;
-		soundEffect->doSoundAction("game", 8);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 8);
 		backDefault = Sprite::create("Sprites/Game_bg_sn.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -462,7 +465,7 @@ void LSFGame::dayChangerF(int type)
 	}
 	else if (wtInit > 240 && wtInit < 360) {
 		soundCheck = 2;
-		soundEffect->doSoundAction("game", 9);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 9);
 		backDefault = Sprite::create("Sprites/Game_bg_nt.png");
 		backDefault->setAnchorPoint(Vec2::ZERO);
 		backDefault->setPosition(Vec2::ZERO);
@@ -484,8 +487,8 @@ void LSFGame::dayChangerF(int type)
 	if (type == 1)
 	{
 		if (soundCheck != 0) { 
-			soundEffect->doSoundStop(2);
-			soundEffect->doSoundAction("game", 0);
+			LSFSingleton::getInstance()->soundEffect->doSoundStop(2);
+			LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 0);
 			soundCheck = 0;
 		}
 		backDefault = Sprite::create("Sprites/Game_bg.png");
@@ -509,8 +512,8 @@ void LSFGame::dayChangerF(int type)
 	else if (type == 2)
 	{
 		if (soundCheck != 1) { 
-			soundEffect->doSoundStop(2);
-			soundEffect->doSoundAction("game", 8);
+			LSFSingleton::getInstance()->soundEffect->doSoundStop(2);
+			LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 8);
 			soundCheck = 1;
 		}
 		backDefault = Sprite::create("Sprites/Game_bg_sn.png");
@@ -534,8 +537,8 @@ void LSFGame::dayChangerF(int type)
 	else if (type == 3)
 	{
 		if (soundCheck != 2) { 
-			soundEffect->doSoundStop(2);
-			soundEffect->doSoundAction("game", 9);
+			LSFSingleton::getInstance()->soundEffect->doSoundStop(2);
+			LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 9);
 			soundCheck = 2;
 		}
 		backDefault = Sprite::create("Sprites/Game_bg_nt.png");
@@ -578,7 +581,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			if (btnCount == false) {
 				if (btnCount == false && fishingStat == false) {
 					//낚시 시작 전
-					soundEffect->doSoundAction("game", 1);
+					LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 1);
 
 					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
 					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
@@ -607,7 +610,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 			if (btnCount == false) {
 				if (btnCount == false && fishingStat == false) {
 					//낚시 시작 전
-					soundEffect->doSoundAction("game", 1);
+					LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 1);
 
 					manualLayer->setVisible(false);
 					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
@@ -638,7 +641,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 		//craftSwitch == true/false On/Off
 		if (craftSwitch == true)
 		{
-			soundEffect->doSoundStop(1);
+			LSFSingleton::getInstance()->soundEffect->doSoundStop(1);
 			craftUsel->setVisible(true);
 			craftSel->setVisible(false);
 			btnCraft->setVisible(false);
@@ -658,7 +661,7 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 		}
 		else
 		{
-			soundEffect->doSoundAction("game", 7);
+			LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 7);
 			craftUsel->setVisible(false);
 			craftSel->setVisible(true);
 			btnCraft->setVisible(true);
@@ -784,7 +787,7 @@ void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell*
 
 	log("combine in itemA : %d itemB : %d", itemA, itemB);
 	log("combine in cellA : %d cellB : %d", cellA, cellB);
-	soundEffect->doSoundAction("game", 18);
+	LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 18);
 	//애니메이션
 	auto combineAnim = animCreate->CreateAnim("Sprites/Button_combine2.json", "Button_combine2", 8, 0.1f);
 	auto combineAnimate = Animate::create(combineAnim);
@@ -831,7 +834,7 @@ void LSFGame::doPushInventory(Ref * pSender) {
 		GaugeBack->setVisible(false);
 
 		
-		soundEffect->doSoundAction("game", 5);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 5);
 		invenLayer->setVisible(true);
 
 		//invOpen Animation
@@ -857,7 +860,7 @@ void LSFGame::doPushInventory(Ref * pSender) {
 			GaugeBack->setVisible(true);
 		}
 
-		soundEffect->doSoundAction("game", 6);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 6);
 		invenLayer->setVisible(false);
 		invTab->setVisible(false);
 		if (invOpen->getNumberOfRunningActions() != 0) {
@@ -888,7 +891,7 @@ void LSFGame::doPushInvTab(Ref * pSender) {
 	
 	if (tag == 10)
 	{
-		soundEffect->doSoundAction("game", 10);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 10);
 		inv1->selected();
 		inv2->unselected();
 		inv3->unselected();
@@ -908,7 +911,7 @@ void LSFGame::doPushInvTab(Ref * pSender) {
 	}
 	else if (tag == 20)
 	{
-		soundEffect->doSoundAction("game", 10);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 10);
 		inv1->unselected();
 		inv2->selected();
 		inv3->unselected();
@@ -930,7 +933,7 @@ void LSFGame::doPushInvTab(Ref * pSender) {
 	}
 	else if (tag == 30)
 	{
-		soundEffect->doSoundAction("game", 10);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 10);
 		inv1->unselected();
 		inv2->unselected();
 		inv3->selected();
@@ -2127,10 +2130,10 @@ void LSFGame::endFishing(float dt)
 void LSFGame::SoundDelay(float dt)
 {
 	if (sDelayCheck == 1) {
-		soundEffect->doSoundAction("game", 3);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 3);
 	}
 	else if (sDelayCheck == 2) {
-		soundEffect->doSoundAction("game", 12);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 12);
 	}
 }
 
@@ -2176,7 +2179,7 @@ void LSFGame::fstChange(int type)
 	if (type == 3) {
 		
 		this->unschedule(schedule_selector(LSFGame::SoundDelay));
-		soundEffect->doSoundAction("game", 14);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 14);
 		resultCount = true;
 		addNewSpriteAt(Vec2(winSize.width / 2, winSize.height / 2), itemName.c_str(), 2);
 		fishBowlProgress(1);
@@ -2191,7 +2194,7 @@ void LSFGame::fstChange(int type)
 	if (type == 4) {
 		
 		this->unschedule(schedule_selector(LSFGame::SoundDelay));
-		soundEffect->doSoundAction("game", 13);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 13);
 		resultCount = false;
 		addNewSpriteAt(Vec2::ZERO, itemName.c_str(), 1);
 		fishBowlProgress(2);
@@ -2207,7 +2210,7 @@ void LSFGame::fstChange(int type)
 void LSFGame::doChangeMode(Ref* pSender)
 {
 	if (modeSwitch == false) {
-		soundEffect->doSoundAction("game", 11);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 11);
 		modeSwitch = true;
 		btn_modeswitch->selected();
 		Gauge->setVisible(true);
@@ -2216,7 +2219,7 @@ void LSFGame::doChangeMode(Ref* pSender)
 
 	}
 	else {
-		soundEffect->doSoundAction("game", 11);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 11);
 		modeSwitch = false;
 		btn_modeswitch->unselected();
 		Gauge->setVisible(false);
@@ -2228,7 +2231,7 @@ void LSFGame::doChangeMode(Ref* pSender)
 }
 void LSFGame::waterSplash(float dt) {
 	
-	soundEffect->doSoundAction("game", 2);
+	LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 2);
 	water->splash(touchRope.x, -100);
 }
 void ContactListener::BeginContact(b2Contact* contact)
@@ -2325,7 +2328,7 @@ void LSFGame::fishRemove(float dt)
 	log("fishRemoveInit");
 	if (hangItem->getNumberOfRunningActions() == 0 && prgCounter == 1)
 	{
-		soundEffect->doSoundAction("game", 15);
+		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 15);
 		log("fishRemove 1");
 		progressLayer->removeChild(hangItem);
 		progressLayer->removeChild(fishBowl);

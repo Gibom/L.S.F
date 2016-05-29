@@ -11,7 +11,7 @@
 #include "WaterNode.h"
 #include "Inventory.h"
 #include "LSFSingleton.h"
-#include "SoundEffect.h"
+
 
 using namespace cocos2d;
 
@@ -25,7 +25,7 @@ public:
 
 	CREATE_FUNC(LSFGame);
 
-	SoundEffect* soundEffect;
+	
 
 	//Box2D-Start---------------------------------------------------------------------------
 	bool createBox2dWorld(bool debug);

@@ -4,7 +4,9 @@
 #include "cocos2d.h"
 #include "AnimateCreate.h"
 #include "LSFSingleton.h"
-#include "SoundEffect.h"
+#include "extensions/cocos-ext.h"
+#include "ui/CocosGUI.h"
+
 
 using namespace cocos2d;
 
@@ -17,15 +19,22 @@ public:
 
     CREATE_FUNC(LSFMain);
 	
-	SoundEffect* soundEffect;
-
+	
+	LayerColor* OptionLayer;
 	MenuItemImage* btn_Start;
 	MenuItemImage* btn_Option;
+	MenuItemImage* btn_Close;
 	Menu* mainMenu;
+	Menu* optionMenu;
+	Sprite* optionBoard;
 	AnimateCreate* animCreate;
+	void sliderEvent(cocos2d::Ref* sender, cocos2d::ui::Slider::EventType type);
 	void doPushSceneTran(Ref * pSender);
 	cocos2d::TransitionScene* createTransition(int nIndex, float t, cocos2d::Scene* s);
 	Size winSize;
+	cocos2d::ui::Text* _displayValueLabel;
+	cocos2d::ui::Text* _displayValueLabel2;
+	
 };
 
 #endif // __LSFMain_SCENE_H__

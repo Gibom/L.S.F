@@ -19,6 +19,8 @@ public:
 
 	void doSoundAction(const std::string & scene, int type);
 	void doSoundStop(int effecttype);
+	void test();
+	void doVolumeUpdate(float per, int type);
 };
 
 #endif // __SOUNDEFFECT_H__
