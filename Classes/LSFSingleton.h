@@ -4,6 +4,8 @@
 #include "cocos2d.h"
 #include "AnimateCreate.h"
 #include "SoundEffect.h"
+#include "AdMob.h"
+
 using namespace cocos2d;
 
 class LSFSingleton{
@@ -47,6 +49,8 @@ public:
 	Size winSize = Director::getInstance()->getWinSize();
 	
 	SoundEffect* soundEffect;
+	AdMob* adMob;
+	
 	//---------------------------- MainScene Begin
 	Sprite* GetmBack();			
 	Sprite* GetmLogo();			   

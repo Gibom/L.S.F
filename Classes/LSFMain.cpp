@@ -38,7 +38,7 @@ bool LSFMain::init()
 	optionBoard->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
 	OptionLayer->addChild(optionBoard);
 
-	
+	OptionLayer->addChild(LSFSingleton::getInstance()->adMob->createScene());
 
 	winSize = Director::getInstance()->getWinSize();
 	
@@ -124,6 +124,8 @@ bool LSFMain::init()
 	slider2->setTag(20);
 	OptionLayer->addChild(slider2);
 	
+	
+
 
 	return true;
 }

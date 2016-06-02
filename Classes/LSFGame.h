@@ -11,6 +11,8 @@
 #include "WaterNode.h"
 #include "Inventory.h"
 #include "LSFSingleton.h"
+#include "extensions/cocos-ext.h"
+#include "ui/CocosGUI.h"
 
 
 using namespace cocos2d;
@@ -25,7 +27,11 @@ public:
 
 	CREATE_FUNC(LSFGame);
 
-	
+	void doRain();
+	void doSnow();
+	void doRing();
+	Sprite* _background;
+	void particleRemove(float dt);
 
 	//Box2D-Start---------------------------------------------------------------------------
 	bool createBox2dWorld(bool debug);
@@ -149,6 +155,20 @@ public:
 	//Box2D-End---------------------------------------------------------------------------
 
 	//환경구성
+
+	//option
+	bool optCount;
+	LayerColor* OptionLayer;
+	MenuItemImage* btn_Option;
+	MenuItemImage* btn_Close;
+	Menu* mainMenu;
+	Menu* optionMenu;
+
+	Sprite* optionBoard;
+	void doOption(Ref * pSender);
+	void sliderEvent(cocos2d::Ref* sender, cocos2d::ui::Slider::EventType type);
+	cocos2d::ui::Text* _displayValueLabel;
+	cocos2d::ui::Text* _displayValueLabel2;
 
 	//WorldTimer
 	void WorldTimer(float dt);

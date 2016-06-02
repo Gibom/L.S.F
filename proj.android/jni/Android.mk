@@ -11,21 +11,22 @@ LOCAL_MODULE := cocos2dcpp_shared
 LOCAL_MODULE_FILENAME := libcocos2dcpp
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
-				   ../../Classes/AppDelegate.cpp \
-				   ../../Classes/AnimateCreate.cpp \
-				   ../../Classes/WaterColumn.cpp \
-				   ../../Classes/WaterNode.cpp \
-				   ../../Classes/Joystick.cpp \
-				   ../../Classes/vrope.cpp \
-				   ../../Classes/vstick.cpp \
-				   ../../Classes/vpoint.cpp \
+				   ../../Classes/AppDelegate.cpp\
+				   ../../Classes/AnimateCreate.cpp\
+				   ../../Classes/WaterColumn.cpp\
+				   ../../Classes/WaterNode.cpp\
+				   ../../Classes/Joystick.cpp\
+				   ../../Classes/vrope.cpp\
+				   ../../Classes/vstick.cpp\
+				   ../../Classes/vpoint.cpp\
 				   ../../Classes/GLES-Render.cpp\
 				   ../../Classes/ContactListener.cpp\
 				   ../../Classes/Inventory.cpp\
 				   ../../Classes/CustomTableViewCell.cpp\
 				   ../../Classes/LSFSingleton.cpp\
 				   ../../Classes/SoundEffect.cpp\
-				   ../../Classes/LSFGame.cpp \
+				   ../../Classes/AdMob.cpp\
+				   ../../Classes/LSFGame.cpp\
 				   ../../Classes/LSFMain.cpp 
 				 
 

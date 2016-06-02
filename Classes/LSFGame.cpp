@@ -2,6 +2,7 @@
 #include <ctime>
 
 using namespace cocos2d;
+using namespace cocos2d::ui;
 
 int ropeHealth = 500;
 bool fishingStat;
@@ -29,8 +30,10 @@ bool LSFGame::init()
 	//////////////////////////////
 	
 	LSFSingleton::getInstance()->soundEffect->test();
-
-
+	
+	this->doRain();
+	
+	
 	listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 	listener->onTouchBegan = CC_CALLBACK_2(LSFGame::onTouchBegan, this);
@@ -60,6 +63,78 @@ bool LSFGame::init()
 	this->addChild(invNull);
 
 	this->scheduleOnce(schedule_selector(LSFGame::touchCounter), 2.f); //초기 진입시 터치 2초후에 활성화
+
+	//옵션 레이어
+	OptionLayer = LayerColor::create(Color4B(255, 255, 255, 0), winSize.width, winSize.height);
+	OptionLayer->setAnchorPoint(Vec2::ZERO);
+	OptionLayer->setPosition(Vec2(0, 0));
+	OptionLayer->setVisible(false);
+	this->addChild(OptionLayer, 6);
+
+	btn_Option = MenuItemImage::create("Sprites/Button_goption_up.png",
+		"Sprites/Button_goption_down.png",
+		CC_CALLBACK_1(LSFGame::doOption,this));
+	btn_Option->setTag(40);
+	btn_Option->setScale(1.4f);
+	mainMenu = Menu::create(btn_Option, nullptr);
+	mainMenu->setPosition(Vec2(140, winSize.height - 200));
+	this->addChild(mainMenu,4);
+
+	optionBoard = Sprite::create("Sprites/OptionBoard.png");
+	optionBoard->setAnchorPoint(Vec2::ZERO);
+	//optionBoard->setPosition(Vec2(winSize.width / 2, winSize.height / 2));
+	OptionLayer->addChild(optionBoard);
+
+	OptionLayer->addChild(LSFSingleton::getInstance()->adMob->createScene());
+
+	btn_Close = MenuItemImage::create("Sprites/Button_close_up.png",
+		"Sprites/Button_close_down.png",
+		CC_CALLBACK_1(LSFGame::doOption, this));
+	btn_Close->setTag(50);
+
+	optionMenu = Menu::create(btn_Close, nullptr);
+	optionMenu->setAnchorPoint(Vec2(0.5, 0.5));
+	optionMenu->setPosition(Vec2(winSize.width / 2, winSize.height / 4));
+	optionMenu->alignItemsVertically();
+
+	OptionLayer->addChild(optionMenu);
+
+
+
+	_displayValueLabel = Text::create("BGM Volume", "fonts/nanumgoco-Bold.ttf", 32);
+	_displayValueLabel->setAnchorPoint(Vec2(0, -1));
+	_displayValueLabel->setPosition(Vec2(60, winSize.height - 400));
+	OptionLayer->addChild(_displayValueLabel);
+
+	Slider* slider = Slider::create();
+	slider->loadBarTexture("Sprites/sliderTrack2.png");
+	slider->loadSlidBallTextures("Sprites/sliderThumb.png", "Sprites/sliderThumb.png", "");
+	slider->loadProgressBarTexture("Sprites/slider_bar_active_9patch.png");
+	slider->setScale9Enabled(true);
+	slider->setCapInsets(Rect(0, 0, 0, 0));
+	slider->setContentSize(Size(250.0f, 19));
+	slider->setPosition(Vec2(190, winSize.height - 400));
+	slider->addEventListener(CC_CALLBACK_2(LSFGame::sliderEvent, this));
+	slider->setTag(10);
+	OptionLayer->addChild(slider);
+
+
+	_displayValueLabel2 = Text::create("Effect Volume", "fonts/nanumgoco-Bold.ttf", 32);
+	_displayValueLabel2->setAnchorPoint(Vec2(0, -1));
+	_displayValueLabel2->setPosition(Vec2(60, winSize.height - 550));
+	OptionLayer->addChild(_displayValueLabel2);
+
+	Slider* slider2 = Slider::create();
+	slider2->loadBarTexture("Sprites/sliderTrack2.png");
+	slider2->loadSlidBallTextures("Sprites/sliderThumb.png", "Sprites/sliderThumb.png", "");
+	slider2->loadProgressBarTexture("Sprites/slider_bar_active_9patch.png");
+	slider2->setScale9Enabled(true);
+	slider2->setCapInsets(Rect(0, 0, 0, 0));
+	slider2->setContentSize(Size(250.0f, 19));
+	slider2->setPosition(Vec2(190, winSize.height - 550));
+	slider2->addEventListener(CC_CALLBACK_2(LSFGame::sliderEvent, this));
+	slider2->setTag(20);
+	OptionLayer->addChild(slider2);
 
 	//상태표시 레이어
 	StatLayer = LayerColor::create(Color4B(255, 255, 255, 0), winSize.width, winSize.height);
@@ -311,9 +386,10 @@ bool LSFGame::init()
 
 	btn_modeswitch = MenuItemImage::create("Sprites/Button_modeauto.png", "Sprites/Button_modemanual.png",
 		CC_CALLBACK_1(LSFGame::doChangeMode, this));
+	btn_modeswitch->setScale(1.4f);
 	modeswitchMenu = Menu::create(btn_modeswitch, nullptr);
 	modeswitchMenu->setAnchorPoint(Vec2(0.5, 0.5));
-	modeswitchMenu->setPosition(Vec2(winSize.width - 140, winSize.height - 100));
+	modeswitchMenu->setPosition(Vec2(winSize.width - 140, winSize.height - 200));
 	modeswitchMenu->alignItemsHorizontally();
 	this->addChild(modeswitchMenu, 3);
 
@@ -560,7 +636,98 @@ void LSFGame::dayChangerF(int type)
 		dayChanger = 0;
 	}
 }
+void LSFGame::doRain()
+{
+	ParticleSystem* m_emitter = ParticleRain::create();
+	m_emitter->retain();
 
+	Vec2 p = m_emitter->getPosition();
+	m_emitter->setPosition(Vec2(p.x, p.y - 100));
+	m_emitter->setLife(4);
+
+	auto texture = Director::getInstance()->getTextureCache()->addImage("Sprites/fire.png");
+	m_emitter->setTexture(texture);
+	m_emitter->setScaleY(4);
+
+	if (m_emitter != NULL)
+	{
+		m_emitter->setPosition(Vec2(240, 1120));
+
+		this->addChild(m_emitter, 5);
+	}
+}
+void LSFGame::doSnow()
+{
+	ParticleSystem* m_emitter = ParticleSnow::create();
+	m_emitter->retain();
+
+	Vec2 p = m_emitter->getPosition();
+
+	m_emitter->setTotalParticles(200);  // default : 700
+
+	m_emitter->setPosition(Vec2(p.x, p.y - 110));
+	m_emitter->setLife(5); // 3
+	m_emitter->setLifeVar(1);
+
+	// gravity
+	m_emitter->setGravity(Vec2(0, -10));
+
+	// speed of particles
+	m_emitter->setSpeed(100);  // 130
+	m_emitter->setSpeedVar(30); // 30
+
+
+	Color4F startColor = m_emitter->getStartColor();
+	startColor.r = 0.9f;
+	startColor.g = 0.9f;
+	startColor.b = 0.9f;
+	m_emitter->setStartColor(startColor);
+
+
+	Color4F endColorVar = m_emitter->getStartColorVar();
+	endColorVar.r = 0.0f;
+	endColorVar.g = 0.0f;
+	endColorVar.b = 0.0f;
+	m_emitter->setStartColorVar(endColorVar);
+
+	m_emitter->setEmissionRate(m_emitter->getTotalParticles() / m_emitter->getLife());
+
+	auto texture = Director::getInstance()->getTextureCache()->addImage("Sprites/snow.png");
+	m_emitter->setTexture(texture);
+
+
+
+	if (m_emitter != NULL)
+	{
+		m_emitter->setPosition(Vec2(240, 1120));
+
+		this->addChild(m_emitter);
+	}
+}
+void LSFGame::doRing()
+{
+
+	ParticleSystemQuad* _emitter = ParticleFlower::create();
+	_emitter->retain();
+
+	_emitter->setTexture(Director::getInstance()->getTextureCache()->addImage("Sprites/stars.png"));
+	_emitter->setLifeVar(0);
+	_emitter->setLife(10);
+	_emitter->setSpeed(1000);
+	_emitter->setSpeedVar(0);
+	_emitter->setEmissionRate(1000);
+	_emitter->setTag(200);
+	if (_emitter != NULL)
+	{
+		_emitter->setPosition(Vec2(360, 400));
+
+		this->addChild(_emitter, 10);
+	}
+}
+void LSFGame::particleRemove(float dt)
+{
+	removeChildByTag(200, true);
+}
 bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 {
 	log("Touched! %d", touchCount);
@@ -576,60 +743,65 @@ bool LSFGame::onTouchBegan(Touch* touch, Event* event)
 	// 게임 화면
 
 	//반자동 모드
+	
 	if (modeSwitch != true) {
-		if (touchCount == true) {
-			if (btnCount == false) {
-				if (btnCount == false && fishingStat == false) {
-					//낚시 시작 전
-					LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 1);
+		if (optCount == false) {
+			if (touchCount == true) {
+				if (btnCount == false) {
+					if (btnCount == false && fishingStat == false) {
+						//낚시 시작 전
+						LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 1);
 
-					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
-					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
+						needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
+						Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
-					this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
-						needle, needle->GetLocalCenter(), 1.1f);
-					//ropeTouchCount = true;
-					log("---------------------------Fishing 1 SA");
+						this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
+							needle, needle->GetLocalCenter(), 1.1f);
+						//ropeTouchCount = true;
+						log("---------------------------Fishing 1 SA");
 
-					log("---------------------------Fishing 2 SA");
-					this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
-					log("---------------------------Fishing 3 SA");
-					startFishing(1);
-					log("---------------------------Fishing 3-1 SA");
-				}
-				if (hangFish == true) {
-					log("---------------------------HangFish true -> Touch SA");
-					endFishing(3);
+						log("---------------------------Fishing 2 SA");
+						this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
+						log("---------------------------Fishing 3 SA");
+						startFishing(1);
+						log("---------------------------Fishing 3-1 SA");
+					}
+					if (hangFish == true) {
+						log("---------------------------HangFish true -> Touch SA");
+						endFishing(3);
+					}
 				}
 			}
 		}
 	}
 	//수동 모드
 	else {
-		if (touchCount == true) {
-			if (btnCount == false) {
-				if (btnCount == false && fishingStat == false) {
-					//낚시 시작 전
-					LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 1);
+		if (optCount == false) {
+			if (touchCount == true) {
+				if (btnCount == false) {
+					if (btnCount == false && fishingStat == false) {
+						//낚시 시작 전
+						LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 1);
 
-					manualLayer->setVisible(false);
-					needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
-					Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
+						manualLayer->setVisible(false);
+						needle = this->addNewSpriteAt(touchPoint, "Sprites/needle.png", 0);
+						Vec2 fVec = fisherman->convertToWorldSpace(fisherman->getPosition());
 
-					this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
-						needle, needle->GetLocalCenter(), 1.1f);
-					//ropeTouchCount = true;
-					log("---------------------------Fishing 1 MA");
+						this->createRope(groundBody, b2Vec2((fVec.x + 16) / PTM_RATIO, (fVec.y - 4) / PTM_RATIO),
+							needle, needle->GetLocalCenter(), 1.1f);
+						//ropeTouchCount = true;
+						log("---------------------------Fishing 1 MA");
 
-					log("---------------------------Fishing 2 MA");
-					this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
-					log("---------------------------Fishing 3 MA");
-					startFishing(1);
-					log("---------------------------Fishing 3-1 MA");
-				}
-				if (hangFish == true) {
-					log("---------------------------HangFish true -> Touch MA");
-					//endFishing(3);
+						log("---------------------------Fishing 2 MA");
+						this->scheduleOnce(schedule_selector(LSFGame::waterSplash), splashDelay / 700);
+						log("---------------------------Fishing 3 MA");
+						startFishing(1);
+						log("---------------------------Fishing 3-1 MA");
+					}
+					if (hangFish == true) {
+						log("---------------------------HangFish true -> Touch MA");
+						//endFishing(3);
+					}
 				}
 			}
 		}
@@ -782,9 +954,9 @@ void LSFGame::onTouchEnded(Touch* touch, Event* event)
 
 }
 
-void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell* cellB)
-{
-
+void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell* cellB) {
+	this->doRing();
+	
 	log("combine in itemA : %d itemB : %d", itemA, itemB);
 	log("combine in cellA : %d cellB : %d", cellA, cellB);
 	LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 18);
@@ -824,6 +996,7 @@ void LSFGame::combine(int itemA, int itemB, TableViewCell* cellA, TableViewCell*
 			btnCraft->removeChildByName("clone2");
 	}
 	tmpCount = 1;
+	this->scheduleOnce(schedule_selector(LSFGame::particleRemove), 3.f);
 }
 
 void LSFGame::doPushInventory(Ref * pSender) {
@@ -832,7 +1005,7 @@ void LSFGame::doPushInventory(Ref * pSender) {
 		TimerBack->setVisible(false);
 		Gauge->setVisible(false);
 		GaugeBack->setVisible(false);
-
+		
 		
 		LSFSingleton::getInstance()->soundEffect->doSoundAction("game", 5);
 		invenLayer->setVisible(true);
@@ -850,6 +1023,9 @@ void LSFGame::doPushInventory(Ref * pSender) {
 		craftSwitch == false;
 
 		modeswitchMenu->setEnabled(false);
+		modeswitchMenu->setVisible(false);
+		mainMenu->setEnabled(false);
+		mainMenu->setVisible(false);
 	}
 	else {
 		Timer->setVisible(true);
@@ -876,6 +1052,9 @@ void LSFGame::doPushInventory(Ref * pSender) {
 		craftSel->setVisible(false);
 		btnCraft->setVisible(false);
 		modeswitchMenu->setEnabled(true);
+		modeswitchMenu->setVisible(true);
+		mainMenu->setEnabled(true);
+		mainMenu->setVisible(true);
 		invOpenCount = false;
 		//인벤토리 비활성화
 		for (int invRow = 0; invRow < 24; invRow++)
@@ -2367,11 +2546,44 @@ static void printProperties(Properties* properties, int indent)
 
 	log("%s}\n", chindent);
 }
+void LSFGame::doOption(Ref* pSender)
+{
+	MenuItemImage* pMenuItem = (MenuItemImage *)(pSender);
+	int tag = (int)pMenuItem->getTag();
+	if (tag == 40) {
+		OptionLayer->setVisible(true);
+		optCount = true;
+	}
+	else if (tag == 50) {
+		OptionLayer->setVisible(false);
+		optCount = false;
+	}
+}
+void LSFGame::sliderEvent(Ref *pSender, Slider::EventType type)
+{
+	if (type == Slider::EventType::ON_PERCENTAGE_CHANGED)
+	{
+		Slider* slider = dynamic_cast<Slider*>(pSender);
+		int percent = slider->getPercent();
+		int tag = (int)slider->getTag();
+		if (tag == 10) {
+			_displayValueLabel->setString(StringUtils::format("BGM Volume %d", percent / 10));
+			LSFSingleton::getInstance()->soundEffect->doVolumeUpdate(percent / 100, 1);
+		}
+		else if (tag == 20)
+		{
+			_displayValueLabel2->setString(StringUtils::format("Effect Volume %d", percent / 10));
+			LSFSingleton::getInstance()->soundEffect->doVolumeUpdate(percent / 100, 2);
+		}
+		LSFSingleton::getInstance()->soundEffect->test();
+	}
+}
 LSFGame::~LSFGame()
 {
 	//월드를 C++의 new로 생성했으므로 여기서 지워준다.
 	delete _world;
 	_world = nullptr;
 }
+
 
 
