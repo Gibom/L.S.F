@@ -5876,11 +5876,6 @@ proj.android/jni/Application.mk
 proj.android/jni/hellocpp/main.cpp
 proj.android/proguard-project.txt
 proj.android/project.properties
-proj.android/res/drawable-hdpi/icon.png
-proj.android/res/drawable-ldpi/icon.png
-proj.android/res/drawable-mdpi/icon.png
-proj.android/res/values/strings.xml
-proj.android/src/org/cocos2dx/cpp/AppActivity.java
 proj.ios_mac/LSF_Project.xcodeproj/project.pbxproj
 proj.ios_mac/ios/AppController.h
 proj.ios_mac/ios/AppController.mm
