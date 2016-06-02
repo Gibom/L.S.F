@@ -1,0 +1,64 @@
+{ "frames": [
+   {
+    "filename": "FishingStat 0.ase",
+    "frame": { "x": 0, "y": 0, "w": 34, "h": 68 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 34, "h": 68 },
+    "sourceSize": { "w": 34, "h": 68 },
+    "duration": 200
+   },
+   {
+    "filename": "FishingStat 1.ase",
+    "frame": { "x": 34, "y": 0, "w": 34, "h": 68 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 34, "h": 68 },
+    "sourceSize": { "w": 34, "h": 68 },
+    "duration": 200
+   },
+   {
+    "filename": "FishingStat 2.ase",
+    "frame": { "x": 68, "y": 0, "w": 34, "h": 68 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 34, "h": 68 },
+    "sourceSize": { "w": 34, "h": 68 },
+    "duration": 200
+   },
+   {
+    "filename": "FishingStat 3.ase",
+    "frame": { "x": 102, "y": 0, "w": 34, "h": 68 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 34, "h": 68 },
+    "sourceSize": { "w": 34, "h": 68 },
+    "duration": 200
+   },
+   {
+    "filename": "FishingStat 4.ase",
+    "frame": { "x": 136, "y": 0, "w": 34, "h": 68 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 34, "h": 68 },
+    "sourceSize": { "w": 34, "h": 68 },
+    "duration": 200
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.5.4",
+  "image": "D:\\LSF_Project\\Resources\\Sprites\\FishingStat_normal.png",
+  "format": "I8",
+  "size": { "w": 170, "h": 68 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "hang", "opacity": 255, "blendMode": "normal" },
+   { "name": "fail", "opacity": 255, "blendMode": "normal" },
+   { "name": "success", "opacity": 255, "blendMode": "normal" },
+   { "name": "normal", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}

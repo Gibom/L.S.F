@@ -3,7 +3,7 @@
 
 using namespace cocos2d;
 using namespace cocos2d::ui;
-
+ 
 int ropeHealth = 500;
 bool fishingStat;
 
